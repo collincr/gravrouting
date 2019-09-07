@@ -1,0 +1,7 @@
+# Dependencies
+# pip install -r requirements.txt
+
+pandas==0.24.2
+geopandas==0.4.1
+shapely==1.6.4
+matplotlib==3.0.3
