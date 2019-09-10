@@ -12,7 +12,7 @@ def get_sec(time_str):
 
 column = []
 i = 0
-with open('intra-measurement time.txt') as csv_file:
+with open('../resources/file/intra_measurement_time.txt') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	station = '-1'
@@ -25,5 +25,8 @@ with open('intra-measurement time.txt') as csv_file:
 
 print(column)
 column = np.clip(column, 0, 260)
-plt.hist(column, bins=[0,100,120,130,140,150,160,170,180,190,200,220,240,260,280])
+plt.hist(column, 
+		bins=[0,100,120,130,140,150,160,170,180,190,200,220,240,260,280])
+plt.savefig('../resources/img/station_visit_freq.png',
+            dpi=1080)
 plt.show()

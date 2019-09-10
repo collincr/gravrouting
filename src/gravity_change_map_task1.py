@@ -20,7 +20,7 @@ def main():
 
     # visualization
     print("\nData visualizing...")
-    data_visualizer(gdf, True)
+    data_visualizer(gdf, False)
 
 
 def data_converter(file_path, ref_src, ref_dst):
@@ -48,7 +48,7 @@ def data_visualizer(gdf, if_annot):
     # overall settings
     fig, ax = plt.subplots(1, figsize=(8, 8))
     ax = gdf.plot(column='Change in gravity (∆G), in milliGals',
-            cmap='YlGn', ax=ax, legend=True)
+            cmap='rainbow', ax=ax, legend=True)
 
     # label settings
     plt.xlabel('Easting', fontsize=13)
@@ -70,7 +70,7 @@ def data_visualizer(gdf, if_annot):
     ax.set_ylim([y_min - y_range * 0.1, y_max + y_range * 0.1])
 
     # y:x default is 1.0
-    ax.set_aspect(0.5)
+    # ax.set_aspect(0.5)
 
     # point annotations
     for x, y, label in zip(gdf.geometry.x, gdf.geometry.y, gdf.index):
@@ -79,7 +79,8 @@ def data_visualizer(gdf, if_annot):
         annot.set_visible(if_annot)
         
     # save figure before showing
-    plt.savefig('station_gravity_change.png', dpi=1080)
+    plt.savefig('../resources/img/station_gravity_change.png',
+            dpi=1080)
     plt.show()
 
 if __name__ == '__main__':

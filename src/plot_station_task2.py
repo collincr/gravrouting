@@ -60,4 +60,5 @@ for index, row in df_stations_not_found.iterrows():
 for index, row in df_stations_neither.iterrows():
     pl_neither.text(row['EASTING'] + 20, row['NORTHING'] + 20, row['NAME'])
 
+plt.savefig('../resources/img/stations.png', dpi=1080)
 plt.show()

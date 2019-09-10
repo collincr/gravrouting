@@ -3,8 +3,8 @@
 import csv
 import datetime
 
-#f= open("res.txt","w+")
-#with open('20190904_station_sequence.csv') as csv_file:
+#f= open("../resources/file/inter_station_time.txt","w+")
+#with open('../data/20190904_station_sequence.csv') as csv_file:
 #	csv_reader = csv.reader(csv_file, delimiter=',')
 #	line_count = 0
 #	station = '-1'
@@ -21,8 +21,8 @@ import datetime
 #		line_count += 1
 #	print('Processed lines.')
 
-f= open("res2.txt","w+")
-with open('20190904_station_sequence.csv') as csv_file:
+f = open("../resources/file/intra_measurement_time.txt","w+")
+with open('../data/20190904_station_sequence.csv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	station = '-1'

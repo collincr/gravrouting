@@ -43,7 +43,7 @@ for feature in data['features']:
 #print(len(vertex_dic))
 
 n = len(vertex_dic)
-adjMatrix = [[0 for x in range(n)] for y in range(n)]
+adj_matrix = [[0 for x in range(n)] for y in range(n)]
 
 vertex_infos = vertex_dic.values()
 for vertex_info in vertex_infos:
@@ -51,12 +51,12 @@ for vertex_info in vertex_infos:
     vertex_id = vertex_info['id']
     for j in range(n):
         if j in vertex_info['adj']:
-            adjMatrix[vertex_id][j] = 1
+            adj_matrix[vertex_id][j] = 1
 
-#print(adjMatrix)
-#print(np.matrix(adjMatrix))
+#print(adj_matrix)
+#print(np.matrix(adj_matrix))
 
-mat = np.matrix(adjMatrix)
-with open('output_adjMtx.txt','wb') as f:
+mat = np.matrix(adj_matrix)
+with open('../resources/file/output_adj_mtx.txt','wb') as f:
     for line in mat:
         np.savetxt(f, line, '%i')

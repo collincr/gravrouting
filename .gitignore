@@ -25,6 +25,6 @@ ipython_config.py
 # Generated file
 .DS_Store
 
-#tmp file
+# Temp file
 *.swp
 
