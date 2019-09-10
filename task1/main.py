@@ -73,8 +73,7 @@ def data_visualizer(gdf, if_annot):
     ax.set_aspect(0.5)
 
     # point annotations
-    rounded = gdf['Change in gravity (∆G), in milliGals'].round(1)
-    for x, y, label in zip(gdf.geometry.x, gdf.geometry.y, rounded):
+    for x, y, label in zip(gdf.geometry.x, gdf.geometry.y, gdf.index):
         annot = ax.annotate(label, xy=(x, y), xytext=(3, 3), 
                 textcoords="offset points")
         annot.set_visible(if_annot)
