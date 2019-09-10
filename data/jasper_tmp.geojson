@@ -1,0 +1,8 @@
+{
+"type": "FeatureCollection",
+"name": "roads_pads_network_test",
+"features": [
+{ "type": "Feature", "properties": { "LAYER": "ROADS", "Name": null, "Shape_Leng": 3230.4046482600002 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 1,2 ], [ 3.1,4.1 ], [5,6] ], [ [ 10.4,20.4 ], [ 3.2,4.2 ], [50,60] ] ] } },
+{ "type": "Feature", "properties": { "LAYER": "ROADS", "Name": null, "Shape_Leng": 3230.4046482600002 }, "geometry": { "type": "MultiLineString", "coordinates": [ [ [ 7,7 ], [ 8,8 ], [9,9] ], [ [ 10.3,20.3 ], [ 30,40 ], [50,60] ] ] } }
+]
+}
