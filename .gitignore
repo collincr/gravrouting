@@ -22,3 +22,6 @@ target/
 profile_default/
 ipython_config.py
 
+# Generated file
+.DS_Store
+
