@@ -3,11 +3,12 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 
-data_closet_at_road = '../data/closest_at_road.geojson'
-data_roads_pads_network = '../data/roads_pads_network.geojson'
+data_stat_status_csv = '../data/20190829_stn_status.csv'
+data_closet_at_road_geojson = '../data/closest_at_road.geojson'
+data_roads_pads_network_geojson = '../data/roads_pads_network.geojson'
 
 stat_dic = {}
-with open('../data/20190829_stn_status.csv', newline='') as csvfile:
+with open(data_stat_status_csv, newline='') as csvfile:
     csv_reader = csv.reader(csvfile, delimiter=',')
     for row in csv_reader:
         if row[6] == "Found":
@@ -19,8 +20,8 @@ with open('../data/20190829_stn_status.csv', newline='') as csvfile:
 
 #print(stat_dic)
 plt.rcParams['figure.figsize'] = (15, 10)
-df_stations = gpd.read_file(data_closet_at_road)
-df_roads = gpd.read_file(data_roads_pads_network)
+df_stations = gpd.read_file(data_closet_at_road_geojson)
+df_roads = gpd.read_file(data_roads_pads_network_geojson)
 
 status = []
 
