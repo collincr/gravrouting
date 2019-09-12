@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document id="root_doc">
+<Schema name="closest_at_road" id="closest_at_road">
+	<SimpleField name="NORTHING" type="float"></SimpleField>
+	<SimpleField name="EASTING" type="float"></SimpleField>
+	<SimpleField name="ELEVATION" type="float"></SimpleField>
+</Schema>
+<Folder><name>closest_at_road</name>
+  <Placemark>
+	<name>B-14</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">251643.726</SimpleData>
+		<SimpleData name="EASTING">2346679.326</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.828671132478,36.0188337380676,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>B-15</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">241482.762</SimpleData>
+		<SimpleData name="EASTING">2330512.295</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.884002654331,35.9916621332253,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>BMU45</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">311685.52</SimpleData>
+		<SimpleData name="EASTING">2304243.06</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.969972624726,36.1849799262033,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CER1</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">259876.862</SimpleData>
+		<SimpleData name="EASTING">2358201.898</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.789337488839,36.0409120348286,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CER15</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260287.523</SimpleData>
+		<SimpleData name="EASTING">2353877.137</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.803860035812,36.042278269965,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CGB</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249537.749</SimpleData>
+		<SimpleData name="EASTING">2336307.992</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.86379486026,36.01312809014,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>COSO1</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">280355.04</SimpleData>
+		<SimpleData name="EASTING">2342341.051</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.842270283223,36.0979703913188,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>COSO2</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">268319.899</SimpleData>
+		<SimpleData name="EASTING">2330959.66</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.881208843691,36.0650478977467,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>COSO3</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">266094.393</SimpleData>
+		<SimpleData name="EASTING">2349817.614</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.817558047621,36.0585032092243,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CR100</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">193036.9</SimpleData>
+		<SimpleData name="EASTING">2349498.92</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.821562700095,35.857648183909,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CRJ</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">262683.5</SimpleData>
+		<SimpleData name="EASTING">2363961.642</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.770086861673,36.0487845046748,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS1</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">251235.209</SimpleData>
+		<SimpleData name="EASTING">2342409.202</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.843159557466,36.0177795790499,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS10</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">251560.894</SimpleData>
+		<SimpleData name="EASTING">2364359.47</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.768790702713,36.0179037046866,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS11</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">247856.194</SimpleData>
+		<SimpleData name="EASTING">2365834.233</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.764082110979,36.007553963545,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS12</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">243485.541</SimpleData>
+		<SimpleData name="EASTING">2365707.893</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.76380450111,35.9948499947818,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS13</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">238617.341</SimpleData>
+		<SimpleData name="EASTING">2364606.09</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.768401047201,35.9822728861701,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS14</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">234447.001</SimpleData>
+		<SimpleData name="EASTING">2346594.138</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.829803740034,35.9713819408941,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS15</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">237573.853</SimpleData>
+		<SimpleData name="EASTING">2347905.755</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.82510359083,35.980090320323,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS16</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245372.335</SimpleData>
+		<SimpleData name="EASTING">2357740.509</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.791606338305,36.0011950401846,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS17</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">247230.086</SimpleData>
+		<SimpleData name="EASTING">2354567.376</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.80215734803,36.006496557324,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS18</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">250818.671</SimpleData>
+		<SimpleData name="EASTING">2360342.539</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.782500134789,36.0160479839074,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS19</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">252272.066</SimpleData>
+		<SimpleData name="EASTING">2355426.158</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.798943024499,36.0200502809501,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS20</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249624.164</SimpleData>
+		<SimpleData name="EASTING">2350065.365</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.81759778767,36.013108374758,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS21</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260639.092</SimpleData>
+		<SimpleData name="EASTING">2350123.927</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.816637857635,36.0431668321364,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS22</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">261876.67</SimpleData>
+		<SimpleData name="EASTING">2344933.08</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.834186222738,36.0468396626673,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS23</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">258156.42</SimpleData>
+		<SimpleData name="EASTING">2343536.74</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.838911235139,36.0367261126287,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS24</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">263754.066</SimpleData>
+		<SimpleData name="EASTING">2340550.76</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.848932584728,36.0521099477666,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS25</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">266954.533</SimpleData>
+		<SimpleData name="EASTING">2335681.015</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.86544101505,36.060859957043,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS26</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">265922.607</SimpleData>
+		<SimpleData name="EASTING">2328933.89</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.88766673272,36.0612473281275,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS28</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">271263.13</SimpleData>
+		<SimpleData name="EASTING">2353345.318</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.805303069121,36.0723815803021,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS29</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">277565.293</SimpleData>
+		<SimpleData name="EASTING">2347700.686</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.824309435559,36.0894514838461,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS3</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">269038.196</SimpleData>
+		<SimpleData name="EASTING">2368658.614</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.753676713544,36.0657791344444,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS30</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">283786.407</SimpleData>
+		<SimpleData name="EASTING">2349670.656</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.817238596448,36.1069035715457,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS31</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">264065.772</SimpleData>
+		<SimpleData name="EASTING">2353638.252</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.804487396438,36.0526233685935,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS34</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">258439.367</SimpleData>
+		<SimpleData name="EASTING">2372446.769</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.741364306859,36.0366138794982,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS35</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">255063.391</SimpleData>
+		<SimpleData name="EASTING">2369775.016</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.750424350349,36.0272443975082,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS36</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">244051.93</SimpleData>
+		<SimpleData name="EASTING">2371084.353</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.746635103948,35.996903102945,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS37</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">244667.426</SimpleData>
+		<SimpleData name="EASTING">2373119.106</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.739579550094,35.9986397474725,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS38</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">239486.806</SimpleData>
+		<SimpleData name="EASTING">2369578.892</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.751708461003,35.984548075914,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS4</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">275241.871</SimpleData>
+		<SimpleData name="EASTING">2368131.88</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.755088825962,36.0827973859603,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS40</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">291388.472</SimpleData>
+		<SimpleData name="EASTING">2344161.278</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.835461833411,36.1279743721734,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS41</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">288460.51</SimpleData>
+		<SimpleData name="EASTING">2346862.601</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.826403196687,36.1199666406263,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS42</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">297588.659</SimpleData>
+		<SimpleData name="EASTING">2344098.282</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.835208429211,36.1449277807769,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS43</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">273830.583</SimpleData>
+		<SimpleData name="EASTING">2340691.28</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.84781287174,36.0799029716594,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS44</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">284231.274</SimpleData>
+		<SimpleData name="EASTING">2338026.36</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.85651572718,36.1085278154666,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS45</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">258843.636</SimpleData>
+		<SimpleData name="EASTING">2321964.299</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.912897869459,36.0389000954153,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS46</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">250990.061</SimpleData>
+		<SimpleData name="EASTING">2328542.757</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.890012620923,36.0175177140983,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS47</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">239393.747</SimpleData>
+		<SimpleData name="EASTING">2328705.878</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.889982847535,35.9855404924171,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS48</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">235252.091</SimpleData>
+		<SimpleData name="EASTING">2332327.064</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.877574651578,35.9742512438666,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS49</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">232961.525</SimpleData>
+		<SimpleData name="EASTING">2328842.269</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.889631566604,35.9680252939263,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS5</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">280462.12</SimpleData>
+		<SimpleData name="EASTING">2367032.232</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.758653136277,36.0971570865215,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS50</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">229753.815</SimpleData>
+		<SimpleData name="EASTING">2330377.047</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.884541592402,35.9590045356623,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS51</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">225568.316</SimpleData>
+		<SimpleData name="EASTING">2334918.811</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.869604007722,35.9477749393566,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS52</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">282094.4</SimpleData>
+		<SimpleData name="EASTING">2354656.23</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.801843138103,36.1022729536867,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS53</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">297315.157</SimpleData>
+		<SimpleData name="EASTING">2337296</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.858640692962,36.1441377950496,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS54</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">296978.701</SimpleData>
+		<SimpleData name="EASTING">2332539.745</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.874682275562,36.1436163230951,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS55</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">267524.939</SimpleData>
+		<SimpleData name="EASTING">2297058.964</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.995879058376,36.063887819452,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS57</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">228473.706</SimpleData>
+		<SimpleData name="EASTING">2320282.195</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.918799264576,35.9559289376399,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS58</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245196.723</SimpleData>
+		<SimpleData name="EASTING">2317499.316</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.927570259173,36.0019492994878,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS59</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">254537.032</SimpleData>
+		<SimpleData name="EASTING">2317844.976</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.926048823358,36.0275946654627,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS6</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">271193.438</SimpleData>
+		<SimpleData name="EASTING">2366057.128</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.762248521391,36.0716796938855,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS60</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249338.787</SimpleData>
+		<SimpleData name="EASTING">2301869.78</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.980256440619,36.0137944411101,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS61</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">265170.449</SimpleData>
+		<SimpleData name="EASTING">2317591.344</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.926639603389,36.0569790090226,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS62</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">273437.192</SimpleData>
+		<SimpleData name="EASTING">2315497.564</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.937655089305,36.0777421551508,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS63</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">213658.212</SimpleData>
+		<SimpleData name="EASTING">2361998.178</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.77821899529,35.9138314074838,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS64</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">230164.28</SimpleData>
+		<SimpleData name="EASTING">2366575.431</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.762366041389,35.9590077352934,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS65</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">286209.954</SimpleData>
+		<SimpleData name="EASTING">2367419.363</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.757007651767,36.1129494110137,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS66</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">263776.983</SimpleData>
+		<SimpleData name="EASTING">2336949.334</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.861051271247,36.0523806860128,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS67</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">254711.609</SimpleData>
+		<SimpleData name="EASTING">2345799.033</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.831491373782,36.0271205746639,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS68</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">175190.55</SimpleData>
+		<SimpleData name="EASTING">2355752.83</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.801212776185,35.8084164340571,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS69</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">183852.81</SimpleData>
+		<SimpleData name="EASTING">2353026.45</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.810044269615,35.8323024360802,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS7</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">265642.56</SimpleData>
+		<SimpleData name="EASTING">2365737.027</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.763551672965,36.056357848976,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS72</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">255112.938</SimpleData>
+		<SimpleData name="EASTING">2332748.08</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.87555280688,36.028667910174,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS73</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">291748.199</SimpleData>
+		<SimpleData name="EASTING">2309950.88</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.951369657817,36.1300461886124,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS8</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260372.845</SimpleData>
+		<SimpleData name="EASTING">2365786.842</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.763918498501,36.0416696966708,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS9</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">254974.624</SimpleData>
+		<SimpleData name="EASTING">2367031.617</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.759901285663,36.0273351264451,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CSE1</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">259877.151</SimpleData>
+		<SimpleData name="EASTING">2355932.233</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.797051891784,36.0408699941752,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CSE2</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">257042.352</SimpleData>
+		<SimpleData name="EASTING">2356080.574</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.796666790103,36.0332038732474,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CSE3</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">255279.262</SimpleData>
+		<SimpleData name="EASTING">2358864.632</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.787432930839,36.0281358620545,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CSE4</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">257773.984</SimpleData>
+		<SimpleData name="EASTING">2361824.43</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.777239159997,36.0350201826059,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CSE5</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249140.374</SimpleData>
+		<SimpleData name="EASTING">2358265.952</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.789471024051,36.0114279227572,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CW1B</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">263550.303</SimpleData>
+		<SimpleData name="EASTING">2364362.345</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.768450601721,36.0508218391498,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR37</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">259243.158</SimpleData>
+		<SimpleData name="EASTING">2368459.973</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.754757451003,36.0389210599133,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR38</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">261802.631</SimpleData>
+		<SimpleData name="EASTING">2371729.988</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.743542954996,36.0457628288416,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR39</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">262388.52</SimpleData>
+		<SimpleData name="EASTING">2374135.716</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.735262705016,36.0471587750523,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR62</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">239715.982</SimpleData>
+		<SimpleData name="EASTING">2325755.461</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.899861174682,35.9866106784748,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR63</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">239715.982</SimpleData>
+		<SimpleData name="EASTING">2325755.461</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.899861174682,35.9866106784748,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR64</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">244121.225</SimpleData>
+		<SimpleData name="EASTING">2333920.445</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.872128820679,35.9985074380196,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR65</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">246757.914</SimpleData>
+		<SimpleData name="EASTING">2337374.494</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.860500853129,36.0057806575106,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR66</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249513.873</SimpleData>
+		<SimpleData name="EASTING">2340630.947</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.849495588879,36.0133542880863,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR68</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">252682.612</SimpleData>
+		<SimpleData name="EASTING">2349993.222</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.817282401617,36.0213246434842,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>DOR72</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260599.108</SimpleData>
+		<SimpleData name="EASTING">2360207.723</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.782542813859,36.0428634099746,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>FLR3</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">187814.74</SimpleData>
+		<SimpleData name="EASTING">2369653.88</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.753786320219,35.8426054938213,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>HCW4</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">278796.878</SimpleData>
+		<SimpleData name="EASTING">2365142.517</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.765067775576,36.0925617830241,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>J204</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">187970.2</SimpleData>
+		<SimpleData name="EASTING">2351544.77</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.814870671062,35.8436621353379,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>J214</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">234135.794</SimpleData>
+		<SimpleData name="EASTING">2353066.662</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.80782369527,35.9703678598127,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>J217</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">269270.99</SimpleData>
+		<SimpleData name="EASTING">2357231.727</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.792138817043,36.0668383890045,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>J4</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">291915.075</SimpleData>
+		<SimpleData name="EASTING">2354046.277</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.80224211576,36.1291838584467,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>JOSRIDGE</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">238369.399</SimpleData>
+		<SimpleData name="EASTING">2352775.126</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.808625131328,35.9821319342366,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE1</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260808.163</SimpleData>
+		<SimpleData name="EASTING">2351205.503</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.813009265492,36.0437991134997,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE10</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">255179.542</SimpleData>
+		<SimpleData name="EASTING">2354612.36</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.80158435958,36.0282358475162,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE11</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253605.398</SimpleData>
+		<SimpleData name="EASTING">2353106.662</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.806976155884,36.0237890551,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE12</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">247985.368</SimpleData>
+		<SimpleData name="EASTING">2352212.536</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.810132850019,36.0083598619825,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE13</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">251690.68</SimpleData>
+		<SimpleData name="EASTING">2352816.31</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.807828281416,36.0186529665825,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE14</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249717.497</SimpleData>
+		<SimpleData name="EASTING">2353008.478</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.807305222824,36.0133966535146,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE15</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245900.662</SimpleData>
+		<SimpleData name="EASTING">2352711.095</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.808431895506,36.0027278066621,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE16</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">242688.55</SimpleData>
+		<SimpleData name="EASTING">2351984.365</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.811176165111,35.9939646907122,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE17</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">243691.031</SimpleData>
+		<SimpleData name="EASTING">2354640.79</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.803348003939,35.9972245211154,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE18</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">249095.281</SimpleData>
+		<SimpleData name="EASTING">2354269.005</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.803083172213,36.0115398016701,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE19</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">247696.166</SimpleData>
+		<SimpleData name="EASTING">2357249.864</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.79294954759,36.0076118866102,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE2</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">261927.853</SimpleData>
+		<SimpleData name="EASTING">2353497.24</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.805171957855,36.0467206594363,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE20</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245236.105</SimpleData>
+		<SimpleData name="EASTING">2358653.988</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.788541178899,36.0006441782492,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE21</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245402.87</SimpleData>
+		<SimpleData name="EASTING">2360845.909</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.781090130053,36.0011074917638,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE22A</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245171.771</SimpleData>
+		<SimpleData name="EASTING">2356115.008</SimpleData>
+		<SimpleData name="ELEVATION">4308</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.797089437211,36.0008083373071,1313.08102616205</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE24</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">250589.819</SimpleData>
+		<SimpleData name="EASTING">2358963.293</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.787057283594,36.0154181580222,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE25</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">250736.599</SimpleData>
+		<SimpleData name="EASTING">2362033.773</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.776749657966,36.0157282973644,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE26</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253538.463</SimpleData>
+		<SimpleData name="EASTING">2365330.83</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.765691657131,36.023373006043,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE27A</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">254916.084</SimpleData>
+		<SimpleData name="EASTING">2363669.072</SimpleData>
+		<SimpleData name="ELEVATION">3719</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.771081567232,36.0270851191405,1133.55346710693</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE28</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">256222.672</SimpleData>
+		<SimpleData name="EASTING">2362286.697</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.775748464143,36.0307444490901,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE29</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253480.76</SimpleData>
+		<SimpleData name="EASTING">2362379.599</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.775449683839,36.0231173849551,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE3</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">264442.232</SimpleData>
+		<SimpleData name="EASTING">2356944.441</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.793393844137,36.0534853886981,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE30</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253617.365</SimpleData>
+		<SimpleData name="EASTING">2360442.143</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.782085080847,36.0237134962015,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE31</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253979.813</SimpleData>
+		<SimpleData name="EASTING">2357389.586</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.792166772096,36.0245367330345,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE32</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253156.957</SimpleData>
+		<SimpleData name="EASTING">2356301.367</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.796032629937,36.0225564756076,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE33</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245057.326</SimpleData>
+		<SimpleData name="EASTING">2367251.621</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.759432708564,35.9999085256068,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE34</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">251370.157</SimpleData>
+		<SimpleData name="EASTING">2354533.679</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.802149083674,36.0177102485297,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE35</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260440.782</SimpleData>
+		<SimpleData name="EASTING">2353631.284</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.804925456284,36.0427117152683,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE36</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">261092.859</SimpleData>
+		<SimpleData name="EASTING">2361813.533</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.7771130973,36.0442056101115,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE37</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">257223.657</SimpleData>
+		<SimpleData name="EASTING">2358274.019</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.789298392756,36.0336072244671,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE38</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">258968.34</SimpleData>
+		<SimpleData name="EASTING">2351627.08</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.811640869174,36.0386614984851,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE39</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">264326.09</SimpleData>
+		<SimpleData name="EASTING">2350722.33</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.814481482408,36.0533127791359,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE4</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">259801.593</SimpleData>
+		<SimpleData name="EASTING">2357682.924</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.79115986709,36.0405908894036,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE40</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">266261.22</SimpleData>
+		<SimpleData name="EASTING">2350847.07</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.813898436923,36.0587920685538,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE5</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">259480.89</SimpleData>
+		<SimpleData name="EASTING">2353796.401</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.80413742917,36.0400872797003,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE6</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">258423.285</SimpleData>
+		<SimpleData name="EASTING">2354611.214</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.801553427421,36.0370607413159,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE7</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">257948.774</SimpleData>
+		<SimpleData name="EASTING">2352961.609</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.807078952529,36.0358502365944,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE8</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">256865.663</SimpleData>
+		<SimpleData name="EASTING">2354115.534</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.803181266373,36.0325241487451,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>RE9</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">255983.235</SimpleData>
+		<SimpleData name="EASTING">2357180.676</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.792965355002,36.0301176458259,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>S47</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">203752.84</SimpleData>
+		<SimpleData name="EASTING">2327046.271</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.89690650893,35.8878148420837,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>SLME</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">256799.947</SimpleData>
+		<SimpleData name="EASTING">2352014.154</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.810103224355,36.0326348892024,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>VOLPK</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">229185.264</SimpleData>
+		<SimpleData name="EASTING">2349859.448</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.818802847473,35.956944402888,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>ZAP15</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">260099</SimpleData>
+		<SimpleData name="EASTING">2351385.58</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.812158431935,36.0416982322142,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>ZAP2</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">256193.8</SimpleData>
+		<SimpleData name="EASTING">2348626.21</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.822114304655,36.0303607578859,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>ZAP28</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">244906.111</SimpleData>
+		<SimpleData name="EASTING">2354310.391</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.803108542105,35.9998940561679,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>ZAP29</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">245551.146</SimpleData>
+		<SimpleData name="EASTING">2348422.386</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.823076434056,36.0017364195314,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>GO21</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">180763</SimpleData>
+		<SimpleData name="EASTING">2371658</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.747335781085,35.8231647789353,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CS70</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">253574</SimpleData>
+		<SimpleData name="EASTING">2363225</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.772243588415,36.0235308136574,0</coordinates></Point>
+  </Placemark>
+  <Placemark>
+	<name>CosoABS</name>
+	<ExtendedData><SchemaData schemaUrl="#closest_at_road">
+		<SimpleData name="NORTHING">0</SimpleData>
+		<SimpleData name="EASTING">0</SimpleData>
+		<SimpleData name="ELEVATION">0</SimpleData>
+	</SchemaData></ExtendedData>
+      <Point><coordinates>-117.789432006001,36.0020146385695,0</coordinates></Point>
+  </Placemark>
+</Folder>
+</Document></kml>
