@@ -2,7 +2,7 @@ import geopandas as gpd
 import json
 import numpy as np
 
-data_roads_pads_network = '../data/roads_pads_network.geojson'
+data_roads_pads_network = '../data/roads_pads_network_w_stations.geojson'
 data_jasper_tmp = '../data/jasper_tmp.geojson'
 
 def pointToKey(p):
