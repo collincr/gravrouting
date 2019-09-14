@@ -1,10 +1,9 @@
-import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from shapely.geometry import Point
+from utm_coordinate_conversion import data_converter
 
 def main():
-    file_path = "../data/ofr20181053_table1.csv";
+    input_path = '../data/ofr20181053_table1.csv'
 
     ref_src = '''+proj=lcc +lat_1=36 +lat_2=37.25 
                  +lat_0=35.33333333333334 +lon_0=-119 
@@ -15,35 +14,16 @@ def main():
 
     # convert data to UTM coordinate system
     print("Data converting to UTM coordinate system...")
-    gdf = data_converter(file_path, ref_src, ref_dst)
+    gdf = data_converter('csv', input_path, 'X, in feet1', 
+            'Y, in feet1', ref_src, ref_dst)
     print(gdf.head())
 
     # visualization
     print("\nData visualizing...")
-    data_visualizer(gdf, False)
+    gravity_change_visualizer(gdf, False)
 
 
-def data_converter(file_path, ref_src, ref_dst):
-
-    # making data frame from csv file
-    df = pd.read_csv(file_path, index_col ="Station")
-
-    # creating a geometry column 
-    geometry = [Point(xy) for xy in zip(df['X, in feet1'], df['Y, in feet1'])]
-
-    # original coordinate reference system
-    crs = ref_src
-
-    # creating a Geographic data frame 
-    gdf = gpd.GeoDataFrame(df, crs=crs, geometry=geometry)
-
-    # coordinate system conversion
-    gdf = gdf.to_crs(ref_dst)
-
-    return gdf
-
-
-def data_visualizer(gdf, if_annot):
+def gravity_change_visualizer(gdf, if_annot):
 
     # overall settings
     fig, ax = plt.subplots(1, figsize=(8, 8))
@@ -55,7 +35,7 @@ def data_visualizer(gdf, if_annot):
     plt.ylabel('Northing', fontsize=13)
 
     # axis settings
-    ax.set_title("Station Gravity Change", fontsize=14)
+    ax.set_title('Station Gravity Change', fontsize=14)
     ax.set_autoscaley_on(False)
 
     x_min = gdf.geometry.x.min()
@@ -73,7 +53,7 @@ def data_visualizer(gdf, if_annot):
     # ax.set_aspect(0.5)
 
     # point annotations
-    for x, y, label in zip(gdf.geometry.x, gdf.geometry.y, gdf.index):
+    for x, y, label in zip(gdf.geometry.x, gdf.geometry.y, gdf['Station']):
         annot = ax.annotate(label, xy=(x, y), xytext=(3, 3), 
                 textcoords="offset points")
         annot.set_visible(if_annot)
@@ -82,6 +62,7 @@ def data_visualizer(gdf, if_annot):
     plt.savefig('../resources/img/station_gravity_change.png',
             dpi=1080)
     plt.show()
+
 
 if __name__ == '__main__':
     main()
