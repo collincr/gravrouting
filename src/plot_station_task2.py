@@ -39,8 +39,8 @@ df_stations['STATUS'] = status
 df_stations.plot(ax = ax, column = 'STATUS', cmap='Set1', legend = True)
 
 plt.title('Stations distribution')
-plt.xlabel('Easting', fontsize=13)
-plt.ylabel('Northing', fontsize=13)
+plt.xlabel('Easting [meters]', fontsize=13)
+plt.ylabel('Northing [meters]', fontsize=13)
 #print(df_stations.NAME)
 for name, northing, easting in zip(df_stations.NAME, df_stations.NORTHING, df_stations.EASTING):
     ax.annotate(name, xy=(easting, northing), xytext=(easting+100, northing+100))
