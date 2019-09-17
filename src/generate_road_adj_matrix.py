@@ -10,7 +10,7 @@ def pointToKey(p):
     #print(key)
     return key
 
-def create_vertex_dic(geojson_file):
+def create_adj_vertex_dic(geojson_file):
     vertex_dic = {}
     with open(geojson_file) as f:
     #with open(data_jasper_tmp) as f:
@@ -51,10 +51,12 @@ def create_adj_matrix(vertex_adj_dictionary):
             if j in vertex_info['adj']:
                 adj_matrix[vertex_id][j] = 1
     return adj_matrix
-
-vertex_dictionary = create_vertex_dic(data_roads_pads_network)
+"""
+vertex_dictionary = create_adj_vertex_dic(data_roads_pads_network)
 matrix = create_adj_matrix(vertex_dictionary)
 mat = np.matrix(matrix)
 with open('../resources/file/output_adj_mtx.txt','wb') as f:
     for line in mat:
         np.savetxt(f, line, '%i')
+
+"""
