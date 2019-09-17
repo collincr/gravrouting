@@ -19,9 +19,11 @@ with open(data_stat_status_csv, newline='') as csvfile:
             stat_dic[row[1]] = "Neither"
 
 #print(stat_dic)
-plt.rcParams['figure.figsize'] = (15, 10)
+plt.rcParams['figure.figsize'] = (12, 8)
 df_stations = gpd.read_file(data_closet_at_road_geojson)
 df_roads = gpd.read_file(data_roads_pads_network_geojson)
+
+print(df_stations.head())
 
 status = []
 
@@ -32,8 +34,21 @@ for index, row in df_stations.iterrows():
     else:
         status.append('Not sure')
 
-
+ax = df_roads.plot(color='black')
 df_stations['STATUS'] = status
+df_stations.plot(ax = ax, column = 'STATUS', cmap='Set1', legend = True)
+
+plt.title('Stations distribution')
+plt.xlabel('Easting [meters]', fontsize=13)
+plt.ylabel('Northing [meters]', fontsize=13)
+#print(df_stations.NAME)
+for name, northing, easting in zip(df_stations.NAME, df_stations.NORTHING, df_stations.EASTING):
+    ax.annotate(name, xy=(easting, northing), xytext=(easting+100, northing+100))
+
+plt.savefig('../resources/img/stations.png', dpi=1080)
+plt.show()
+
+"""
 df_stations_found = df_stations[(df_stations.STATUS == "Found")]
 df_stations_not_found = df_stations[(df_stations.STATUS == "Not found")]
 df_stations_neither = df_stations[(df_stations.STATUS == "Neither")]
@@ -61,5 +76,5 @@ for index, row in df_stations_not_found.iterrows():
 for index, row in df_stations_neither.iterrows():
     pl_neither.text(row['EASTING'] + 20, row['NORTHING'] + 20, row['NAME'])
 
-plt.savefig('../resources/img/stations.png', dpi=1080)
 plt.show()
+"""
