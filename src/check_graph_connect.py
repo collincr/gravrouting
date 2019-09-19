@@ -40,11 +40,14 @@ def dfs_iterative(vertex_id, vertex_dic):
                 stack.append(neighbor)
 
 def check_vertex_connected(vertex_dic):
+    count = 0
     for key in vertex_dic.keys():
         value = vertex_dic[key]
         if not value['visited']:
-            continue
+            count = count+1
+            dfs_iterative(key, vertex_dic)
             #print(key, ": (", value['lon'],",", value['lat'],") not visited")
+    return count
 
 def write_dic_to_csv(dic):
      w = csv.writer(open("output.csv", "w"))
@@ -60,7 +63,8 @@ def write_dic_to_json(dic):
 #visited_vertex_dic = create_visited_vertex_dic(data_jasper_tmp_geojson)
 visited_vertex_dic = create_visited_vertex_dic(roads_pads_network_geojson)
 #dfs_recursive(4, visited_vertex_dic)
-dfs_iterative(4, visited_vertex_dic)
-check_vertex_connected(visited_vertex_dic)
+#dfs_iterative(4, visited_vertex_dic)
+component_count = check_vertex_connected(visited_vertex_dic)
+print(component_count)
 #print(visited_vertex_dic)
 write_dic_to_csv(visited_vertex_dic)
