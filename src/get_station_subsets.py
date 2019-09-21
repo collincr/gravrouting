@@ -1,24 +1,24 @@
-from utm_coordinate_conversion import data_converter
+from utm_coordinate_conversion import gdf_constructor, utm_coordinate_converter
 
 def main():
-    input_path = '../data/ofr20181053_table1.csv'
+    local_station_status_csv = '../data/20190829_stn_status.csv'
     
-    ref_src = '''+proj=lcc +lat_1=36 +lat_2=37.25 
-                 +lat_0=35.33333333333334 +lon_0=-119 
-                 +x_0=609601.2192024384 +y_0=0 
-                 +datum=NAD27 +units=us-ft +no_defs'''
-
-    ref_dst = '+proj=utm +zone=11 +datum=WGS84'
-
-    # convert data to UTM coordinate system
     print("Data converting to UTM coordinate system...")
-    gdf = data_converter('csv', input_path, 'X, in feet1', 
-            'Y, in feet1', ref_src, ref_dst)
-    print(gdf.head())
+    
+    # read in dataframe
+    df_stations = pd.read_csv(local_station_status_csv)
+
+    # construct geodataframe from dataframe
+    gdf_stations = gdf_constructor(df_stations, 'Easting', 'Northing')
+
+    # convert coordinate system to utm
+    gdf_stations = utm_coordinate_converter(gdf_stations)
+
+    print("Each pair of distances calculating...")
 
     # calculate distance
-    print("Each pair of distances calculating...")
-    dist = pair_distance(gdf)
+    dist = pair_distance(gdf_stations)
+    
     print(dist)
 
 

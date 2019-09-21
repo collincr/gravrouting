@@ -1,26 +1,29 @@
+import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from utm_coordinate_conversion import data_converter
+from utm_coordinate_conversion import gdf_constructor, utm_coordinate_converter
 
 def main():
-    input_path = '../data/ofr20181053_table1.csv'
+    local_gravity_change_csv = '../data/ofr20181053_table1.csv'
 
-    ref_src = '''+proj=lcc +lat_1=36 +lat_2=37.25 
-                 +lat_0=35.33333333333334 +lon_0=-119 
-                 +x_0=609601.2192024384 +y_0=0 
-                 +datum=NAD27 +units=us-ft +no_defs'''
-
-    ref_dst = '+proj=utm +zone=11 +datum=WGS84'
-
-    # convert data to UTM coordinate system
     print("Data converting to UTM coordinate system...")
-    gdf = data_converter('csv', input_path, 'X, in feet1', 
-            'Y, in feet1', ref_src, ref_dst)
-    print(gdf.head())
+
+    # read in dataframe
+    df_gravity = pd.read_csv(local_gravity_change_csv)
+
+    # construct geodataframe from dataframe
+    gdf_gravity = gdf_constructor(df_gravity, 
+            'X, in feet1', 'Y, in feet1')
+
+    # convert coordinate system to utm
+    gdf_gravity = utm_coordinate_converter(gdf_gravity)
+
+    print(gdf_gravity.head())
+
+    print("\nData visualizing...")
 
     # visualization
-    print("\nData visualizing...")
-    gravity_change_visualizer(gdf, False)
+    gravity_change_visualizer(gdf_gravity, False)
 
 
 def gravity_change_visualizer(gdf, if_annot):
