@@ -1,7 +1,7 @@
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
-from utm_coordinate_conversion import gdf_constructor, utm_coordinate_converter
+from data_readin_conversion import gdf_constructor, utm_coordinate_converter
 
 def main():
     local_gravity_change_csv = '../data/ofr20181053_table1.csv'

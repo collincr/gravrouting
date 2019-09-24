@@ -1,4 +1,5 @@
-from utm_coordinate_conversion import gdf_constructor, utm_coordinate_converter
+import pandas as pd
+from data_readin_conversion import gdf_constructor, utm_coordinate_converter
 
 def main():
     local_station_status_csv = '../data/20190829_stn_status.csv'
@@ -28,8 +29,8 @@ def pair_distance(gdf):
         for j in range(i + 1, gdf.geometry.size):
             
             # station names
-            point_a = gdf.loc[i]['Station']
-            point_b = gdf.loc[j]['Station']
+            point_a = gdf.loc[i]['StationName']
+            point_b = gdf.loc[j]['StationName']
             
             # euclidean distance
             dist = gdf.geometry.iloc[i].distance(gdf.geometry.iloc[j])
