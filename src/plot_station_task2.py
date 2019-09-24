@@ -5,7 +5,7 @@ from matplotlib.pyplot import figure
 
 data_stat_status_csv = '../data/20190829_stn_status.csv'
 data_closet_at_road_geojson = '../data/closest_at_road.geojson'
-data_roads_pads_network_geojson = '../data/roads_pads_network.geojson'
+data_roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
 
 stat_dic = {}
 with open(data_stat_status_csv, newline='') as csvfile:
@@ -23,7 +23,7 @@ plt.rcParams['figure.figsize'] = (12, 8)
 df_stations = gpd.read_file(data_closet_at_road_geojson)
 df_roads = gpd.read_file(data_roads_pads_network_geojson)
 
-print(df_stations.head())
+#print(df_stations.head())
 
 status = []
 
@@ -36,15 +36,16 @@ for index, row in df_stations.iterrows():
 
 ax = df_roads.plot(color='black')
 df_stations['STATUS'] = status
-df_stations.plot(ax = ax, column = 'STATUS', cmap='Set1', legend = True)
+df_stations.plot(ax = ax, column = 'STATUS', legend = True)
 
 plt.title('Stations distribution')
 plt.xlabel('Easting [meters]', fontsize=13)
 plt.ylabel('Northing [meters]', fontsize=13)
 #print(df_stations.NAME)
+"""
 for name, northing, easting in zip(df_stations.NAME, df_stations.NORTHING, df_stations.EASTING):
     ax.annotate(name, xy=(easting, northing), xytext=(easting+100, northing+100))
-
+"""
 plt.savefig('../resources/img/stations.png', dpi=1080)
 plt.show()
 
