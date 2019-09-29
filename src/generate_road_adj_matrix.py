@@ -1,9 +1,13 @@
 import geopandas as gpd
 import json
+import csv
 import numpy as np
+import check_graph_connect as cgc
 
-data_roads_pads_network = '../data/roads_pads_network_w_stations.geojson'
+roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
 data_jasper_tmp = '../data/jasper_tmp.geojson'
+roads_correction_csv = './roads_correction.csv'
+roads_correction_tmp_csv = './roads_correction_tmp.csv'
 
 def pointToKey(p):
     key = str(int(p[0])) + "#" + str(int(p[1]))
@@ -51,12 +55,41 @@ def create_adj_matrix(vertex_adj_dictionary):
             if j in vertex_info['adj']:
                 adj_matrix[vertex_id][j] = 1
     return adj_matrix
-"""
-vertex_dictionary = create_adj_vertex_dic(data_roads_pads_network)
-matrix = create_adj_matrix(vertex_dictionary)
-mat = np.matrix(matrix)
-with open('../resources/file/output_adj_mtx.txt','wb') as f:
-    for line in mat:
-        np.savetxt(f, line, '%i')
 
-"""
+def write_matrix_to_file(matrix):
+    mat = np.matrix(matrix)
+    with open('../resources/file/output_adj_mtx.txt','wb') as f:
+        for line in mat:
+            np.savetxt(f, line, '%i')
+
+def add_adj_vertex(easting1, northing1, easting2, northing2, vertex_dic):
+
+    key1 = pointToKey([easting1, northing1])
+    key2 = pointToKey([easting2, northing2])
+    if key1 not in vertex_dic or key2 not in vertex_dic:
+        print(key1 + " or " + key2 + " not in vertex dictionary")
+    else:
+        #print(vertex_dic[key1])
+        vertex_dic[key1]['adj'].add(vertex_dic.get(key2)['id'])
+        vertex_dic[key2]['adj'].add(vertex_dic.get(key1)['id'])
+
+def add_correction_to_dic(file_name, vertex_dic):
+    with open(file_name, newline='') as csvfile:
+        csv_reader = csv.DictReader(csvfile, delimiter=',')
+        for row in csv_reader:
+            vertex1_easting = row['Easting1']
+            vertex1_northing = row['Northing1']
+            vertex2_easting = row['Easting2']
+            vertex2_northing = row['Northing2']
+            add_adj_vertex(vertex1_easting, vertex1_northing, vertex2_easting,
+                    vertex2_northing, vertex_dic)
+            #print(vertex1_easting, vertex1_northing, vertex2_easting, vertex2_northing)
+
+vertex_dictionary = create_adj_vertex_dic(roads_pads_network_geojson)
+#vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp)
+#print(vertex_dictionary)
+add_correction_to_dic(roads_correction_csv, vertex_dictionary)
+#add_correction_to_dic(roads_correction_tmp_csv, vertex_dictionary)
+#print(vertex_dictionary)
+#matrix = create_adj_matrix(vertex_dictionary)
+visited_vertex_dic = cgc.create_visited_vertex_dic(data_roads_pads_network)
