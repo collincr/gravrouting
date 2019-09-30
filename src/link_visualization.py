@@ -2,7 +2,7 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from shapely.geometry import LineString
-from generate_road_adj_matrix import create_adj_vertex_dic
+from graph_util import create_adj_vertex_dic
 
 def main():
     data_closet_at_road_geojson = '../data/closest_at_road.geojson'
