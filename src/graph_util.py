@@ -85,7 +85,7 @@ def print_kth_componenet(k, components, with_coord, vertex_dic):
     print("component " + str(k))
     if with_coord:
         for vertex in components[k]:
-            print(get_coord_from_vertex_id(vertex, vertex_dic))
+            print(vertex, get_coord_from_vertex_id(vertex, vertex_dic))
     else:
         print(components[k])
 
@@ -190,6 +190,13 @@ def add_correction_to_dic(file_name, vertex_dic):
                     vertex2_northing, vertex_dic)
             #print(vertex1_easting, vertex1_northing, vertex2_easting, vertex2_northing)
             
+def remove_component_from_dic(comp, vertex_dic):
+    for vertex_id in comp:
+        if vertex_id in vertex_dic:
+            #print("delete " + str(vertex_id) + " from vertex_dic")
+            del vertex_dic[vertex_id]
+        else:
+            print("vertex " + str(vertex_id) + " not in vertex_dic")
 
 vertex_dictionary = create_adj_vertex_dic(roads_pads_network_geojson)
 #vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
@@ -201,4 +208,6 @@ add_correction_to_dic(roads_correction_csv, vertex_dictionary)
 visited_vertex_dic = create_visited_vertex_dic(vertex_dictionary)
 components = check_vertex_connected(visited_vertex_dic)
 print("Components count:",len(components))
-#print_kth_componenet(2, components, True, visited_vertex_dic)
+#print_kth_componenet(1, components, True, visited_vertex_dic)
+remove_component_from_dic(components[0], visited_vertex_dic)
+remove_component_from_dic(components[1], visited_vertex_dic)
