@@ -4,8 +4,8 @@ import json
 
 roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
 data_jasper_tmp_geojson = '../data/jasper_tmp.geojson'
-roads_correction_csv = './roads_correction.csv'
-roads_correction_tmp_csv = './roads_correction_tmp.csv'
+roads_correction_csv = '../data/roads_correction.csv'
+roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
 
 #def create_visited_vertex_dic(geojson_file):
 def create_visited_vertex_dic(vertex_dic):
@@ -22,7 +22,7 @@ def create_visited_vertex_dic(vertex_dic):
         vertex_visit_dic[vertex_id]['lon'] = int(key.split("#")[0])
         vertex_visit_dic[vertex_id]['lat'] = int(key.split("#")[1])
     #print(vertex_dic)
-    write_dic_to_csv(vertex_visit_dic)
+    #write_dic_to_csv(vertex_visit_dic)
     return vertex_visit_dic
 
 def dfs_recursive(vertex_id, vertex_dic):
