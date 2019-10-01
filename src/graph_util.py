@@ -7,14 +7,13 @@ data_jasper_tmp_geojson = '../data/jasper_tmp.geojson'
 roads_correction_csv = '../data/roads_correction.csv'
 roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
 
-#def create_visited_vertex_dic(geojson_file):
-def create_visited_vertex_dic(vertex_dic):
+def create_vertex_visit_dic(vertex_adj_dic):
     #tmp_vertex_dic = gram.create_adj_vertex_dic(geojson_file)
     vertex_visit_dic = {}
-    for key in vertex_dic.keys():
+    for key in vertex_adj_dic.keys():
         #print(value['id'])
         #print(key.split("#")[0])
-        value = vertex_dic[key]
+        value = vertex_adj_dic[key]
         vertex_id = value['id']
         vertex_visit_dic[vertex_id] = {}
         vertex_visit_dic[vertex_id]['adj'] = value['adj']
@@ -24,31 +23,31 @@ def create_visited_vertex_dic(vertex_dic):
     #print(vertex_dic)
     #write_dic_to_csv(vertex_visit_dic)
     return vertex_visit_dic
-
+"""
 def dfs_recursive(vertex_id, vertex_dic):
     vertex_dic[vertex_id]['visited'] = True
     for adj_id in vertex_dic[vertex_id]['adj']:
         if not vertex_dic[adj_id]['visited']:
             dfs_recursive(adj_id, vertex_dic)
-
-def dfs_iterative(vertex_id, vertex_dic, path):
+"""
+def dfs_iterative(vertex_id, vertex_visit_dic, path):
     stack = [vertex_id]
     while stack:
         vertex = stack.pop()
-        visited = vertex_dic[vertex]['visited']
+        visited = vertex_visit_dic[vertex]['visited']
         if not visited:
             path.append(vertex)
-            vertex_dic[vertex]['visited'] = True
-            for neighbor in vertex_dic[vertex]['adj']:
+            vertex_visit_dic[vertex]['visited'] = True
+            for neighbor in vertex_visit_dic[vertex]['adj']:
                 stack.append(neighbor)
 
-def check_vertex_connected(vertex_dic):
+def check_vertex_connected(vertex_visit_dic):
     components = []
-    for key in vertex_dic.keys():
-        value = vertex_dic[key]
+    for key in vertex_visit_dic.keys():
+        value = vertex_visit_dic[key]
         if not value['visited']:
             path = []
-            dfs_iterative(key, vertex_dic, path)
+            dfs_iterative(key, vertex_visit_dic, path)
             components.append(path)
             #print(key, ": (", value['easting'],",", value['northing'],") not visited")
     return components
@@ -64,9 +63,9 @@ def write_dic_to_json(dic):
     f.write(json)
     f.close()
 
-def get_coord_from_vertex_id(vertex_id, vertex_dic):
-    if vertex_id in vertex_dic:
-        return vertex_dic[vertex_id]['easting'], vertex_dic[vertex_id]['northing']
+def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
+    if vertex_id in vertex_visit_dic:
+        return vertex_visit_dic[vertex_id]['easting'], vertex_visit_dic[vertex_id]['northing']
     else:
         print("vertex:", vertex_id, "not exists")
         return 0,0
@@ -74,18 +73,18 @@ def get_coord_from_vertex_id(vertex_id, vertex_dic):
 def calculate_dst(easting1, northing1, easting2, northing2):
     return math.sqrt(pow((easting1 - easting2), 2) + pow((northing1 - northing2), 2))
 
-def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_dic):
-    e1, n1 = get_coord_from_vertex_id(vertex_1, vertex_dic)
-    e2, n2 = get_coord_from_vertex_id(vertex_2, vertex_dic)
+def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_visit_dic):
+    e1, n1 = get_coord_from_vertex_id(vertex_1, vertex_visit_dic)
+    e2, n2 = get_coord_from_vertex_id(vertex_2, vertex_visit_dic)
     #print(vertex_1,"(", e1, n1, ")",)
     #print(vertex_2,"(", e2, n2, ")",)
     return calculate_dst(e1, n1, e2, n2)
 
-def print_kth_componenet(k, components, with_coord, vertex_dic):
+def print_kth_componenet(k, components, with_coord, vertex_visit_dic):
     print("component " + str(k))
     if with_coord:
         for vertex in components[k]:
-            print(vertex, get_coord_from_vertex_id(vertex, vertex_dic))
+            print(vertex, get_coord_from_vertex_id(vertex, vertex_visit_dic))
     else:
         print(components[k])
 
@@ -105,10 +104,10 @@ def check_same_vertex(distance, components):
                             " in comp-" + str(other_comp) + " are close")
 
 
-def get_component_from_coord(easting, northing, components, vertex_dic):
+def get_component_from_coord(easting, northing, components, vertex_visit_dic):
     for i in range(len(components)):
         for vertex in components[i]:
-            e, n = get_coord_from_vertex_id(vertex, vertex_dic)
+            e, n = get_coord_from_vertex_id(vertex, vertex_visit_dic)
             if easting == e and northing == n:
                 return i
     return -1
@@ -119,7 +118,7 @@ def pointToKey(p):
     #print(key)
     return key
 
-def create_adj_vertex_dic(geojson_file):
+def create_vertex_adj_dic(geojson_file):
     vertex_dic = {}
     with open(geojson_file) as f:
     #with open(data_jasper_tmp) as f:
@@ -152,7 +151,7 @@ def create_adj_vertex_dic(geojson_file):
 def create_adj_matrix(vertex_adj_dictionary):
     n = len(vertex_adj_dictionary)
     adj_matrix = [[0 for x in range(n)] for y in range(n)]
-    vertex_infos = vertex_dictionary.values()
+    vertex_infos = vertex_adj_dictionary.values()
     for vertex_info in vertex_infos:
         #print(vertex_info)
         vertex_id = vertex_info['id']
@@ -167,18 +166,18 @@ def write_matrix_to_file(matrix):
         for line in mat:
             np.savetxt(f, line, '%i')
 
-def add_adj_vertex(easting1, northing1, easting2, northing2, vertex_dic):
+def add_adj_vertex(easting1, northing1, easting2, northing2, vertex_adj_dic):
 
     key1 = pointToKey([easting1, northing1])
     key2 = pointToKey([easting2, northing2])
-    if key1 not in vertex_dic or key2 not in vertex_dic:
+    if key1 not in vertex_adj_dic or key2 not in vertex_adj_dic:
         print(key1 + " or " + key2 + " not in vertex dictionary")
     else:
         #print(vertex_dic[key1])
-        vertex_dic[key1]['adj'].add(vertex_dic.get(key2)['id'])
-        vertex_dic[key2]['adj'].add(vertex_dic.get(key1)['id'])
+        vertex_adj_dic[key1]['adj'].add(vertex_adj_dic.get(key2)['id'])
+        vertex_adj_dic[key2]['adj'].add(vertex_adj_dic.get(key1)['id'])
 
-def add_correction_to_dic(file_name, vertex_dic):
+def add_correction_to_dic(file_name, vertex_adj_dic):
     with open(file_name, newline='') as csvfile:
         csv_reader = csv.DictReader(csvfile, delimiter=',')
         for row in csv_reader:
@@ -187,27 +186,27 @@ def add_correction_to_dic(file_name, vertex_dic):
             vertex2_easting = row['Easting2']
             vertex2_northing = row['Northing2']
             add_adj_vertex(vertex1_easting, vertex1_northing, vertex2_easting,
-                    vertex2_northing, vertex_dic)
+                    vertex2_northing, vertex_adj_dic)
             #print(vertex1_easting, vertex1_northing, vertex2_easting, vertex2_northing)
             
-def remove_component_from_dic(comp, vertex_dic):
+def remove_component_from_dic(comp, vertex_visit_dic):
     for vertex_id in comp:
-        if vertex_id in vertex_dic:
-            #print("delete " + str(vertex_id) + " from vertex_dic")
-            del vertex_dic[vertex_id]
+        if vertex_id in vertex_visit_dic:
+            #print("delete " + str(vertex_id) + " from vertex_visit_dic")
+            del vertex_visit_dic[vertex_id]
         else:
-            print("vertex " + str(vertex_id) + " not in vertex_dic")
+            print("vertex " + str(vertex_id) + " not in vertex_visit_dic")
 
-vertex_dictionary = create_adj_vertex_dic(roads_pads_network_geojson)
+vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
 #vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
 #print(vertex_dictionary)
-add_correction_to_dic(roads_correction_csv, vertex_dictionary)
+add_correction_to_dic(roads_correction_csv, vertex_adj_dic)
 #add_correction_to_dic(roads_correction_tmp_csv, vertex_dictionary)
 #print(vertex_dictionary)
 #matrix = create_adj_matrix(vertex_dictionary)
-visited_vertex_dic = create_visited_vertex_dic(vertex_dictionary)
-components = check_vertex_connected(visited_vertex_dic)
+vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
+components = check_vertex_connected(vertex_visit_dic)
 print("Components count:",len(components))
 #print_kth_componenet(1, components, True, visited_vertex_dic)
-remove_component_from_dic(components[0], visited_vertex_dic)
-remove_component_from_dic(components[1], visited_vertex_dic)
+remove_component_from_dic(components[0], vertex_visit_dic)
+remove_component_from_dic(components[1], vertex_visit_dic)
