@@ -19,8 +19,8 @@ def create_visited_vertex_dic(vertex_dic):
         vertex_visit_dic[vertex_id] = {}
         vertex_visit_dic[vertex_id]['adj'] = value['adj']
         vertex_visit_dic[vertex_id]['visited'] = False
-        vertex_visit_dic[vertex_id]['lon'] = int(key.split("#")[0])
-        vertex_visit_dic[vertex_id]['lat'] = int(key.split("#")[1])
+        vertex_visit_dic[vertex_id]['easting'] = int(key.split("#")[0])
+        vertex_visit_dic[vertex_id]['northing'] = int(key.split("#")[1])
     #print(vertex_dic)
     #write_dic_to_csv(vertex_visit_dic)
     return vertex_visit_dic
@@ -50,7 +50,7 @@ def check_vertex_connected(vertex_dic):
             path = []
             dfs_iterative(key, vertex_dic, path)
             components.append(path)
-            #print(key, ": (", value['lon'],",", value['lat'],") not visited")
+            #print(key, ": (", value['easting'],",", value['northing'],") not visited")
     return components
 
 def write_dic_to_csv(dic):
@@ -66,20 +66,20 @@ def write_dic_to_json(dic):
 
 def get_coord_from_vertex_id(vertex_id, vertex_dic):
     if vertex_id in vertex_dic:
-        return vertex_dic[vertex_id]['lon'], vertex_dic[vertex_id]['lat']
+        return vertex_dic[vertex_id]['easting'], vertex_dic[vertex_id]['northing']
     else:
         print("vertex:", vertex_id, "not exists")
         return 0,0
 
-def calculate_dst(lon1, lat1, lon2, lat2):
-    return math.sqrt(pow((lon1 - lon2), 2) + pow((lat1 - lat2), 2))
+def calculate_dst(easting1, northing1, easting2, northing2):
+    return math.sqrt(pow((easting1 - easting2), 2) + pow((northing1 - northing2), 2))
 
 def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_dic):
-    lon1, lat1 = get_coord_from_vertex_id(vertex_1, vertex_dic)
-    lon2, lat2 = get_coord_from_vertex_id(vertex_2, vertex_dic)
-    #print(vertex_1,"(", lon1, lat1, ")",)
-    #print(vertex_2,"(", lon2, lat2, ")",)
-    return calculate_dst(lon1, lat1, lon2, lat2)
+    e1, n1 = get_coord_from_vertex_id(vertex_1, vertex_dic)
+    e2, n2 = get_coord_from_vertex_id(vertex_2, vertex_dic)
+    #print(vertex_1,"(", e1, n1, ")",)
+    #print(vertex_2,"(", e2, n2, ")",)
+    return calculate_dst(e1, n1, e2, n2)
 
 def print_kth_componenet(k, components, with_coord, vertex_dic):
     print("component " + str(k))
