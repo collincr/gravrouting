@@ -1,11 +1,14 @@
 import math
 import csv
 import json
+import geopandas as gpd
+import data_readin_conversion as drc
 
 roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
 data_jasper_tmp_geojson = '../data/jasper_tmp.geojson'
 roads_correction_csv = '../data/roads_correction.csv'
 roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
+roads_pads_network_UTM_geojson = '../data/roads_pads_network_w_stations_UTM.geojson'
 
 def create_vertex_visit_dic(vertex_adj_dic):
     #tmp_vertex_dic = gram.create_adj_vertex_dic(geojson_file)
@@ -197,6 +200,9 @@ def remove_component_from_dic(comp, vertex_visit_dic):
         else:
             print("vertex " + str(vertex_id) + " not in vertex_visit_dic")
 
+gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
+drc.geojson_saver(gdf_utm, roads_pads_network_UTM_geojson)
+"""
 vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
 #vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
 #print(vertex_dictionary)
@@ -210,3 +216,4 @@ print("Components count:",len(components))
 #print_kth_componenet(1, components, True, visited_vertex_dic)
 remove_component_from_dic(components[0], vertex_visit_dic)
 remove_component_from_dic(components[1], vertex_visit_dic)
+"""

@@ -16,7 +16,6 @@ def main():
 
     # convert coordinate system to utm
     gdf_stations = utm_coordinate_converter(gdf_stations)
-
     # save geodataframe as geojson file
     geojson_saver(gdf_stations, utm_station_status_geojson)
 
@@ -50,6 +49,18 @@ def utm_coordinate_converter(gdf):
 
     return gdf
 
+def convert_to_UTM_with_geojson(geojson):
+    gdf_roads = gpd.read_file(geojson)
+    #print(gdf_roads.head())
+    #print('\n')
+    local_coordinate = '''+proj=lcc +lat_1=36 +lat_2=37.25
+                 +lat_0=35.33333333333334 +lon_0=-119
+                 +x_0=609601.2192024384 +y_0=0
+                 +datum=NAD27 +units=us-ft +no_defs'''
+    gdf_roads.crs  = local_coordinate
+    gdf_roads_UTM = utm_coordinate_converter(gdf_roads)
+    #print(gdf_roads_UTM.head())
+    return gdf_roads_UTM
 
 def geojson_saver(gdf, file_path):
 
