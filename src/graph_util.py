@@ -6,9 +6,10 @@ import data_readin_conversion as drc
 
 roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
 data_jasper_tmp_geojson = '../data/jasper_tmp.geojson'
+roads_pads_network_UTM_geojson = '../data/roads_pads_network_w_stations_UTM.geojson'
 roads_correction_csv = '../data/roads_correction.csv'
 roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
-roads_pads_network_UTM_geojson = '../data/roads_pads_network_w_stations_UTM.geojson'
+roads_correction_UTM_csv = '../data/roads_correction_UTM.csv'
 
 def create_vertex_visit_dic(vertex_adj_dic):
     #tmp_vertex_dic = gram.create_adj_vertex_dic(geojson_file)
@@ -91,19 +92,18 @@ def print_kth_componenet(k, components, with_coord, vertex_visit_dic):
     else:
         print(components[k])
 
-def check_same_vertex(distance, components):
+def check_same_vertex(distance, components, vertex_visit_dic):
     for cur_comp in range(len(components)):
         for other_comp in range(cur_comp + 1, len(components)):
             for cur_vertex in components[cur_comp]:
                 for other_vertex in components[other_comp]:
-                    dis = get_dst_from_vertex_id(cur_vertex, other_vertex,
-                            visited_vertex_dic)
-                    if dis < max_distance:
+                    dis = get_dst_from_vertex_id(cur_vertex, other_vertex, vertex_visit_dic)
+                    if dis < distance:
                         #print(cur_vertex, other_vertex, " are close")
                         print(cur_vertex,
-                            get_coord_from_vertex_id(cur_vertex, visited_vertex_dic),
+                            get_coord_from_vertex_id(cur_vertex, vertex_visit_dic),
                             " in comp-" + str(cur_comp),",", other_vertex,
-                            get_coord_from_vertex_id(other_vertex, visited_vertex_dic),
+                            get_coord_from_vertex_id(other_vertex, vertex_visit_dic),
                             " in comp-" + str(other_comp) + " are close")
 
 
@@ -128,27 +128,28 @@ def create_vertex_adj_dic(geojson_file):
         data = json.load(f)
     for feature in data['features']:
         #print("+++ FEATURE +++")
-        for line in feature['geometry']['coordinates']:
-            #print("*** LINE ***")
-            #print(line)
-            for i in range(len(line)):
-                point = line[i]
-                key = pointToKey(point)
-                point_info = vertex_dic.get(key)
-                if point_info is None:
-                    vertex_dic[key] = {}
-                    vertex_dic[key]['id'] = len(vertex_dic)-1 # start from 0
-                    vertex_dic[key]['adj'] = set()
-                    point_info = vertex_dic[key]
+        if feature['geometry'] is not None and feature['geometry']['coordinates'] is not None:
+            for line in feature['geometry']['coordinates']:
+                #print("*** LINE ***")
+                #print(line)
+                for i in range(len(line)):
+                    point = line[i]
+                    key = pointToKey(point)
+                    point_info = vertex_dic.get(key)
+                    if point_info is None:
+                        vertex_dic[key] = {}
+                        vertex_dic[key]['id'] = len(vertex_dic)-1 # start from 0
+                        vertex_dic[key]['adj'] = set()
+                        point_info = vertex_dic[key]
 
-                if i > 0:
-                    left_key = pointToKey(line[i-1])
-                    left_point_info = vertex_dic.get(left_key)
-                    if left_point_info is not None:
-                        point_info['adj'].add(left_point_info['id'])
-                        left_point_info['adj'].add(vertex_dic[key]['id'])
-                    else:
-                        print("Left point is None!")
+                    if i > 0:
+                        left_key = pointToKey(line[i-1])
+                        left_point_info = vertex_dic.get(left_key)
+                        if left_point_info is not None:
+                            point_info['adj'].add(left_point_info['id'])
+                            left_point_info['adj'].add(vertex_dic[key]['id'])
+                        else:
+                            print("Left point is None!")
     return vertex_dic
 
 def create_adj_matrix(vertex_adj_dictionary):
@@ -199,21 +200,24 @@ def remove_component_from_dic(comp, vertex_visit_dic):
             del vertex_visit_dic[vertex_id]
         else:
             print("vertex " + str(vertex_id) + " not in vertex_visit_dic")
-
+"""
 gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
 drc.geojson_saver(gdf_utm, roads_pads_network_UTM_geojson)
 """
-vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
+vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_UTM_geojson)
+#vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
 #vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
 #print(vertex_dictionary)
-add_correction_to_dic(roads_correction_csv, vertex_adj_dic)
+#add_correction_to_dic(roads_correction_csv, vertex_adj_dic)
 #add_correction_to_dic(roads_correction_tmp_csv, vertex_dictionary)
+#add_correction_to_dic(roads_correction_UTM_csv, vertex_adj_dic)
 #print(vertex_dictionary)
 #matrix = create_adj_matrix(vertex_dictionary)
 vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
 components = check_vertex_connected(vertex_visit_dic)
 print("Components count:",len(components))
-#print_kth_componenet(1, components, True, visited_vertex_dic)
-remove_component_from_dic(components[0], vertex_visit_dic)
-remove_component_from_dic(components[1], vertex_visit_dic)
-"""
+max_dst = 10
+check_same_vertex(max_dst, components, vertex_visit_dic)
+#print_kth_componenet(5, components, True, vertex_visit_dic)
+#remove_component_from_dic(components[0], vertex_visit_dic)
+#remove_component_from_dic(components[1], vertex_visit_dic)
