@@ -203,11 +203,43 @@ def remove_component_from_dic(comp, vertex_visit_dic):
             del vertex_visit_dic[vertex_id]
         else:
             print("vertex " + str(vertex_id) + " not in vertex_visit_dic")
+
+def remove_item_from_dic(item_name, vertex_dic):
+    for key in vertex_dic:
+        value = vertex_dic.get(key)
+        if item_name in value:
+            del value[item_name]
+
+def get_graph(roads_network_geoson, roads_correction_csv):
+    vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_network_geoson)
+    add_correction_to_dic(roads_correction_csv, vertex_adj_dic, tmp_dic)
+    vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
+
+    # Remove invalid components
+    components = check_vertex_connected(vertex_visit_dic)
+    remove_component_from_dic(components[0], vertex_visit_dic)
+    remove_component_from_dic(components[1], vertex_visit_dic)
+    #print("Components count after removal:",len(components))
+
+    # Check connectivity again
+    vertex_visit_dic = create_vertex_visit_dic(vertex_visit_dic)
+    components = check_vertex_connected(vertex_visit_dic)
+    print("Components count after removal:",len(components))
+
+    remove_item_from_dic('visited', vertex_visit_dic)
+    return vertex_visit_dic
+
+
+vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
+#print(get_graph(data_jasper_tmp_geojson, roads_correction_tmp_csv))
+
 """
 gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
 drc.geojson_saver(gdf_utm, roads_pads_network_UTM_geojson)
 """
 
+
+"""
 # Create (k, v) = (id, adj set) dictionary
 vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_pads_network_UTM_geojson)
 #vertex_adj_dic, tmp_dic = create_vertex_adj_dic(data_jasper_tmp_geojson)
@@ -245,3 +277,4 @@ vertex_visit_dic = create_vertex_visit_dic(vertex_visit_dic)
 components = check_vertex_connected(vertex_visit_dic)
 print("Components count after removal:",len(components))
 #print(vertex_visit_dic)
+"""
