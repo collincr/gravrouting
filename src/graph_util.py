@@ -11,22 +11,53 @@ roads_correction_csv = '../data/roads_correction.csv'
 roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
 roads_correction_UTM_csv = '../data/roads_correction_UTM.csv'
 
-def create_vertex_visit_dic(vertex_adj_dic):
-    #tmp_vertex_dic = gram.create_adj_vertex_dic(geojson_file)
-    vertex_visit_dic = {}
-    for key in vertex_adj_dic.keys():
+def create_vertex_adj_dic(geojson_file):
+    tmp_dic = {}
+    with open(geojson_file) as f:
+    #with open(data_jasper_tmp) as f:
+        data = json.load(f)
+    for feature in data['features']:
+        #print("+++ FEATURE +++")
+        if (feature['geometry'] is not None and
+            feature['geometry']['coordinates'] is not None):
+            for line in feature['geometry']['coordinates']:
+                #print("*** LINE ***")
+                #print(line)
+                for i in range(len(line)):
+                    point = line[i]
+                    key = pointToKey(point)
+                    point_info = tmp_dic.get(key)
+                    if point_info is None:
+                        tmp_dic[key] = {}
+                        tmp_dic[key]['id'] = len(tmp_dic)-1 # start from 0
+                        tmp_dic[key]['adj'] = set()
+                        point_info = tmp_dic[key]
+
+                    if i > 0:
+                        left_key = pointToKey(line[i-1])
+                        left_point_info = tmp_dic.get(left_key)
+                        if left_point_info is not None:
+                            point_info['adj'].add(left_point_info['id'])
+                            left_point_info['adj'].add(tmp_dic[key]['id'])
+                        else:
+                            print("Left point is None!")
+    vertex_adj_dic = {}
+    for key in tmp_dic.keys():
         #print(value['id'])
         #print(key.split("#")[0])
-        value = vertex_adj_dic[key]
+        value = tmp_dic[key]
         vertex_id = value['id']
-        vertex_visit_dic[vertex_id] = {}
-        vertex_visit_dic[vertex_id]['adj'] = value['adj']
-        vertex_visit_dic[vertex_id]['visited'] = False
-        vertex_visit_dic[vertex_id]['easting'] = int(key.split("#")[0])
-        vertex_visit_dic[vertex_id]['northing'] = int(key.split("#")[1])
-    #print(vertex_dic)
-    #write_dic_to_csv(vertex_visit_dic)
-    return vertex_visit_dic
+        vertex_adj_dic[vertex_id] = {}
+        vertex_adj_dic[vertex_id]['adj'] = value['adj']
+        vertex_adj_dic[vertex_id]['easting'] = int(key.split("#")[0])
+        vertex_adj_dic[vertex_id]['northing'] = int(key.split("#")[1])
+    return vertex_adj_dic, tmp_dic
+
+def create_vertex_visit_dic(vertex_adj_dic):
+    for key in vertex_adj_dic:
+        vertex_adj_dic.get(key)['visited'] = False
+    #print(vertex_adj_dic)
+    return vertex_adj_dic
 """
 def dfs_recursive(vertex_id, vertex_dic):
     vertex_dic[vertex_id]['visited'] = True
@@ -124,37 +155,6 @@ def pointToKey(p):
     #print(key)
     return key
 
-def create_vertex_adj_dic(geojson_file):
-    vertex_dic = {}
-    with open(geojson_file) as f:
-    #with open(data_jasper_tmp) as f:
-        data = json.load(f)
-    for feature in data['features']:
-        #print("+++ FEATURE +++")
-        if feature['geometry'] is not None and feature['geometry']['coordinates'] is not None:
-            for line in feature['geometry']['coordinates']:
-                #print("*** LINE ***")
-                #print(line)
-                for i in range(len(line)):
-                    point = line[i]
-                    key = pointToKey(point)
-                    point_info = vertex_dic.get(key)
-                    if point_info is None:
-                        vertex_dic[key] = {}
-                        vertex_dic[key]['id'] = len(vertex_dic)-1 # start from 0
-                        vertex_dic[key]['adj'] = set()
-                        point_info = vertex_dic[key]
-
-                    if i > 0:
-                        left_key = pointToKey(line[i-1])
-                        left_point_info = vertex_dic.get(left_key)
-                        if left_point_info is not None:
-                            point_info['adj'].add(left_point_info['id'])
-                            left_point_info['adj'].add(vertex_dic[key]['id'])
-                        else:
-                            print("Left point is None!")
-    return vertex_dic
-
 def create_adj_matrix(vertex_adj_dictionary):
     n = len(vertex_adj_dictionary)
     adj_matrix = [[0 for x in range(n)] for y in range(n)]
@@ -173,28 +173,28 @@ def write_matrix_to_file(matrix):
         for line in mat:
             np.savetxt(f, line, '%i')
 
-def add_adj_vertex(easting1, northing1, easting2, northing2, vertex_adj_dic):
+def add_adj_vertex(vertex1, vertex2, vertex_adj_dic, coord_to_id_dic):
 
-    key1 = pointToKey([easting1, northing1])
-    key2 = pointToKey([easting2, northing2])
-    if key1 not in vertex_adj_dic or key2 not in vertex_adj_dic:
-        print(key1 + " or " + key2 + " not in vertex dictionary")
+    key1 = pointToKey(vertex1)
+    key2 = pointToKey(vertex2)
+    if key1 not in coord_to_id_dic or key2 not in coord_to_id_dic:
+        print(key1 + " or " + key2 + " not in coord_to_id_dic")
     else:
         #print(vertex_dic[key1])
-        vertex_adj_dic[key1]['adj'].add(vertex_adj_dic.get(key2)['id'])
-        vertex_adj_dic[key2]['adj'].add(vertex_adj_dic.get(key1)['id'])
+        #coord_to_id_dic[key1]['adj'].add(coord_to_id_dic.get(key2)['id'])
+        #coord_to_id_dic[key2]['adj'].add(coord_to_id_dic.get(key1)['id'])
+        id1 = coord_to_id_dic.get(key1)['id']
+        id2 = coord_to_id_dic.get(key2)['id']
+        vertex_adj_dic.get(id1)['adj'].add(id2)
+        vertex_adj_dic.get(id2)['adj'].add(id1)
 
-def add_correction_to_dic(file_name, vertex_adj_dic):
+def add_correction_to_dic(file_name, vertex_adj_dic, coord_to_id_dic):
     with open(file_name, newline='') as csvfile:
         csv_reader = csv.DictReader(csvfile, delimiter=',')
         for row in csv_reader:
-            vertex1_easting = row['Easting1']
-            vertex1_northing = row['Northing1']
-            vertex2_easting = row['Easting2']
-            vertex2_northing = row['Northing2']
-            add_adj_vertex(vertex1_easting, vertex1_northing, vertex2_easting,
-                    vertex2_northing, vertex_adj_dic)
-            #print(vertex1_easting, vertex1_northing, vertex2_easting, vertex2_northing)
+            v1 = [row['Easting1'], row['Northing1']]
+            v2 = [row['Easting2'], row['Northing2']]
+            add_adj_vertex(v1, v2, vertex_adj_dic, coord_to_id_dic)
             
 def remove_component_from_dic(comp, vertex_visit_dic):
     for vertex_id in comp:
@@ -208,23 +208,21 @@ gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
 drc.geojson_saver(gdf_utm, roads_pads_network_UTM_geojson)
 """
 
-# Create (k, v) = (coord, adj set) dictionary
-vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_UTM_geojson)
-#vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
-#vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
-#print(vertex_dictionary)
+# Create (k, v) = (id, adj set) dictionary
+vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_pads_network_UTM_geojson)
+#vertex_adj_dic, tmp_dic = create_vertex_adj_dic(data_jasper_tmp_geojson)
+#print(vertex_adj_dic)
 
 # Add vertices correction
-#add_correction_to_dic(roads_correction_csv, vertex_adj_dic)
-#add_correction_to_dic(roads_correction_tmp_csv, vertex_dictionary)
-add_correction_to_dic(roads_correction_UTM_csv, vertex_adj_dic)
-#print(vertex_dictionary)
+add_correction_to_dic(roads_correction_UTM_csv, vertex_adj_dic, tmp_dic)
+#add_correction_to_dic(roads_correction_tmp_csv, vertex_adj_dic, tmp_dic)
+#print(vertex_adj_dic)
 #matrix = create_adj_matrix(vertex_dictionary)
 
-# Create (k, v) = (id, adj set) dictionary
+# Create (k, v) = (id, {adj set, visited}) dictionary
 vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
 components = check_vertex_connected(vertex_visit_dic)
-print("Components count:",len(components))
+print("Components count before removal:",len(components))
 
 # Check if there is a vertex but has two different coordinates
 #max_dst = 10
@@ -237,5 +235,13 @@ print("Components count:",len(components))
 #print("comp1", comp1, " comp2", comp2)
 
 # Remove invalid vertices components
+#print("dic count before:", len(vertex_visit_dic))
 remove_component_from_dic(components[0], vertex_visit_dic)
 remove_component_from_dic(components[1], vertex_visit_dic)
+#print("dic count after:", len(vertex_visit_dic))
+
+# Check connectivity again
+vertex_visit_dic = create_vertex_visit_dic(vertex_visit_dic)
+components = check_vertex_connected(vertex_visit_dic)
+print("Components count after removal:",len(components))
+#print(vertex_visit_dic)
