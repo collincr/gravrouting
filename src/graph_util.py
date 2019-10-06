@@ -86,6 +86,9 @@ def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_visit_dic):
 
 def print_kth_componenet(k, components, with_coord, vertex_visit_dic):
     print("component " + str(k))
+    if k >= len(components):
+        print("k is out of bound")
+        return
     if with_coord:
         for vertex in components[k]:
             print(vertex, get_coord_from_vertex_id(vertex, vertex_visit_dic))
@@ -204,20 +207,35 @@ def remove_component_from_dic(comp, vertex_visit_dic):
 gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
 drc.geojson_saver(gdf_utm, roads_pads_network_UTM_geojson)
 """
+
+# Create (k, v) = (coord, adj set) dictionary
 vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_UTM_geojson)
 #vertex_adj_dic = create_vertex_adj_dic(roads_pads_network_geojson)
 #vertex_dictionary = create_adj_vertex_dic(data_jasper_tmp_geojson)
 #print(vertex_dictionary)
+
+# Add vertices correction
 #add_correction_to_dic(roads_correction_csv, vertex_adj_dic)
 #add_correction_to_dic(roads_correction_tmp_csv, vertex_dictionary)
-#add_correction_to_dic(roads_correction_UTM_csv, vertex_adj_dic)
+add_correction_to_dic(roads_correction_UTM_csv, vertex_adj_dic)
 #print(vertex_dictionary)
 #matrix = create_adj_matrix(vertex_dictionary)
+
+# Create (k, v) = (id, adj set) dictionary
 vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
 components = check_vertex_connected(vertex_visit_dic)
 print("Components count:",len(components))
-max_dst = 10
-check_same_vertex(max_dst, components, vertex_visit_dic)
-#print_kth_componenet(5, components, True, vertex_visit_dic)
-#remove_component_from_dic(components[0], vertex_visit_dic)
-#remove_component_from_dic(components[1], vertex_visit_dic)
+
+# Check if there is a vertex but has two different coordinates
+#max_dst = 10
+#check_same_vertex(max_dst, components, vertex_visit_dic)
+#print_kth_componenet(3, components, True, vertex_visit_dic)
+
+# get component number
+#comp1 = get_component_from_coord(431670, 3976576, components, vertex_visit_dic)
+#comp2 = get_component_from_coord(430486, 3976875, components, vertex_visit_dic)
+#print("comp1", comp1, " comp2", comp2)
+
+# Remove invalid vertices components
+remove_component_from_dic(components[0], vertex_visit_dic)
+remove_component_from_dic(components[1], vertex_visit_dic)
