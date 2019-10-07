@@ -11,6 +11,11 @@ roads_correction_csv = '../data/roads_correction.csv'
 roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
 roads_correction_UTM_csv = '../data/roads_correction_UTM.csv'
 
+def main():
+
+    vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
+    #print(get_graph(data_jasper_tmp_geojson, roads_correction_tmp_csv))
+
 def create_vertex_adj_dic(geojson_file):
     tmp_dic = {}
     with open(geojson_file) as f:
@@ -111,9 +116,10 @@ def calculate_dst(easting1, northing1, easting2, northing2):
 def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_visit_dic):
     e1, n1 = get_coord_from_vertex_id(vertex_1, vertex_visit_dic)
     e2, n2 = get_coord_from_vertex_id(vertex_2, vertex_visit_dic)
-    #print(vertex_1,"(", e1, n1, ")",)
-    #print(vertex_2,"(", e2, n2, ")",)
-    return calculate_dst(e1, n1, e2, n2)
+    dist = calculate_dst(e1, n1, e2, n2)
+    #print(vertex_1,"(", e1, n1, ")", vertex_2,"(", e2, n2, ")", dist)
+    return dist
+    #return calculate_dst(e1, n1, e2, n2)
 
 def print_kth_componenet(k, components, with_coord, vertex_visit_dic):
     print("component " + str(k))
@@ -230,8 +236,8 @@ def get_graph(roads_network_geoson, roads_correction_csv):
     return vertex_visit_dic
 
 
-vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
-#print(get_graph(data_jasper_tmp_geojson, roads_correction_tmp_csv))
+if __name__ == '__main__':
+    main()
 
 """
 gdf_utm = drc.convert_to_UTM_with_geojson(roads_pads_network_geojson)
