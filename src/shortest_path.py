@@ -1,22 +1,32 @@
+import math
+import files
 from collections import defaultdict, deque
+from graph_util import get_graph
+
 
 def main():
+    
+    graph_dic = get_graph(files.roads_pads_network_utm_geojson,
+            files.roads_correction_utm_csv)
+
     graph = Graph()
 
-    for node in ['vertex_1', 'vertex_2', 'vertex_3', 'vertex_4', 'vertex_5', 'vertex_6', 'vertex_7']:
+    for node in graph_dic.keys():
         graph.add_node(node)
 
-    graph.add_edge('vertex_1', 'vertex_2', 10)
-    graph.add_edge('vertex_1', 'vertex_3', 20)
-    graph.add_edge('vertex_2', 'vertex_4', 15)
-    graph.add_edge('vertex_3', 'vertex_4', 30)
-    graph.add_edge('vertex_2', 'vertex_5', 50)
-    graph.add_edge('vertex_4', 'vertex_5', 30)
-    graph.add_edge('vertex_5', 'vertex_6', 5)
-    graph.add_edge('vertex_6', 'vertex_7', 2)
+    for from_node in graph_dic.keys():
+        for to_node in graph_dic[from_node]['adj']:
+            if (to_node > from_node):
+                dist = euclidean(graph_dic[from_node]['easting'], 
+                        graph_dic[from_node]['northing'],
+                        graph_dic[to_node]['easting'], 
+                        graph_dic[to_node]['northing'])
+                graph.add_edge(from_node, to_node, dist)
+
+    print(graph)
 
     # shortest distance, path
-    print(shortest_path(graph, 'vertex_1', 'vertex_4'))
+    print(shortest_path(graph, 3578, 3587))
 
 
 class Graph(object):
@@ -32,7 +42,12 @@ class Graph(object):
         self.edges[from_node].append(to_node)
         self.edges[to_node].append(from_node)
         self.distances[(from_node, to_node)] = distance
-
+        
+    def __str__(self):   
+        return "Graph: {0} nodes, {1} edges\n".format(
+                len(self.nodes), len(self.edges)) \
+                + "Nodes:\n{0}\nEdges:\n{1}\nDistances:\n{2}".format(
+                self.nodes, self.edges, self.distances)
 
 def shortest_path(graph, origin, destination):
     visited, paths = dijkstra(graph, origin)
@@ -81,6 +96,9 @@ def dijkstra(graph, initial):
     return visited, path
 
 
+def euclidean(x1, y1, x2, y2):
+    return math.sqrt(math.pow(x1 - x2, 2) + math.pow(y1 - y2, 2))
+
+
 if __name__ == '__main__':
     main()
-    
