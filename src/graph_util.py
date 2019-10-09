@@ -236,6 +236,29 @@ def get_graph(roads_network_geoson, roads_correction_csv):
     return vertex_visit_dic
 
 
+def create_station_status_dic(utm_geojson):
+    station_info_dic = {}
+    with open(utm_geojson) as f:
+        station_info = json.load(f)
+    for feature in station_info['features']:
+        station_id = feature['properties']['StationNumber']
+        station_name = feature['properties']['StationName']
+        station_type = feature['properties']['StationType']
+        station_status = feature['properties']['Status']
+        station_coord = feature['geometry']['coordinates']
+        #easting = feature['geometry']['coordinates'][0]
+        #northing = feature['geometry']['coordinates'][1]
+
+        station_info_dic[station_id] = {}
+        station_info_dic[station_id]['name'] = station_name
+        station_info_dic[station_id]['type'] = station_type
+        station_info_dic[station_id]['status'] = station_status
+        station_info_dic[station_id]['coordinates'] = station_coord
+        #station_info_dic[station_id]['easting'] = easting
+        #station_info_dic[station_id]['northing'] = northing
+
+    return station_info_dic
+
 if __name__ == '__main__':
     main()
 

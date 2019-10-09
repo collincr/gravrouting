@@ -6,9 +6,15 @@ import json
 def main():
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
+    station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson)
+    print('stations count', len(station_dic))
+    add_station_to_road_mapping(station_dic, graph_dic)
+
+    """
     src = 4
     dst = 3609
     get_shortest_path(src, dst, graph_dic)
+    """
 
     """
     dijkstra(src, graph_dic)
@@ -19,6 +25,17 @@ def main():
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
     #print(graph_dic)
+
+def add_station_to_road_mapping(station_dic, road_dic):
+    for stat in station_dic:
+        coordinate = station_dic.get(stat)['coordinates']
+        for road_vertex in road_dic:
+            easting = road_dic.get(road_vertex)['easting']
+            northing = road_dic.get(road_vertex)['northing']
+            if coordinate[0] == easting and coordinate[1] == northing:
+                station_dic.get(stat)['road_id'] = road_vertex
+                return
+        #print('Station', stat, ' not found')
 
 def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)
