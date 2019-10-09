@@ -1,5 +1,7 @@
 roads_pads_network_utm_geojson = '../data/roads_pads_network_w_stations_UTM.geojson'
 roads_correction_utm_csv = '../data/roads_correction_UTM.csv'
+station_status_utm_geojson = '../resources/file/utm_station_status.geojson'
+
 
 # testing
 tmp_roads_geojson = '../data/jasper_tmp.geojson'
