@@ -2,7 +2,7 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import figure
 from shapely.geometry import LineString
-from graph_util import create_adj_vertex_dic
+from graph_util import create_vertex_adj_dic
 
 def main():
     data_closet_at_road_geojson = '../data/closest_at_road.geojson'
@@ -30,7 +30,7 @@ def get_lines_gdf(vertices_x, vertices_y, crs,
     coords = []
 
     # create vertex adjancency dictionary
-    vertex_dictionary = create_adj_vertex_dic(
+    adj_dict, vertex_dictionary = create_vertex_adj_dic(
             data_roads_pads_network_geojson)
 
     # construct connected lines
