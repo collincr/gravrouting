@@ -3,18 +3,16 @@ import csv
 import json
 import geopandas as gpd
 import data_readin_conversion as drc
-
-roads_pads_network_geojson = '../data/roads_pads_network_w_stations.geojson'
-data_jasper_tmp_geojson = '../data/jasper_tmp.geojson'
-roads_pads_network_UTM_geojson = '../data/roads_pads_network_w_stations_UTM.geojson'
-roads_correction_csv = '../data/roads_correction.csv'
-roads_correction_tmp_csv = '../data/roads_correction_tmp.csv'
-roads_correction_UTM_csv = '../data/roads_correction_UTM.csv'
+import files
 
 def main():
 
-    vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
+    #vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
     #print(get_graph(data_jasper_tmp_geojson, roads_correction_tmp_csv))
+
+    # convert geojson to utm form
+    #gdf_utm = drc.convert_to_UTM_with_geojson(files.closest_to_road_goejson)
+    #drc.geojson_saver(gdf_utm, files.closest_to_road_geojson_utm)
 
 def create_vertex_adj_dic(geojson_file):
     tmp_dic = {}
