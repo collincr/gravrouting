@@ -8,8 +8,10 @@ def main():
             files.roads_correction_utm_csv)
     station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
             files.closest_to_road_geojson_utm )
-    print('stations count', len(station_dic))
-    #add_station_to_road_mapping(station_dic, graph_dic)
+
+    #print('stations count', len(station_dic))
+
+    add_station_to_road_mapping(station_dic, graph_dic)
 
     """
     src = 4
@@ -29,14 +31,14 @@ def main():
 
 def add_station_to_road_mapping(station_dic, road_dic):
     for stat in station_dic:
-        coordinate = station_dic.get(stat)['coordinates']
+        coordinate = station_dic.get(stat)['road_coordinates']
         for road_vertex in road_dic:
             easting = road_dic.get(road_vertex)['easting']
             northing = road_dic.get(road_vertex)['northing']
-            if coordinate[0] == easting and coordinate[1] == northing:
+            if int(coordinate[0]) == easting and int(coordinate[1]) == northing:
                 station_dic.get(stat)['road_id'] = road_vertex
                 return
-        #print('Station', stat, ' not found')
+        print('Station', stat, ' not found')
 
 def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)

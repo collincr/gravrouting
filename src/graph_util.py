@@ -97,9 +97,9 @@ def write_dic_to_csv(dic):
              w.writerow([key, val])
 
 def write_dic_to_json(dic):
-    json = json.dumps(dict)
+    output = json.dumps(dict)
     f = open("output.json","w")
-    f.write(json)
+    f.write(output)
     f.close()
 
 def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
@@ -265,6 +265,7 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
             station_id_dic[station_id]['road_coordinates'] = station_road_dic[station_name]
         else:
             print(station_name, "closest road not found")
+            station_id_dic[station_id]['road_coordinates'] = [-1, -1]
 
     return station_id_dic
 
