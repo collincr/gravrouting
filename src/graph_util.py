@@ -53,8 +53,8 @@ def create_vertex_adj_dic(geojson_file):
         vertex_id = value['id']
         vertex_adj_dic[vertex_id] = {}
         vertex_adj_dic[vertex_id]['adj'] = value['adj']
-        vertex_adj_dic[vertex_id]['easting'] = int(key.split("#")[0])
-        vertex_adj_dic[vertex_id]['northing'] = int(key.split("#")[1])
+        vertex_adj_dic[vertex_id]['coordinates'] = [int(key.split("#")[0]),
+                int(key.split("#")[1])]
     return vertex_adj_dic, tmp_dic
 
 def create_vertex_visit_dic(vertex_adj_dic):
@@ -104,7 +104,8 @@ def write_dic_to_json(dic):
 
 def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
     if vertex_id in vertex_visit_dic:
-        return vertex_visit_dic[vertex_id]['easting'], vertex_visit_dic[vertex_id]['northing']
+        coordinates = vertex_visit_dic[vertex_id]['coordinates']
+        return coordinates[0], coordinates[1]
     else:
         print("vertex:", vertex_id, "not exists")
         return 0,0

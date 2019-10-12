@@ -43,9 +43,9 @@ def add_station_to_road_mapping(station_dic, road_dic):
         station_dic.get(stat)['road_id'] = -1
         found = False
         for road_vertex in road_dic:
-            easting = road_dic.get(road_vertex)['easting']
-            northing = road_dic.get(road_vertex)['northing']
-            if int(coordinate[0]) == easting and int(coordinate[1]) == northing:
+            road_coordinates = road_dic[road_vertex]['coordinates']
+            if (int(coordinate[0]) == road_coordinates[0]
+                    and int(coordinate[1]) == road_coordinates[1]):
                 station_dic.get(stat)['road_id'] = road_vertex
                 found = True
                 break
