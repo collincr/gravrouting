@@ -13,6 +13,7 @@ def main():
     # convert geojson to utm form
     #gdf_utm = drc.convert_to_UTM_with_geojson(files.closest_to_road_goejson)
     #drc.geojson_saver(gdf_utm, files.closest_to_road_geojson_utm)
+    pass
 
 def create_vertex_adj_dic(geojson_file):
     tmp_dic = {}
@@ -234,28 +235,38 @@ def get_graph(roads_network_geoson, roads_correction_csv):
     return vertex_visit_dic
 
 
-def create_station_status_dic(utm_geojson):
-    station_info_dic = {}
-    with open(utm_geojson) as f:
-        station_info = json.load(f)
-    for feature in station_info['features']:
+def create_station_status_dic(stat_id_geojson, stat_road_geojson):
+    # Get closest road coordinates
+    station_road_dic = {}
+    with open(stat_road_geojson) as f:
+        station_road_info = json.load(f)
+    for feature in station_road_info['features']:
+        station_name = feature['properties']['NAME']
+        station_road_coord = feature['geometry']['coordinates']
+        station_road_dic[station_name] = station_road_coord
+
+    # Get station id, status, utm coordinate
+    station_id_dic = {}
+    with open(stat_id_geojson) as f:
+        station_id_info = json.load(f)
+    for feature in station_id_info['features']:
         station_id = feature['properties']['StationNumber']
         station_name = feature['properties']['StationName']
         station_type = feature['properties']['StationType']
         station_status = feature['properties']['Status']
         station_coord = feature['geometry']['coordinates']
-        #easting = feature['geometry']['coordinates'][0]
-        #northing = feature['geometry']['coordinates'][1]
 
-        station_info_dic[station_id] = {}
-        station_info_dic[station_id]['name'] = station_name
-        station_info_dic[station_id]['type'] = station_type
-        station_info_dic[station_id]['status'] = station_status
-        station_info_dic[station_id]['coordinates'] = station_coord
-        #station_info_dic[station_id]['easting'] = easting
-        #station_info_dic[station_id]['northing'] = northing
+        station_id_dic[station_id] = {}
+        station_id_dic[station_id]['name'] = station_name
+        station_id_dic[station_id]['type'] = station_type
+        station_id_dic[station_id]['status'] = station_status
+        station_id_dic[station_id]['coordinates'] = station_coord
+        if station_name in station_road_dic:
+            station_id_dic[station_id]['road_coordinates'] = station_road_dic[station_name]
+        else:
+            print(station_name, "closest road not found")
 
-    return station_info_dic
+    return station_id_dic
 
 if __name__ == '__main__':
     main()

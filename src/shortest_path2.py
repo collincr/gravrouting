@@ -6,9 +6,10 @@ import json
 def main():
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
-    station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson)
+    station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
+            files.closest_to_road_geojson_utm )
     print('stations count', len(station_dic))
-    add_station_to_road_mapping(station_dic, graph_dic)
+    #add_station_to_road_mapping(station_dic, graph_dic)
 
     """
     src = 4
