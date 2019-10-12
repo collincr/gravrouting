@@ -10,9 +10,9 @@ def main():
             files.closest_to_road_geojson_utm )
 
     #print('stations count', len(station_dic))
-
+    #print(station_dic)
     add_station_to_road_mapping(station_dic, graph_dic)
-
+    get_shortest_path_from_stat(4, 10, station_dic, graph_dic)
     """
     src = 4
     dst = 3609
@@ -29,16 +29,28 @@ def main():
     #dijkstra(graph_dic, "0", graph_edges)
     #print(graph_dic)
 
+def get_shortest_path_from_stat(src_id, dst_id, station_dic, graph_dic):
+    if src_id not in station_dic or dst_id not in station_dic:
+        print('Invalid station id')
+        return
+    road1_id = station_dic[src_id]['road_id']
+    road2_id = station_dic[dst_id]['road_id']
+    return get_shortest_path(road1_id, road2_id, graph_dic)
+
 def add_station_to_road_mapping(station_dic, road_dic):
     for stat in station_dic:
         coordinate = station_dic.get(stat)['road_coordinates']
+        station_dic.get(stat)['road_id'] = -1
+        found = False
         for road_vertex in road_dic:
             easting = road_dic.get(road_vertex)['easting']
             northing = road_dic.get(road_vertex)['northing']
             if int(coordinate[0]) == easting and int(coordinate[1]) == northing:
                 station_dic.get(stat)['road_id'] = road_vertex
-                return
-        print('Station', stat, ' not found')
+                found = True
+                break
+        if not found and not (coordinate[0] == -1 and coordinate[1] == -1):
+            print('Station', station_dic[stat]['name'], 'road mapping not found')
 
 def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)
