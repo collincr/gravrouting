@@ -4,6 +4,7 @@ import json
 import geopandas as gpd
 import data_readin_conversion as drc
 import files
+import numpy
 
 def main():
 
@@ -113,6 +114,10 @@ def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
 def calculate_dst(easting1, northing1, easting2, northing2):
     return math.sqrt(pow((easting1 - easting2), 2) + pow((northing1 - northing2), 2))
 
+def calculate_dst_from_coordinates(coordinates1, coordinates2):
+    return math.sqrt(pow((coordinates1[0] - coordinates2[0]), 2)
+            + pow((coordinates1[1] - coordinates2[1]), 2))
+
 def get_dst_from_vertex_id(vertex_1, vertex_2, vertex_visit_dic):
     e1, n1 = get_coord_from_vertex_id(vertex_1, vertex_visit_dic)
     e2, n2 = get_coord_from_vertex_id(vertex_2, vertex_visit_dic)
@@ -146,6 +151,21 @@ def check_same_vertex(distance, components, vertex_visit_dic):
                             get_coord_from_vertex_id(other_vertex, vertex_visit_dic),
                             " in comp-" + str(other_comp) + " are close")
 
+def find_closest_road(stat_list, stat_dic, road_dic):
+    closest_road_list = []
+    for stat in stat_list:
+        stat_coordinate = stat_dic[stat]['coordinates']
+        min_dist = numpy.Inf
+        road_id = -1
+        for road in road_dic:
+            road_coordinate = road_dic[road]['coordinates']
+            dist = calculate_dst_from_coordinates(stat_coordinate, road_coordinate)
+            if dist < min_dist:
+                min_dist = dist
+                road_id = road
+        #print(min_dist)
+        closest_road_list.append(road_id)
+    return closest_road_list
 
 def get_component_from_coord(easting, northing, components, vertex_visit_dic):
     for i in range(len(components)):

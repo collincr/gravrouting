@@ -4,15 +4,28 @@ import numpy
 import json
 
 def main():
+    # Get road network
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
+
+    # Get station info
     station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
             files.closest_to_road_geojson_utm )
-
     #print('stations count', len(station_dic))
     #print(station_dic)
-    add_station_to_road_mapping(station_dic, graph_dic)
-    get_shortest_path_from_stat(4, 10, station_dic, graph_dic)
+
+    # Add mapping to station info dictionary
+    road_not_found_stat = add_station_to_road_mapping(station_dic, graph_dic)
+    #print(len(road_not_found_stat), 'stations cannot find road mapping')
+
+    # [Debug] Find the closest road of station that fail mapping
+    closest_road_list = gutil.find_closest_road(road_not_found_stat, station_dic, graph_dic)
+
+    # Get shortest path of two stations
+    path, distance = get_shortest_path_from_stat(4, 10, station_dic, graph_dic)
+    print(path)
+    print(distance)
+
     """
     src = 4
     dst = 3609
@@ -38,6 +51,7 @@ def get_shortest_path_from_stat(src_id, dst_id, station_dic, graph_dic):
     return get_shortest_path(road1_id, road2_id, graph_dic)
 
 def add_station_to_road_mapping(station_dic, road_dic):
+    road_not_found_stat = []
     for stat in station_dic:
         coordinate = station_dic.get(stat)['road_coordinates']
         station_dic.get(stat)['road_id'] = -1
@@ -51,12 +65,14 @@ def add_station_to_road_mapping(station_dic, road_dic):
                 break
         if not found and not (coordinate[0] == -1 and coordinate[1] == -1):
             print('Station', station_dic[stat]['name'], 'road mapping not found')
+            road_not_found_stat.append(stat)
+    return road_not_found_stat
 
 def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)
     path = get_dijkstra_path(src, dst, graph_dic)
     dist = get_dist_from_path(path, graph_dic)
-    print(path, dist)
+    #print(path, dist)
     return path, dist
 
 def get_dist_from_path(path, graph_dic):
