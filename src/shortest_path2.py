@@ -4,6 +4,15 @@ import numpy
 import json
 
 def main():
+
+    station1 = 'ZAP28'
+    station2 = 'RE16'
+    get_shortest_path_dist_from_stat(station1, station2)
+    #graph_dic, graph_edges = get_test_graph()
+    #dijkstra(graph_dic, "0", graph_edges)
+    #print(graph_dic)
+
+def initialize():
     # Get road network
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
@@ -18,31 +27,38 @@ def main():
     road_not_found_stat = add_station_to_road_mapping(station_dic, graph_dic)
     #print(len(road_not_found_stat), 'stations cannot find road mapping')
 
+    # Get station name to id mapping
+    stat_name_dic = create_stat_name_id_mapping(station_dic)
+
     # [Debug] Find the closest road of station that fail mapping
-    closest_road_list = gutil.find_closest_road(road_not_found_stat, station_dic, graph_dic)
+    #closest_road_list = gutil.find_closest_road(road_not_found_stat,
+    #        station_dic, graph_dic)
+
+    return graph_dic, station_dic, stat_name_dic
+
+def get_shortest_path_dist_from_stat(stat1, stat2):
+    graph_dic, stat_id_dic, stat_name_dic = initialize()
+    if stat1 not in stat_name_dic or stat2 not in stat_name_dic:
+        print('Stations cannot be found')
+        return -1
+    id1 = stat_name_dic[stat1]
+    id2 = stat_name_dic[stat2]
 
     # Get shortest path of two stations
-    path, distance = get_shortest_path_from_stat(4, 10, station_dic, graph_dic)
-    print(path)
+    path, distance = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
+    #print(path)
     print(distance)
 
-    """
-    src = 4
-    dst = 3609
-    get_shortest_path(src, dst, graph_dic)
-    """
+    return distance
 
-    """
-    dijkstra(src, graph_dic)
-    print(graph_dic)
-    path = get_dij_path(src, dst, graph_dic)
-    dist = get_dist_from_path(path, graph_dic)
-    """
-    #graph_dic, graph_edges = get_test_graph()
-    #dijkstra(graph_dic, "0", graph_edges)
-    #print(graph_dic)
+def create_stat_name_id_mapping(station_dic):
+    stat_name_dic = {}
+    for stat_id in station_dic:
+        stat_name = station_dic[stat_id]['name']
+        stat_name_dic[stat_name] = stat_id
+    return stat_name_dic
 
-def get_shortest_path_from_stat(src_id, dst_id, station_dic, graph_dic):
+def get_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic):
     if src_id not in station_dic or dst_id not in station_dic:
         print('Invalid station id')
         return
