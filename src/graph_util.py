@@ -235,7 +235,13 @@ def remove_item_from_dic(item_name, vertex_dic):
         value = vertex_dic.get(key)
         if item_name in value:
             del value[item_name]
-
+'''
+id:
+{
+    adj: {adjacent vertices id},
+    coordinates: [easting, northing]
+}
+'''
 def get_graph(roads_network_geoson, roads_correction_csv):
     vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_network_geoson)
     add_correction_to_dic(roads_correction_csv, vertex_adj_dic, tmp_dic)

@@ -2,13 +2,12 @@ import graph_util as gutil
 import files
 import numpy
 import json
+import csv
 
 def main():
 
-    station1 = 'ZAP28'
-    station2 = 'RE16'
+    internal_get_spt_from_stat_name()
 
-    get_shortest_path_dist_from_stat(station1, station2)
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
     #print(graph_dic)
@@ -60,6 +59,51 @@ def get_shortest_path_dist_from_stat(stat1, stat2, sp_dic):
         return -1
 
     return sp_dic[key]['distance'], sp_dic['path']
+
+def internal_get_spt_from_stat_name():
+    station1 = 'RE2'
+    station2 = 'RE35'
+
+    graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
+            files.roads_correction_utm_csv)
+    with open('output.csv', 'w') as csv_file:
+        writer = csv.writer(csv_file)
+        for key, value in graph_dic.items():
+            writer.writerow([key, value])
+    with open('output.csv') as csv_file:
+        reader = csv.reader(csv_file)
+        mydict = dict(reader)
+        print(mydict)
+    '''
+    #print(graph_dic)
+    with open('output.txt', 'w') as f:
+        print(graph_dic, file=f)
+        f.write(str(graph_dic))
+    with open('output.txt', 'r') as f:
+        data = f.read()
+        tmp_dic = eval(data)
+        print('tmp_dic', tmp_dic[4])
+    '''
+    stat_id_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
+            files.closest_to_road_geojson_utm )
+    road_not_found_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
+    stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
+
+    #internal_get_straight_dist_from_stats(station1, station2, stat_name_dic, stat_id_dic)
+
+    id1 = stat_name_dic[station1]
+    id2 = stat_name_dic[station2]
+    path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
+    #print(dist)
+    #print(path)
+
+def internal_get_straight_dist_from_stats(stat1, stat2, stat_name_dic, stat_id_dic):
+    id1 = stat_name_dic[stat1]
+    id2 = stat_name_dic[stat2]
+    coord1 = stat_id_dic[id1]['coordinates']
+    coord2 = stat_id_dic[id2]['coordinates']
+    dist = gutil.calculate_dst_from_coordinates(coord1, coord2)
+    print(stat1, stat2, dist)
 
 def create_stat_name_id_mapping(station_dic):
     stat_name_dic = {}
