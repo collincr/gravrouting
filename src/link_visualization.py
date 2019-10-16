@@ -47,8 +47,6 @@ def plot_lines(gdf_lines, crs, data_roads_pads_network_geojson,
             data_closet_at_road_geojson):
     plt.rcParams['figure.figsize'] = (30, 24)
 
-    print(gdf_lines)
-
     # plot the whole route map and stations for reference
     gdf_roads = gpd.read_file(data_roads_pads_network_geojson)
     gdf_stations = gpd.read_file(data_closet_at_road_geojson)
