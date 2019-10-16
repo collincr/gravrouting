@@ -7,6 +7,7 @@ def main():
 
     station1 = 'ZAP28'
     station2 = 'RE16'
+
     get_shortest_path_dist_from_stat(station1, station2)
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -18,7 +19,7 @@ def initialize():
             files.roads_correction_utm_csv)
 
     # Get station info
-    station_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
+    stat_id_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
             files.closest_to_road_geojson_utm )
     #print('stations count', len(station_dic))
     #print(station_dic)
@@ -34,22 +35,31 @@ def initialize():
     #closest_road_list = gutil.find_closest_road(road_not_found_stat,
     #        station_dic, graph_dic)
 
-    return graph_dic, station_dic, stat_name_dic
+    sp_dic = {}
+    stations = list(stat_id_dic)
+    for i in range(len(stations)):
+        for j in range(len(stations)):
+            if i == j:
+                continue
+            id1 = stations[i]
+            id2 = stations[j]
+            stat_name1 = stat_name_dic[id1]
+            stat_name2 = stat_name_dic[id2]
+            path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
+            key = stat_name1 + '#' + stat_name2
+            dist_dic[key] = {}
+            dist_dic[key]['distance'] = dist
+            dist_dic[key]['path'] = path
 
-def get_shortest_path_dist_from_stat(stat1, stat2):
-    graph_dic, stat_id_dic, stat_name_dic = initialize()
-    if stat1 not in stat_name_dic or stat2 not in stat_name_dic:
+    return graph_dic, station_id_dic, sp_dic
+
+def get_shortest_path_dist_from_stat(stat1, stat2, sp_dic):
+    key = stat1 + '#' + stat2
+    if key not in sp_dic:
         print('Stations cannot be found')
         return -1
-    id1 = stat_name_dic[stat1]
-    id2 = stat_name_dic[stat2]
 
-    # Get shortest path of two stations
-    path, distance = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
-    #print(path)
-    print(distance)
-
-    return distance
+    return sp_dic[key]['distance'], sp_dic['path']
 
 def create_stat_name_id_mapping(station_dic):
     stat_name_dic = {}
