@@ -34,7 +34,7 @@ def create_vertex_adj_dic(geojson_file):
                     point_info = tmp_dic.get(key)
                     if point_info is None:
                         tmp_dic[key] = {}
-                        tmp_dic[key]['id'] = len(tmp_dic)-1 # start from 0
+                        tmp_dic[key]['id'] = str(len(tmp_dic)-1) # start from 0
                         tmp_dic[key]['adj'] = set()
                         point_info = tmp_dic[key]
 
@@ -274,10 +274,11 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
 
     # Get station id, status, utm coordinate
     station_id_dic = {}
+    station_road_not_found = []
     with open(stat_id_geojson) as f:
         station_id_info = json.load(f)
     for feature in station_id_info['features']:
-        station_id = feature['properties']['StationNumber']
+        station_id = str(feature['properties']['StationNumber'])
         station_name = feature['properties']['StationName']
         station_type = feature['properties']['StationType']
         station_status = feature['properties']['Status']
@@ -291,7 +292,8 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
         if station_name in station_road_dic:
             station_id_dic[station_id]['road_coordinates'] = station_road_dic[station_name]
         else:
-            print(station_name, "closest road not found")
+            #print(station_name, "closest road not found")
+            station_road_not_found.append(station_id)
             station_id_dic[station_id]['road_coordinates'] = [-1, -1]
 
     return station_id_dic
