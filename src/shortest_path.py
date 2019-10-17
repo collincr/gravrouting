@@ -8,15 +8,13 @@ def main():
 
     #initialize()
 
-    #internal_get_spt_from_stat_name()
+    internal_get_spt_from_stat_name()
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
     #print(graph_dic)
 
-    test_graph_adj_dic = get_test_graph_dic()
-    test_graph_edge_dic = get_test_graph_edge_dic()
-    internal_test_graph()
+    #internal_test_graph()
     pass
 
 def initialize():
@@ -113,7 +111,7 @@ def internal_dijkstra(src, graph_dic, dist_dic):
 
 def internal_get_spt_from_stat_name():
     station1 = 'CSE1'
-    station2 = 'RE4'
+    station2 = 'DOR72'
 
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
@@ -124,7 +122,7 @@ def internal_get_spt_from_stat_name():
     road_not_found_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
     stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
 
-    internal_get_straight_dist_from_stats(station1, station2, stat_name_dic, stat_id_dic)
+    #internal_get_straight_dist_from_stats(station1, station2, stat_name_dic, stat_id_dic)
 
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
@@ -179,7 +177,7 @@ def add_station_to_road_mapping(station_dic, road_dic):
 def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)
     path = get_dijkstra_path(src, dst, graph_dic)
-    dist = get_dist_from_path(path, graph_dic)
+    dist = graph_dic[dst]['dist']
     print(path, dist)
     return path, dist
 '''
