@@ -6,9 +6,9 @@ import csv
 
 def main():
 
-    #initialize()
+    preprocess()
 
-    internal_get_spt_from_stat_name()
+    #internal_get_spt_from_stat_name()
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -17,7 +17,7 @@ def main():
     #internal_test_graph()
     pass
 
-def initialize():
+def preprocess():
     # Get road network
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
@@ -34,27 +34,25 @@ def initialize():
     #print(len(road_not_found_stat), 'stations cannot find road mapping')
 
     # Get station name to id mapping
-    stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
+    #stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
 
     # [Debug] Find the closest road of station that fail mapping
     #closest_road_list = gutil.find_closest_road(road_not_found_stat,
     #        station_dic, graph_dic)
 
-    sp_dic = get_spt_for_all_vertices(stat_id_dic, stat_name_dic, graph_dic)
+    sp_dic = get_spt_for_all_vertices(stat_id_dic, graph_dic)
 
-    return graph_dic, stat_id_dic, sp_dic
+    return graph_dic, stat_id_dic
 
-def get_spt_for_all_vertices(stat_id_dic, stat_name_dic, graph_dic):
+def get_spt_for_all_vertices(stat_id_dic,graph_dic):
     sp_dic = {}
-    stations = list(stat_id_dic)
     for id1 in stat_id_dic.keys():
         for id2 in stat_id_dic.keys():
             if id1 == id2:
                 continue
-            stat_name1 = stat_id_dic[id1]['name']
-            stat_name2 = stat_id_dic[id2]['name']
-            path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
-            key = stat_name1 + '#' + stat_name2
+            path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic,
+                    graph_dic)
+            key = id1 + '#' + id2
             sp_dic[key] = {}
             sp_dic[key]['distance'] = dist
             sp_dic[key]['path'] = path
