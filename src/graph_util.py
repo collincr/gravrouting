@@ -14,6 +14,9 @@ def main():
     # convert geojson to utm form
     #gdf_utm = drc.convert_to_UTM_with_geojson(files.closest_to_road_goejson)
     #drc.geojson_saver(gdf_utm, files.closest_to_road_geojson_utm)
+
+    #internal_get_perpendicular_distance()
+    #internal_get_closest_point_to_line()
     pass
 
 def create_vertex_adj_dic(geojson_file):
@@ -58,18 +61,18 @@ def create_vertex_adj_dic(geojson_file):
                 int(key.split("#")[1])]
     return vertex_adj_dic, tmp_dic
 
-def create_vertex_visit_dic(vertex_adj_dic):
+def reset_vertex_visit_dic(vertex_adj_dic):
     for key in vertex_adj_dic:
         vertex_adj_dic.get(key)['visited'] = False
     #print(vertex_adj_dic)
     return vertex_adj_dic
-"""
+'''
 def dfs_recursive(vertex_id, vertex_dic):
     vertex_dic[vertex_id]['visited'] = True
     for adj_id in vertex_dic[vertex_id]['adj']:
         if not vertex_dic[adj_id]['visited']:
             dfs_recursive(adj_id, vertex_dic)
-"""
+'''
 def dfs_iterative(vertex_id, vertex_visit_dic, path):
     stack = [vertex_id]
     while stack:
@@ -81,15 +84,38 @@ def dfs_iterative(vertex_id, vertex_visit_dic, path):
             for neighbor in vertex_visit_dic[vertex]['adj']:
                 stack.append(neighbor)
 
-def check_vertex_connected(vertex_visit_dic):
+def bfs_iterative(coordinate, src, vertex_visit_dic):
+    queue = [src]
+    min_dist = numpy.Inf
+    edge = []
+    closest_coord = [-1, -1]
+    while queue:
+        vertex = queue.pop(0)
+        if not vertex_visit_dic[vertex]['visited']:
+            vertex_visit_dic[vertex]['visited'] = True
+            for adj in vertex_visit_dic[vertex]['adj']:
+                dist = get_perpendicular_distance(coordinate, [vertex,
+                    adj], vertex_visit_dic)
+                coord = get_closest_point_on_line(coordinate, [vertex, adj],
+                        vertex_visit_dic)
+                if dist < min_dist:
+                    min_dist = dist
+                    edge = [vertex, adj]
+                    closest_coord = coord
+                queue.append(adj)
+    return closest_coord, edge
+
+def check_vertex_connected(vertex_adj_dic):
     components = []
-    for key in vertex_visit_dic.keys():
-        value = vertex_visit_dic[key]
+    reset_vertex_visit_dic(vertex_adj_dic)
+    for key in vertex_adj_dic.keys():
+        value = vertex_adj_dic[key]
         if not value['visited']:
             path = []
-            dfs_iterative(key, vertex_visit_dic, path)
+            dfs_iterative(key, vertex_adj_dic, path)
             components.append(path)
             #print(key, ": (", value['easting'],",", value['northing'],") not visited")
+    remove_item_from_dic('visited', vertex_adj_dic)
     return components
 
 def write_dic_to_csv(dic):
@@ -236,6 +262,7 @@ def remove_item_from_dic(item_name, vertex_dic):
         if item_name in value:
             del value[item_name]
 '''
+Create road network dictionary contains entries as below
 id:
 {
     adj: {adjacent vertices id},
@@ -245,23 +272,31 @@ id:
 def get_graph(roads_network_geoson, roads_correction_csv):
     vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_network_geoson)
     add_correction_to_dic(roads_correction_csv, vertex_adj_dic, tmp_dic)
-    vertex_visit_dic = create_vertex_visit_dic(vertex_adj_dic)
 
     # Remove invalid components
-    components = check_vertex_connected(vertex_visit_dic)
-    remove_component_from_dic(components[0], vertex_visit_dic)
-    remove_component_from_dic(components[1], vertex_visit_dic)
+    components = check_vertex_connected(vertex_adj_dic)
+    remove_component_from_dic(components[0], vertex_adj_dic)
+    remove_component_from_dic(components[1], vertex_adj_dic)
     #print("Components count after removal:",len(components))
 
     # Check connectivity again
-    vertex_visit_dic = create_vertex_visit_dic(vertex_visit_dic)
-    components = check_vertex_connected(vertex_visit_dic)
+    components = check_vertex_connected(vertex_adj_dic)
     print("Components count after removal:",len(components))
+    #print(vertex_adj_dic)
 
-    remove_item_from_dic('visited', vertex_visit_dic)
-    return vertex_visit_dic
+    return vertex_adj_dic
 
-
+'''
+Create station info dictionary contains entries as below
+id:
+{
+    'name': 'RE37',
+    'type': 0,
+    'status': 'Found',
+    'coordinates': [easting, northing],
+    'road_coordinates': [easting, northing, elevation]
+}
+'''
 def create_station_status_dic(stat_id_geojson, stat_road_geojson):
     # Get closest road coordinates
     station_road_dic = {}
@@ -274,7 +309,6 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
 
     # Get station id, status, utm coordinate
     station_id_dic = {}
-    station_road_not_found = []
     with open(stat_id_geojson) as f:
         station_id_info = json.load(f)
     for feature in station_id_info['features']:
@@ -293,10 +327,68 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
             station_id_dic[station_id]['road_coordinates'] = station_road_dic[station_name]
         else:
             #print(station_name, "closest road not found")
-            station_road_not_found.append(station_id)
             station_id_dic[station_id]['road_coordinates'] = [-1, -1]
 
     return station_id_dic
+
+def handle_road_not_found(station_id_dic, vertex_adj_dic):
+    for stat in station_id_dic:
+        road_coord = station_id_dic[stat]['road_coordinates']
+        if road_coord[0] == -1 and road_coord[1] == -1:
+            reset_vertex_visit_dic(vertex_adj_dic)
+            src = next(iter(vertex_adj_dic)) # first vertex
+            closest_coordinate, edge = bfs_iterative(station_id_dic[stat]['coordinates'],
+                    src, vertex_adj_dic)
+            station_id_dic[stat]['road_coordinates'] = closest_coordinate
+            #add_vertex_to_road_network(edge, closest_coordinate,
+            #vertex_adj_dic) # TODO
+    remove_item_from_dic('visited', vertex_adj_dic)
+
+def get_perpendicular_distance(point, edge, vertex_adj_dic):
+   coord1 = vertex_adj_dic[edge[0]]['coordinates']
+   coord2 = vertex_adj_dic[edge[1]]['coordinates']
+   denominator = calculate_dst_from_coordinates(coord1, coord2)
+   numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
+
+   return (numerator / denominator)
+
+def get_closest_point_on_line(point, edge, vertex_adj_dic):
+    coord1 = vertex_adj_dic[edge[0]]['coordinates']
+    coord2 = vertex_adj_dic[edge[1]]['coordinates']
+    coord1_to_point = [point[0] - coord1[0], point[1] - coord1[1]]
+    coord1_to_coord2 = [coord2[0] - coord1[0], coord2[1] - coord1[1]]
+    dist_square = pow(coord1_to_coord2[0], 2) + pow(coord1_to_coord2[1], 2)
+    dot_product = (coord1_to_point[0]*coord1_to_coord2[0]
+            + coord1_to_point[1]*coord1_to_coord2[1])
+    normalized_dist = dot_product / dist_square
+    closest_point = [coord1[0] + coord1_to_coord2[0] * normalized_dist,
+            coord1[1] + coord1_to_coord2[1] * normalized_dist]
+    print('closest point:', closest_point[0], closest_point[1])
+    return closest_point
+
+def internal_get_perpendicular_distance(coord1, coord2, point):
+    coord1 = [5, 8]
+    coord2 = [10, 14]
+    point = [-3, 7]
+    denominator = calculate_dst_from_coordinates(coord1, coord2)
+    numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
+    #print(numerator / denominator)
+    return numerator / denominator
+
+def internal_get_closest_point_on_line(coord1, coord2, point):
+    coord1 = [5, -21]
+    coord2 = [10, -51]
+    point = [3, 8]
+    coord1_to_point = [point[0] - coord1[0], point[1] - coord1[1]]
+    coord1_to_coord2 = [coord2[0] - coord1[0], coord2[1] - coord1[1]]
+    dist_square = pow(coord1_to_coord2[0], 2) + pow(coord1_to_coord2[1], 2)
+    dot_product = (coord1_to_point[0]*coord1_to_coord2[0]
+            + coord1_to_point[1]*coord1_to_coord2[1])
+    normalized_dist = dot_product / dist_square
+    closest_point = [coord1[0] + coord1_to_coord2[0] * normalized_dist,
+            coord1[1] + coord1_to_coord2[1] * normalized_dist]
+    #print('closest point:', closest_point[0], closest_point[1])
+    return closest_point
 
 if __name__ == '__main__':
     main()

@@ -6,9 +6,9 @@ import csv
 
 def main():
 
-    preprocess()
+    #preprocess()
 
-    #internal_get_spt_from_stat_name()
+    internal_get_spt_from_stat_name()
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -29,6 +29,8 @@ def preprocess():
     #print('stations count', len(station_dic))
     #print(stat_id_dic)
 
+    gutil.handle_road_not_found(stat_id_dic, graph_dic)
+
     # Add mapping to station info dictionary
     road_not_found_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
     #print(len(road_not_found_stat), 'stations cannot find road mapping')
@@ -40,7 +42,7 @@ def preprocess():
     #closest_road_list = gutil.find_closest_road(road_not_found_stat,
     #        station_dic, graph_dic)
 
-    sp_dic = get_spt_for_all_vertices(stat_id_dic, graph_dic)
+    #sp_dic = get_spt_for_all_vertices(stat_id_dic, graph_dic)
 
     return graph_dic, stat_id_dic
 
@@ -176,7 +178,7 @@ def get_shortest_path(src, dst, graph_dic):
     dijkstra(src, graph_dic)
     path = get_dijkstra_path(src, dst, graph_dic)
     dist = graph_dic[dst]['dist']
-    print(path, dist)
+    #print(path, dist)
     return path, dist
 '''
 def get_dist_from_path(path, graph_dic):
@@ -261,5 +263,6 @@ def get_test_graph_edge_dic():
             test_graph_edge_dic[key2] = int(row['edge'])
     #print(test_graph_edge_dic)
     return test_graph_edge_dic
+
 if __name__ == '__main__':
     main()
