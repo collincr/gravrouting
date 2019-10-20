@@ -32,7 +32,7 @@ def preprocess():
     gutil.handle_road_not_found(stat_id_dic, graph_dic)
 
     # Add mapping to station info dictionary
-    road_not_found_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
+    road_not_map_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
     #print(len(road_not_found_stat), 'stations cannot find road mapping')
 
     # Get station name to id mapping

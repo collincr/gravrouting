@@ -94,8 +94,8 @@ def bfs_iterative(coordinate, src, vertex_visit_dic):
         if not vertex_visit_dic[vertex]['visited']:
             vertex_visit_dic[vertex]['visited'] = True
             for adj in vertex_visit_dic[vertex]['adj']:
-                dist = get_perpendicular_distance(coordinate, [vertex,
-                    adj], vertex_visit_dic)
+                dist = get_perpendicular_distance(coordinate, [vertex, adj],
+                        vertex_visit_dic)
                 coord = get_closest_point_on_line(coordinate, [vertex, adj],
                         vertex_visit_dic)
                 if dist < min_dist:
@@ -340,8 +340,7 @@ def handle_road_not_found(station_id_dic, vertex_adj_dic):
             closest_coordinate, edge = bfs_iterative(station_id_dic[stat]['coordinates'],
                     src, vertex_adj_dic)
             station_id_dic[stat]['road_coordinates'] = closest_coordinate
-            #add_vertex_to_road_network(edge, closest_coordinate,
-            #vertex_adj_dic) # TODO
+            add_vertex_to_road_network(edge, closest_coordinate, vertex_adj_dic)
     remove_item_from_dic('visited', vertex_adj_dic)
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
@@ -389,6 +388,29 @@ def internal_get_closest_point_on_line(coord1, coord2, point):
             coord1[1] + coord1_to_coord2[1] * normalized_dist]
     #print('closest point:', closest_point[0], closest_point[1])
     return closest_point
+
+def add_vertex_to_road_network(edge, vertex_coord, vertex_adj_dic):
+    id = get_max_id(vertex_adj_dic) + 1
+    remove_adj(edge[0], edge[1], vertex_adj_dic)
+    remove_adj(edge[1], edge[0], vertex_adj_dic)
+    vertex_adj_dic[id] = {}
+    vertex_adj_dic[id]['coordinates'] = vertex_coord
+    vertex_adj_dic[id]['adj'] = {edge[0], edge[1]}
+
+def get_max_id(vertex_adj_dic):
+    max_id = -1
+    for vertex_id in vertex_adj_dic:
+        max_id = max(max_id, vertex_id)
+    return max_id
+
+def remove_adj(vertex, adj, vertex_adj_dic):
+    if vertex not in vertex_adj_dic:
+        print('vertex', vertex, 'not in vertex_adj_dic')
+        return
+    if adj in vertex_adj_dic[vertex]['adj']:
+        vertex_adj_dic[vertex]['adj'].remove(adj)
+    else:
+        print('adj not found')
 
 if __name__ == '__main__':
     main()
