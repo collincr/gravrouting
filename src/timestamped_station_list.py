@@ -1,13 +1,16 @@
 import datetime as dt
-from shortest_path import get_shortest_path_dist_from_stat
+from shortest_path import internal_get_spt_from_stat_name
 
 def main():
     station_list = {'CS25', 'CS26', 'COSO2', 'CS44', 'CS43'}
     permutations = permute(station_list)
+    count = 1
     for stations in permutations:
         res = add_visit_timestamp(stations)
         print("Departure and arrival time of each station")
+        print("Situation [" + str(count) + "]")
         print(res)
+        count += 1
 
 
 ''' Find all permutations of a station list.
@@ -45,9 +48,9 @@ def add_visit_timestamp(stations):
         if last_station == None:
             arrival_time = 0
         else:
-            # 15m/s i.e. 54km/h Will be speed between actual station
-            speed = 15
-            distance =  get_shortest_path_dist_from_stat(last_station, station)
+            # 10m/s i.e. 36m/h Will be speed between actual station
+            speed = 10
+            _, distance = internal_get_spt_from_stat_name(last_station, station)
             road_time = distance / speed    # intra-station time (secs)
             arrival_time = departure_time + road_time
 
