@@ -7,15 +7,27 @@ import csv
 def main():
 
     #preprocess()
+    #get_not_ready_station()
 
-    internal_get_spt_from_stat_name()
+    #internal_get_spt_from_stat_name()
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
     #print(graph_dic)
 
     #internal_test_graph()
+
+    internal_get_spt_from_stat_name('CSE1', 'DOR72')
     pass
+
+def get_not_ready_station():
+    not_found = {'S47A', 'GPO', 'G005', 'HW4', 'CS31A', 'RE22', 'RE27'}
+    not_map = {'S47', 'BMU45', 'J204', 'CR100', 'FLR3', 'GO21', 'CS46', 'CS55',
+            'CS57', 'CS58', 'CS59', 'CS60', 'CS68', 'CS69', 'CS73'}
+    not_ready = set(not_found)
+    not_ready.update(not_map)
+    print(not_ready)
+    return not_ready
 
 def preprocess():
     # Get road network
@@ -29,7 +41,8 @@ def preprocess():
     #print('stations count', len(station_dic))
     #print(stat_id_dic)
 
-    gutil.handle_road_not_found(stat_id_dic, graph_dic)
+    #gutil.handle_road_not_found(stat_id_dic, graph_dic)
+    #gutil.check_vertex_connected(graph_dic)
 
     # Add mapping to station info dictionary
     road_not_map_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
@@ -109,9 +122,13 @@ def internal_dijkstra(src, graph_dic, dist_dic):
                     graph_dic.get(neighbor)['dist'] = new_dist
                     graph_dic.get(neighbor)['prev'] = min_dist_vertex
 
-def internal_get_spt_from_stat_name():
-    station1 = 'CSE1'
-    station2 = 'DOR72'
+def internal_get_spt_from_stat_name(station1, station2):
+    #station1 = 'CSE1'
+    #station2 = 'DOR72'
+    not_ready_stat_set = get_not_ready_station()
+    if station1 in not_ready_stat_set or station2 in not_ready_stat_set:
+        print('stations closest road not ready yet')
+        return
 
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
@@ -127,8 +144,10 @@ def internal_get_spt_from_stat_name():
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
     path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
-    print('Shortest path distance:', dist)
+    print('Shortest path distance (m):', dist)
     print(path)
+
+    return path, dist
 
 def internal_get_straight_dist_from_stats(stat1, stat2, stat_name_dic, stat_id_dic):
     id1 = stat_name_dic[stat1]

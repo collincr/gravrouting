@@ -116,6 +116,7 @@ def check_vertex_connected(vertex_adj_dic):
             components.append(path)
             #print(key, ": (", value['easting'],",", value['northing'],") not visited")
     remove_item_from_dic('visited', vertex_adj_dic)
+    #print('Component count:', len(components))
     return components
 
 def write_dic_to_csv(dic):
@@ -281,7 +282,8 @@ def get_graph(roads_network_geoson, roads_correction_csv):
 
     # Check connectivity again
     components = check_vertex_connected(vertex_adj_dic)
-    print("Components count after removal:",len(components))
+    if len(components) != 1:
+        print("Components count after removal:",len(components))
     #print(vertex_adj_dic)
 
     return vertex_adj_dic
@@ -348,7 +350,8 @@ def get_perpendicular_distance(point, edge, vertex_adj_dic):
    coord2 = vertex_adj_dic[edge[1]]['coordinates']
    denominator = calculate_dst_from_coordinates(coord1, coord2)
    numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
-
+   if denominator == 0:
+        print('denominator is 0', coord1, coord2)
    return (numerator / denominator)
 
 def get_closest_point_on_line(point, edge, vertex_adj_dic):
