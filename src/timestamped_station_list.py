@@ -19,16 +19,30 @@ STATIONS = [
 
 
 def main():
-    station_list = STATIONS[2]
+    timestamped_station(2)
+
+
+''' Given an index to get a list of station in STATIONS.
+    Show timestamps for each station of all permuations.
+    Return the station permutation with shortest time consumed. 
+'''
+def timestamped_station(index):    
+    station_list = STATIONS[index]
     permutations = permute(station_list)
     count = 1
+    min_time = float("inf")
+    shortest = None
     for stations in permutations:
-        res = add_visit_timestamp(stations)
+        res, total_time = add_visit_timestamp(stations)
+        if total_time < min_time:
+            min_time = total_time
+            shortest = stations
         print("Departure and arrival time of each station")
         print("Situation [" + str(count) + "]")
         print(res)
         count += 1
 
+    return shortest
 
 ''' Find all permutations of a station list.
 '''
@@ -65,8 +79,8 @@ def add_visit_timestamp(stations):
         if last_station == None:
             arrival_time = 0
         else:
-            # 10m/s i.e. 36m/h Will be speed between actual station
-            speed = 10
+            # 3m/s i.e. 10.8km/h Average speed on unpaved road
+            speed = 3
             _, distance = internal_get_spt_from_stat_name(last_station, station)
             road_time = distance // speed   # intra-station time (secs)
             arrival_time = departure_time + road_time
@@ -79,7 +93,7 @@ def add_visit_timestamp(stations):
                 + ", " + str(dt.timedelta(seconds = departure_time))
         res.append(entry)
 
-    return res
+    return res, departure_time
 
 
 if __name__ == '__main__':
