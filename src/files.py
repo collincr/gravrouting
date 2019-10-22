@@ -4,6 +4,9 @@ station_status_utm_geojson = '../resources/file/utm_station_status.geojson'
 closest_to_road_goejson = '../data/closest_at_road.geojson'
 closest_to_road_geojson_utm = '../data/closest_at_road_utm.geojson'
 
+# shortest path tree of all stations
+spt_json = '../data/all_stations_spt.json'
+
 # testing
 tmp_roads_geojson = '../data/jasper_tmp.geojson'
 tmp_correction_csv = '../data/roads_correction_tmp.csv'

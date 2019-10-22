@@ -3,11 +3,14 @@ import files
 import numpy
 import json
 import csv
+import os.path
 
 def main():
 
-    #preprocess()
+    preprocess()
     #get_not_ready_station()
+    #get_all_stations_spt()
+    #get_all_stations_spt_dic_from_file()
 
     #internal_get_spt_from_stat_name()
 
@@ -17,7 +20,8 @@ def main():
 
     #internal_test_graph()
 
-    internal_get_spt_from_stat_name('CSE1', 'DOR72')
+    #internal_get_spt_from_stat_name('CSE1', 'DOR72')
+
     pass
 
 def get_not_ready_station():
@@ -26,7 +30,7 @@ def get_not_ready_station():
             'CS57', 'CS58', 'CS59', 'CS60', 'CS68', 'CS69', 'CS73'}
     not_ready = set(not_found)
     not_ready.update(not_map)
-    print(not_ready)
+    #print(not_ready)
     return not_ready
 
 def preprocess():
@@ -55,15 +59,35 @@ def preprocess():
     #closest_road_list = gutil.find_closest_road(road_not_found_stat,
     #        station_dic, graph_dic)
 
-    #sp_dic = get_spt_for_all_vertices(stat_id_dic, graph_dic)
+    #print(stat_id_dic)
+    sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
+    with open(files.spt_json, 'w') as file:
+        file.write(json.dumps(sp_dic))
 
     return graph_dic, stat_id_dic
 
-def get_spt_for_all_vertices(stat_id_dic,graph_dic):
+def get_all_stations_spt_dic_from_file():
+    if not os.path.exists(files.spt_json):
+        print("Havn't generate stations shortest path file!")
+        return None
+    with open(files.spt_json) as file:
+        dic = json.load(file)
+    #print(dic)
+    return dic
+
+def get_spt_for_all_stations(stat_id_dic, graph_dic):
+    limit = '10'
     sp_dic = {}
+    not_ready_set = get_not_ready_station()
     for id1 in stat_id_dic.keys():
+        print('id1', id1)
+        if not is_ready(id1, stat_id_dic):
+            continue
+        #if id1 == limit:
+        #    break
         for id2 in stat_id_dic.keys():
-            if id1 == id2:
+            print('id2', id2)
+            if id1 == id2 or not is_ready(id2, stat_id_dic):
                 continue
             path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic,
                     graph_dic)
@@ -72,6 +96,16 @@ def get_spt_for_all_vertices(stat_id_dic,graph_dic):
             sp_dic[key]['distance'] = dist
             sp_dic[key]['path'] = path
     return sp_dic
+
+def is_ready(stat_id, stat_id_dic):
+    stat = stat_id_dic[stat_id]['name']
+    road = stat_id_dic[stat_id]['road_id']
+    not_ready_set = get_not_ready_station()
+    if stat in not_ready_set or road == -1:
+        print(stat_id, 'not ready')
+        return False
+    return True
+
 '''
 def get_shortest_path_dist_from_stat(stat1, stat2, sp_dic):
     key = stat1 + '#' + stat2
