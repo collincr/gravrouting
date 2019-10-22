@@ -45,8 +45,8 @@ def preprocess():
     #print('stations count', len(station_dic))
     #print(stat_id_dic)
 
-    #gutil.handle_road_not_found(stat_id_dic, graph_dic)
-    #gutil.check_vertex_connected(graph_dic)
+    gutil.handle_road_not_found(stat_id_dic, graph_dic)
+    gutil.check_vertex_connected(graph_dic)
 
     # Add mapping to station info dictionary
     road_not_map_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
@@ -60,9 +60,9 @@ def preprocess():
     #        station_dic, graph_dic)
 
     #print(stat_id_dic)
-    sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
-    with open(files.spt_json, 'w') as file:
-        file.write(json.dumps(sp_dic))
+    #sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
+    #with open(files.spt_json, 'w') as file:
+    #    file.write(json.dumps(sp_dic))
 
     return graph_dic, stat_id_dic
 

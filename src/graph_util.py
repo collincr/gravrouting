@@ -18,7 +18,16 @@ def main():
     #internal_get_perpendicular_distance()
     #internal_get_closest_point_to_line()
     pass
-
+'''
+tmp_dic
+{
+    easting#northing:
+    {
+        'id': 1
+        'adj': {2,3}
+    }
+}
+'''
 def create_vertex_adj_dic(geojson_file):
     tmp_dic = {}
     with open(geojson_file) as f:
@@ -44,7 +53,7 @@ def create_vertex_adj_dic(geojson_file):
                     if i > 0:
                         left_key = pointToKey(line[i-1])
                         left_point_info = tmp_dic.get(left_key)
-                        if left_point_info is not None:
+                        if left_point_info is not None and left_key != key:
                             point_info['adj'].add(left_point_info['id'])
                             left_point_info['adj'].add(tmp_dic[key]['id'])
                         else:
@@ -346,13 +355,15 @@ def handle_road_not_found(station_id_dic, vertex_adj_dic):
     remove_item_from_dic('visited', vertex_adj_dic)
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
-   coord1 = vertex_adj_dic[edge[0]]['coordinates']
-   coord2 = vertex_adj_dic[edge[1]]['coordinates']
-   denominator = calculate_dst_from_coordinates(coord1, coord2)
-   numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
-   if denominator == 0:
+    if edge[0] == edge[1]:
+        print('edge with same vertex')
+    coord1 = vertex_adj_dic[edge[0]]['coordinates']
+    coord2 = vertex_adj_dic[edge[1]]['coordinates']
+    denominator = calculate_dst_from_coordinates(coord1, coord2)
+    numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
+    if denominator == 0:
         print('denominator is 0', coord1, coord2)
-   return (numerator / denominator)
+    return (numerator / denominator)
 
 def get_closest_point_on_line(point, edge, vertex_adj_dic):
     coord1 = vertex_adj_dic[edge[0]]['coordinates']
@@ -365,7 +376,7 @@ def get_closest_point_on_line(point, edge, vertex_adj_dic):
     normalized_dist = dot_product / dist_square
     closest_point = [coord1[0] + coord1_to_coord2[0] * normalized_dist,
             coord1[1] + coord1_to_coord2[1] * normalized_dist]
-    print('closest point:', closest_point[0], closest_point[1])
+    #print('closest point:', closest_point[0], closest_point[1])
     return closest_point
 
 def internal_get_perpendicular_distance(coord1, coord2, point):
@@ -393,7 +404,7 @@ def internal_get_closest_point_on_line(coord1, coord2, point):
     return closest_point
 
 def add_vertex_to_road_network(edge, vertex_coord, vertex_adj_dic):
-    id = get_max_id(vertex_adj_dic) + 1
+    id = str(get_max_id(vertex_adj_dic) + 1)
     remove_adj(edge[0], edge[1], vertex_adj_dic)
     remove_adj(edge[1], edge[0], vertex_adj_dic)
     vertex_adj_dic[id] = {}
@@ -403,7 +414,7 @@ def add_vertex_to_road_network(edge, vertex_coord, vertex_adj_dic):
 def get_max_id(vertex_adj_dic):
     max_id = -1
     for vertex_id in vertex_adj_dic:
-        max_id = max(max_id, vertex_id)
+        max_id = max(max_id, int(vertex_id))
     return max_id
 
 def remove_adj(vertex, adj, vertex_adj_dic):
