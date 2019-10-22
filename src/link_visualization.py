@@ -6,17 +6,21 @@ from matplotlib.pyplot import figure
 from shapely.geometry import LineString
 from timestamped_station_list import timestamped_station
 from shortest_path import internal_get_spt_from_stat_name
+from timestamped_station_list import STATIONS
 
 def main():
-    crs = '+proj=utm +zone=11 +datum=WGS84'
+    #shorted_path_stations = timestamped_station(2)
+    shorted_path_stations = STATIONS[2]     # A list of station name to visualize
+    visualize_path_of_stations(shorted_path_stations)		
+    
 
+def visualize_path_of_stations(stations):
+    crs = '+proj=utm +zone=11 +datum=WGS84'
     print("Preparing vertex data...")
 
     path_vertex_id = []
-    shortest = timestamped_station(2)
-    #shortest = ["CS25", "CS26", "COSO2", "CS44", "CS43"]
-    for i in range(len(shortest) - 1):
-        vertex_id, _ = internal_get_spt_from_stat_name(shortest[i], shortest[i + 1])
+    for i in range(len(stations) - 1):
+        vertex_id, _ = internal_get_spt_from_stat_name(stations[i], stations[i + 1])
         path_vertex_id.extend(vertex_id)
 
     gdf_lines = get_lines_gdf(path_vertex_id, crs, 
