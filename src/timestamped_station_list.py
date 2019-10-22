@@ -51,7 +51,7 @@ def add_visit_timestamp(stations):
             # 10m/s i.e. 36m/h Will be speed between actual station
             speed = 10
             _, distance = internal_get_spt_from_stat_name(last_station, station)
-            road_time = distance / speed    # intra-station time (secs)
+            road_time = distance // speed   # intra-station time (secs)
             arrival_time = departure_time + road_time
 
         measure_time = 150                  # inner-station time (secs)
