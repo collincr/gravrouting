@@ -134,9 +134,9 @@ def write_dic_to_csv(dic):
      for key, val in dic.items():
              w.writerow([key, val])
 
-def write_dic_to_json(dic):
+def write_dic_to_json(dic, filename):
     output = json.dumps(dict)
-    f = open("output.json","w")
+    f = open(filename,"w")
     f.write(output)
     f.close()
 
@@ -344,10 +344,12 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
     return station_id_dic
 
 def handle_road_not_found(station_id_dic, vertex_adj_dic):
+    all_found = True
     for stat in station_id_dic:
         road_coord = station_id_dic[stat]['road_coordinates']
         if road_coord[0] == -1 and road_coord[1] == -1:
             #print('Handle station', stat)
+            all_found = False
             reset_vertex_visit_dic(vertex_adj_dic)
             src = next(iter(vertex_adj_dic)) # first vertex
             closest_coordinate, edge = bfs_iterative(station_id_dic[stat]['coordinates'],
@@ -356,6 +358,8 @@ def handle_road_not_found(station_id_dic, vertex_adj_dic):
             add_coord_to_road_network(edge, closest_coordinate, vertex_adj_dic)
             #check_vertex_connected(vertex_adj_dic)
     remove_item_from_dic('visited', vertex_adj_dic)
+    if all_found:
+        print('All stations have closest road coordinate')
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
     if edge[0] == edge[1]:

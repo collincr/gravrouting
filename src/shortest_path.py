@@ -24,14 +24,13 @@ def main():
 
     pass
 
-def get_not_ready_station():
-    not_found = {'S47A', 'GPO', 'G005', 'HW4', 'CS31A', 'RE22', 'RE27'}
-    not_map = {'S47', 'BMU45', 'J204', 'CR100', 'FLR3', 'GO21', 'CS46', 'CS55',
-            'CS57', 'CS58', 'CS59', 'CS60', 'CS68', 'CS69', 'CS73'}
-    not_ready = set(not_found)
-    not_ready.update(not_map)
-    #print(not_ready)
-    return not_ready
+def get_ignore_stations():
+    stats = {'S47A', 'GPO', 'G005', 'HW4', 'CS31A', 'RE22', 'RE27', 'BMU45',
+            'CR100', 'CS46', 'CS55', 'CS57', 'CS58', 'CS59', 'CS60', 'CS62',
+            'CS68', 'CS69', 'CS73', 'FLR3', 'GO21', 'GPO', 'J204', 'S47', 'CS40',
+            'CS42','CS45','CS47','CS48','CS49','CS50','CS51','CS53','CS54',
+            'CS61','CS72','DOR62','DOR63'}
+    return stats
 
 def preprocess():
     # Get road network
@@ -41,16 +40,17 @@ def preprocess():
 
     # Get station info
     stat_id_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
-            files.closest_to_road_geojson_utm )
+            files.closest_to_road_geojson_utm)
+    remove_invalid_stations(stat_id_dic)
     #print('stations count', len(station_dic))
     #print(stat_id_dic)
 
     gutil.handle_road_not_found(stat_id_dic, graph_dic)
-    gutil.check_vertex_connected(graph_dic)
+    #gutil.check_vertex_connected(graph_dic)
 
     # Add mapping to station info dictionary
     road_not_map_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
-    #print(len(road_not_found_stat), 'stations cannot find road mapping')
+    print(len(road_not_map_stat), "stations can't find road mapping")
 
     # Get station name to id mapping
     #stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
@@ -60,11 +60,16 @@ def preprocess():
     #        station_dic, graph_dic)
 
     #print(stat_id_dic)
-    #sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
-    #with open(files.spt_json, 'w') as file:
-    #    file.write(json.dumps(sp_dic))
+    sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
+    gutil.write_dic_to_json(sp_dic, files.spt_json)
 
     return graph_dic, stat_id_dic
+
+def remove_invalid_stations(stat_id_dic):
+    ignore_stat_set = get_ignore_stations()
+    for stat in list(stat_id_dic):
+        if stat_id_dic[stat]['name'] in ignore_stat_set:
+            del stat_id_dic[stat]
 
 def get_all_stations_spt_dic_from_file():
     if not os.path.exists(files.spt_json):
@@ -78,17 +83,15 @@ def get_all_stations_spt_dic_from_file():
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
     limit = '10'
     sp_dic = {}
-    not_ready_set = get_not_ready_station()
     for id1 in stat_id_dic.keys():
-        print('id1', id1)
-        if not is_ready(id1, stat_id_dic):
-            continue
+        #print('id1', id1)
         #if id1 == limit:
         #    break
         for id2 in stat_id_dic.keys():
-            print('id2', id2)
-            if id1 == id2 or not is_ready(id2, stat_id_dic):
+            #print('id2', id2)
+            if id1 == id2:
                 continue
+            print('finding shortest path of', id1, '->', id2)
             path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic,
                     graph_dic)
             key = id1 + '#' + id2
@@ -96,7 +99,7 @@ def get_spt_for_all_stations(stat_id_dic, graph_dic):
             sp_dic[key]['distance'] = dist
             sp_dic[key]['path'] = path
     return sp_dic
-
+'''
 def is_ready(stat_id, stat_id_dic):
     stat = stat_id_dic[stat_id]['name']
     road = stat_id_dic[stat_id]['road_id']
@@ -105,7 +108,7 @@ def is_ready(stat_id, stat_id_dic):
         print(stat_id, 'not ready')
         return False
     return True
-
+'''
 '''
 def get_shortest_path_dist_from_stat(stat1, stat2, sp_dic):
     key = stat1 + '#' + stat2
