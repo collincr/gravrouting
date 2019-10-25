@@ -336,7 +336,7 @@ id:
     'road_coordinates': [easting, northing, elevation]
 }
 '''
-def create_station_status_dic(stat_id_geojson, stat_road_geojson):
+def create_station_status_from_file(stat_id_geojson, stat_road_geojson):
     # Get closest road coordinates
     station_road_dic = {}
     with open(stat_road_geojson) as f:
