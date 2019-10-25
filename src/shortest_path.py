@@ -26,7 +26,7 @@ def get_not_ready_station():
             'CS57', 'CS58', 'CS59', 'CS60', 'CS68', 'CS69', 'CS73'}
     not_ready = set(not_found)
     not_ready.update(not_map)
-    print(not_ready)
+    #print(not_ready)
     return not_ready
 
 def preprocess():
@@ -144,8 +144,8 @@ def internal_get_spt_from_stat_name(station1, station2):
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
     path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
-    print('Shortest path distance (m):', dist)
-    print(path)
+    #print('Shortest path distance (m):', dist)
+    #print(path)
 
     return path, dist
 
@@ -155,7 +155,7 @@ def internal_get_straight_dist_from_stats(stat1, stat2, stat_name_dic, stat_id_d
     coord1 = stat_id_dic[id1]['coordinates']
     coord2 = stat_id_dic[id2]['coordinates']
     dist = gutil.calculate_dst_from_coordinates(coord1, coord2)
-    print(stat1, stat2, dist)
+    #print(stat1, stat2, dist)
 
 def create_stat_name_id_mapping(station_dic):
     stat_name_dic = {}
