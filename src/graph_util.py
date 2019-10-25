@@ -8,7 +8,8 @@ import numpy
 
 def main():
 
-    #vertex_adj_dic = get_graph(roads_pads_network_UTM_geojson, roads_correction_UTM_csv)
+    vertex_adj_dic = get_graph(files.roads_pads_network_utm_geojson,
+            files.roads_correction_utm_csv)
     #print(get_graph(data_jasper_tmp_geojson, roads_correction_tmp_csv))
 
     # convert geojson to utm form
@@ -18,7 +19,16 @@ def main():
     #internal_get_perpendicular_distance()
     #internal_get_closest_point_to_line()
     pass
-
+'''
+tmp_dic
+{
+    easting#northing:
+    {
+        'id': 1
+        'adj': {2,3}
+    }
+}
+'''
 def create_vertex_adj_dic(geojson_file):
     tmp_dic = {}
     with open(geojson_file) as f:
@@ -45,8 +55,9 @@ def create_vertex_adj_dic(geojson_file):
                         left_key = pointToKey(line[i-1])
                         left_point_info = tmp_dic.get(left_key)
                         if left_point_info is not None:
-                            point_info['adj'].add(left_point_info['id'])
-                            left_point_info['adj'].add(tmp_dic[key]['id'])
+                            if left_key != key:
+                                point_info['adj'].add(left_point_info['id'])
+                                left_point_info['adj'].add(tmp_dic[key]['id'])
                         else:
                             print("Left point is None!")
     vertex_adj_dic = {}
@@ -124,9 +135,9 @@ def write_dic_to_csv(dic):
      for key, val in dic.items():
              w.writerow([key, val])
 
-def write_dic_to_json(dic):
+def write_dic_to_json(dic, filename):
     output = json.dumps(dict)
-    f = open("output.json","w")
+    f = open(filename,"w")
     f.write(output)
     f.close()
 
@@ -226,10 +237,10 @@ def write_matrix_to_file(matrix):
         for line in mat:
             np.savetxt(f, line, '%i')
 
-def add_adj_vertex(vertex1, vertex2, vertex_adj_dic, coord_to_id_dic):
+def add_edge_from_coord(coord1, coord2, vertex_adj_dic, coord_to_id_dic):
 
-    key1 = pointToKey(vertex1)
-    key2 = pointToKey(vertex2)
+    key1 = pointToKey(coord1)
+    key2 = pointToKey(coord2)
     if key1 not in coord_to_id_dic or key2 not in coord_to_id_dic:
         print(key1 + " or " + key2 + " not in coord_to_id_dic")
     else:
@@ -238,17 +249,37 @@ def add_adj_vertex(vertex1, vertex2, vertex_adj_dic, coord_to_id_dic):
         #coord_to_id_dic[key2]['adj'].add(coord_to_id_dic.get(key1)['id'])
         id1 = coord_to_id_dic.get(key1)['id']
         id2 = coord_to_id_dic.get(key2)['id']
-        vertex_adj_dic.get(id1)['adj'].add(id2)
-        vertex_adj_dic.get(id2)['adj'].add(id1)
+        add_adj(id1, id2, vertex_adj_dic)
+        add_adj(id2, id1, vertex_adj_dic)
+        #vertex_adj_dic.get(id1)['adj'].add(id2)
+        #vertex_adj_dic.get(id2)['adj'].add(id1)
 
-def add_correction_to_dic(file_name, vertex_adj_dic, coord_to_id_dic):
+def remove_edge_from_coord(coord1, coord2, vertex_adj_dic, coord_to_id_dic):
+    key1 = pointToKey(coord1)
+    key2 = pointToKey(coord2)
+    if key1 not in coord_to_id_dic or key2 not in coord_to_id_dic:
+        print(key1 + " or " + key2 + " not in coord_to_id_dic")
+    else:
+        id1 = coord_to_id_dic.get(key1)['id']
+        id2 = coord_to_id_dic.get(key2)['id']
+        remove_adj(id1, id2, vertex_adj_dic)
+        remove_adj(id2, id1, vertex_adj_dic)
+
+def apply_road_correction_to_dic(file_name, vertex_adj_dic, coord_to_id_dic):
     with open(file_name, newline='') as csvfile:
         csv_reader = csv.DictReader(csvfile, delimiter=',')
         for row in csv_reader:
             v1 = [row['Easting1'], row['Northing1']]
             v2 = [row['Easting2'], row['Northing2']]
-            add_adj_vertex(v1, v2, vertex_adj_dic, coord_to_id_dic)
-            
+            if row['Action'] == 'Add':
+                #print('Action', row['Action'])
+                add_edge_from_coord(v1, v2, vertex_adj_dic, coord_to_id_dic)
+            elif row['Action'] == 'Remove':
+                #print('Action', row['Action'])
+                remove_edge_from_coord(v1, v2, vertex_adj_dic, coord_to_id_dic)
+            else:
+                print('Wrong action')
+
 def remove_component_from_dic(comp, vertex_visit_dic):
     for vertex_id in comp:
         if vertex_id in vertex_visit_dic:
@@ -272,18 +303,24 @@ id:
 '''
 def get_graph(roads_network_geoson, roads_correction_csv):
     vertex_adj_dic, tmp_dic = create_vertex_adj_dic(roads_network_geoson)
-    add_correction_to_dic(roads_correction_csv, vertex_adj_dic, tmp_dic)
+    apply_road_correction_to_dic(roads_correction_csv, vertex_adj_dic, tmp_dic)
+
+    # Check connectivity
+    components = check_vertex_connected(vertex_adj_dic)
+    #print_kth_componenet(3, components, True, vertex_adj_dic)
 
     # Remove invalid components
-    components = check_vertex_connected(vertex_adj_dic)
     remove_component_from_dic(components[0], vertex_adj_dic)
     remove_component_from_dic(components[1], vertex_adj_dic)
+    remove_component_from_dic(components[3], vertex_adj_dic)
+    remove_component_from_dic(components[4], vertex_adj_dic)
     #print("Components count after removal:",len(components))
 
     # Check connectivity again
     components = check_vertex_connected(vertex_adj_dic)
     if len(components) != 1:
-        print("Components count after removal:",len(components))
+        print("Graph components count is", len(components),
+                "after checking connectivity!")
     #print(vertex_adj_dic)
 
     return vertex_adj_dic
@@ -334,25 +371,35 @@ def create_station_status_dic(stat_id_geojson, stat_road_geojson):
     return station_id_dic
 
 def handle_road_not_found(station_id_dic, vertex_adj_dic):
+    all_found = True
     for stat in station_id_dic:
         road_coord = station_id_dic[stat]['road_coordinates']
         if road_coord[0] == -1 and road_coord[1] == -1:
+            print('Handle station', station_id_dic[stat]['name'])
+            all_found = False
             reset_vertex_visit_dic(vertex_adj_dic)
             src = next(iter(vertex_adj_dic)) # first vertex
             closest_coordinate, edge = bfs_iterative(station_id_dic[stat]['coordinates'],
                     src, vertex_adj_dic)
             station_id_dic[stat]['road_coordinates'] = closest_coordinate
-            add_vertex_to_road_network(edge, closest_coordinate, vertex_adj_dic)
+            insert_coord_to_edge_of_network(edge, closest_coordinate, vertex_adj_dic)
+            #check_vertex_connected(vertex_adj_dic)
     remove_item_from_dic('visited', vertex_adj_dic)
+    if all_found:
+        print('All stations have closest road coordinate')
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
-   coord1 = vertex_adj_dic[edge[0]]['coordinates']
-   coord2 = vertex_adj_dic[edge[1]]['coordinates']
-   denominator = calculate_dst_from_coordinates(coord1, coord2)
-   numerator = abs((coord2[1] - coord1[1]) * point[0] - (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1] - coord2[1] * coord1[0])
-   if denominator == 0:
+    if edge[0] == edge[1]:
+        print('edge with same vertex')
+    coord1 = vertex_adj_dic[edge[0]]['coordinates']
+    coord2 = vertex_adj_dic[edge[1]]['coordinates']
+    denominator = calculate_dst_from_coordinates(coord1, coord2)
+    numerator = abs((coord2[1] - coord1[1]) * point[0] -
+            (coord2[0] - coord1[0]) * point[1] + coord2[0] * coord1[1]
+            - coord2[1] * coord1[0])
+    if denominator == 0:
         print('denominator is 0', coord1, coord2)
-   return (numerator / denominator)
+    return (numerator / denominator)
 
 def get_closest_point_on_line(point, edge, vertex_adj_dic):
     coord1 = vertex_adj_dic[edge[0]]['coordinates']
@@ -365,7 +412,7 @@ def get_closest_point_on_line(point, edge, vertex_adj_dic):
     normalized_dist = dot_product / dist_square
     closest_point = [coord1[0] + coord1_to_coord2[0] * normalized_dist,
             coord1[1] + coord1_to_coord2[1] * normalized_dist]
-    print('closest point:', closest_point[0], closest_point[1])
+    #print('closest point:', closest_point[0], closest_point[1])
     return closest_point
 
 def internal_get_perpendicular_distance(coord1, coord2, point):
@@ -392,19 +439,31 @@ def internal_get_closest_point_on_line(coord1, coord2, point):
     #print('closest point:', closest_point[0], closest_point[1])
     return closest_point
 
-def add_vertex_to_road_network(edge, vertex_coord, vertex_adj_dic):
-    id = get_max_id(vertex_adj_dic) + 1
+def insert_coord_to_edge_of_network(edge, vertex_coord, vertex_adj_dic):
+    #print(edge[0], vertex_adj_dic[edge[0]]['adj'])
+    #print(edge[1], vertex_adj_dic[edge[1]]['adj'])
     remove_adj(edge[0], edge[1], vertex_adj_dic)
     remove_adj(edge[1], edge[0], vertex_adj_dic)
+
+    id = str(get_max_id(vertex_adj_dic) + 1)
     vertex_adj_dic[id] = {}
     vertex_adj_dic[id]['coordinates'] = vertex_coord
     vertex_adj_dic[id]['adj'] = {edge[0], edge[1]}
 
+    add_adj(edge[0], id, vertex_adj_dic)
+    add_adj(edge[1], id, vertex_adj_dic)
+
 def get_max_id(vertex_adj_dic):
     max_id = -1
     for vertex_id in vertex_adj_dic:
-        max_id = max(max_id, vertex_id)
+        max_id = max(max_id, int(vertex_id))
     return max_id
+
+def add_adj(vertex, adj, vertex_adj_dic):
+    if vertex not in vertex_adj_dic:
+        print('vertex', vertex, 'not in vertex_adj_dic')
+        return
+    vertex_adj_dic[vertex]['adj'].add(adj)
 
 def remove_adj(vertex, adj, vertex_adj_dic):
     if vertex not in vertex_adj_dic:

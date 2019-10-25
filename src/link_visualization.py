@@ -4,13 +4,25 @@ import matplotlib.pyplot as plt
 import graph_util as gutil
 from matplotlib.pyplot import figure
 from shapely.geometry import LineString
+from timestamped_station_list import timestamped_station
+from shortest_path import internal_get_spt_from_stat_name
+from timestamped_station_list import STATIONS
 
 def main():
-    crs = '+proj=utm +zone=11 +datum=WGS84'
+    #shorted_path_stations = timestamped_station(2)
+    shorted_path_stations = STATIONS[2]     # A list of station name to visualize
+    visualize_path_of_stations(shorted_path_stations)		
+    
 
+def visualize_path_of_stations(stations):
+    crs = '+proj=utm +zone=11 +datum=WGS84'
     print("Preparing vertex data...")
 
-    path_vertex_id = ['1431', '1432', '1433', '1434', '1435', '1436', '1437', '1438']
+    path_vertex_id = []
+    for i in range(len(stations) - 1):
+        vertex_id, _ = internal_get_spt_from_stat_name(stations[i], stations[i + 1])
+        path_vertex_id.extend(vertex_id)
+
     gdf_lines = get_lines_gdf(path_vertex_id, crs, 
             files.roads_pads_network_utm_geojson, 
             files.roads_correction_utm_csv)
