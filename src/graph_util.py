@@ -383,8 +383,8 @@ def handle_road_not_found(station_id_dic, vertex_adj_dic):
             insert_coord_to_edge_of_network(edge, closest_coordinate, vertex_adj_dic)
             #check_vertex_connected(vertex_adj_dic)
     remove_item_from_dic('visited', vertex_adj_dic)
-    if all_found:
-        print('All stations have closest road coordinate')
+    #if all_found:
+    #    print('All stations have closest road coordinate')
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
     if edge[0] == edge[1]:
