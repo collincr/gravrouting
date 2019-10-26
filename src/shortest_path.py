@@ -7,8 +7,8 @@ import os.path
 
 def main():
 
-    #graph_dic, stat_info_dic = preprocess()
-    #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+    graph_dic, stat_info_dic = preprocess()
+    generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
 
     #get_station_adj_dic()
 
@@ -16,7 +16,7 @@ def main():
     #get_all_stations_spt()
     #get_all_stations_spt_dic_from_file()
 
-    internal_get_spt_from_stat_name('CSE1', 'DOR72')
+    #internal_get_spt_from_stat_name('CSE1', 'DOR72')
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -127,12 +127,10 @@ def get_all_stations_spt_dic_from_file():
     return dic
 
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
-    limit = '10'
+    limit = -1
     sp_dic = {}
     for id1 in stat_id_dic.keys():
         #print('id1', id1)
-        #if id1 == limit:
-        #    break
         for id2 in stat_id_dic.keys():
             #print('id2', id2)
             if id1 == id2:
@@ -144,6 +142,10 @@ def get_spt_for_all_stations(stat_id_dic, graph_dic):
             sp_dic[key] = {}
             sp_dic[key]['distance'] = dist
             sp_dic[key]['path'] = path
+            if limit > 0 and len(sp_dic) >= limit:
+                break
+        if limit > 0 and len(sp_dic) >= limit:
+            break
     return sp_dic
 '''
 def is_ready(stat_id, stat_id_dic):

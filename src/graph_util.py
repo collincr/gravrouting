@@ -136,10 +136,8 @@ def write_dic_to_csv(dic):
              w.writerow([key, val])
 
 def write_dic_to_json(dic, filename):
-    output = json.dumps(dict)
-    f = open(filename,"w")
-    f.write(output)
-    f.close()
+    with open(filename, 'w') as file:
+        file.write(json.dumps(dic))
 
 def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
     if vertex_id in vertex_visit_dic:
