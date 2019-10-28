@@ -7,12 +7,16 @@ import os.path
 
 def main():
 
-    preprocess()
+    #graph_dic, stat_info_dic = preprocess()
+    #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+
+    #get_station_adj_dic()
+
     #get_not_ready_station()
     #get_all_stations_spt()
     #get_all_stations_spt_dic_from_file()
 
-    #internal_get_spt_from_stat_name()
+    internal_get_spt_from_stat_name('CS14', 'CS15')
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -40,18 +44,16 @@ def preprocess():
     #print(graph_dic)
 
     # Get station info
-    stat_id_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
-            files.closest_to_road_geojson_utm)
-    remove_invalid_stations(stat_id_dic)
+    stat_info_dic = get_station_dic()
     #print('stations count', len(station_dic))
     #print(stat_id_dic)
 
-    gutil.handle_road_not_found(stat_id_dic, graph_dic)
+    gutil.handle_road_not_found(stat_info_dic, graph_dic)
     #gutil.check_vertex_connected(graph_dic)
 
     # Add mapping to station info dictionary
-    road_not_map_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
-    print(len(road_not_map_stat), "stations can't find road mapping")
+    road_not_map_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
+    #print(len(road_not_map_stat), "stations can't find road mapping")
 
     # Get station name to id mapping
     #stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
@@ -61,10 +63,54 @@ def preprocess():
     #        station_dic, graph_dic)
 
     #print(stat_id_dic)
-    sp_dic = get_spt_for_all_stations(stat_id_dic, graph_dic)
+    return graph_dic, stat_info_dic
+
+def generate_shortest_path_for_all_stat(stat_info_dic, graph_dic):
+    sp_dic = get_spt_for_all_stations(stat_info_dic, graph_dic)
     gutil.write_dic_to_json(sp_dic, files.spt_json)
 
-    return graph_dic, stat_id_dic
+def get_station_adj_dic():
+    graph_dic, stat_info_dic = preprocess()
+    for stat in stat_info_dic:
+        road = stat_info_dic[stat]['road_id']
+        if road in graph_dic:
+            graph_dic[road]['stat_id'] = stat
+        else:
+            print('station road id not in graph_dic')
+
+    for stat in stat_info_dic:
+        #print(stat_info_dic[stat]['name'])
+        gutil.reset_vertex_visit_dic(graph_dic)
+        adj_set = get_stat_adj_from_road(stat_info_dic[stat]['road_id'],
+                stat_info_dic, graph_dic)
+        stat_info_dic[stat]['adj'] = adj_set
+
+    #print(stat_info_dic)
+    return stat_info_dic
+
+def get_stat_adj_from_road(start, stat_info_dic, graph_dic):
+    stat_adj = set()
+    #start = stat_info_dic[next(iter(stat_info_dic))]['road_id']
+
+    queue = [start]
+    while queue:
+        road = queue.pop(0)
+        if not graph_dic[road]['visited']:
+            graph_dic[road]['visited'] = True
+            for adj in graph_dic[road]['adj']:
+                #print(adj, graph_dic[adj]['coordinates'])
+                if graph_dic[adj].get('stat_id') is not None:
+                    stat_adj.add(graph_dic[adj]['stat_id'])
+                else:
+                    queue.append(adj)
+    #print(stat_adj)
+    return stat_adj
+
+def get_station_dic():
+    stat_id_dic = gutil.create_station_status_from_file(
+            files.station_status_utm_geojson,files.closest_to_road_geojson_utm)
+    remove_invalid_stations(stat_id_dic)
+    return stat_id_dic
 
 def remove_invalid_stations(stat_id_dic):
     ignore_stat_set = get_ignore_stations()
@@ -163,25 +209,20 @@ def internal_dijkstra(src, graph_dic, dist_dic):
 def internal_get_spt_from_stat_name(station1, station2):
     #station1 = 'CSE1'
     #station2 = 'DOR72'
-    not_ready_stat_set = get_not_ready_station()
+    not_ready_stat_set = get_ignore_stations()
     if station1 in not_ready_stat_set or station2 in not_ready_stat_set:
         print('stations closest road not ready yet')
         return
 
-    graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
-            files.roads_correction_utm_csv)
-    #print(graph_dic)
-
-    stat_id_dic = gutil.create_station_status_dic(files.station_status_utm_geojson,
-            files.closest_to_road_geojson_utm )
-    road_not_found_stat = add_station_to_road_mapping(stat_id_dic, graph_dic)
-    stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
+    graph_dic, stat_info_dic = preprocess()
+    road_not_found_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
+    stat_name_dic = create_stat_name_id_mapping(stat_info_dic)
 
     #internal_get_straight_dist_from_stats(station1, station2, stat_name_dic, stat_id_dic)
 
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
-    path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic, graph_dic)
+    path, dist = get_shortest_path_from_stat_id(id1, id2, stat_info_dic, graph_dic)
     #print('Shortest path distance (m):', dist)
     #print(path)
 
