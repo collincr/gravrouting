@@ -7,8 +7,8 @@ import os.path
 
 def main():
 
-    #graph_dic, stat_info_dic = preprocess()
-    #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+    graph_dic, stat_info_dic = preprocess()
+    generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
 
     #get_station_adj_dic()
 
@@ -16,7 +16,8 @@ def main():
     #get_all_stations_spt()
     #get_all_stations_spt_dic_from_file()
 
-    internal_get_spt_from_stat_name('CS14', 'CS15')
+
+    #internal_get_spt_from_stat_name('CSE1', 'DOR72')
 
     #graph_dic, graph_edges = get_test_graph()
     #dijkstra(graph_dic, "0", graph_edges)
@@ -53,7 +54,9 @@ def preprocess():
 
     # Add mapping to station info dictionary
     road_not_map_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
-    #print(len(road_not_map_stat), "stations can't find road mapping")
+
+    if len(road_not_map_stat) > 0:
+        print(len(road_not_map_stat), "stations can't find road mapping")
 
     # Get station name to id mapping
     #stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
@@ -64,6 +67,35 @@ def preprocess():
 
     #print(stat_id_dic)
     return graph_dic, stat_info_dic
+'''
+def get_road_network_dic():
+    graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
+            files.roads_correction_utm_csv)
+    return graph_dic
+'''
+def get_shortest_path(stat1, stat2, stat_info_dic, stat_sp_dic):
+    if stat1 == stat2:
+        return 0, []
+    if stat1 in get_ignore_stations() or stat2 in get_ignore_stations():
+        print('station is invalid')
+        return -1, []
+
+    stat_id1 = -1
+    stat_id2 = -1
+    for stat_id in stat_info_dic:
+        if stat_info_dic[stat_id]['name'] == stat1:
+            if stat_id1 != -1:
+                print('Found same station name', stat1)
+            stat_id1 = stat_id
+        elif stat_info_dic[stat_id]['name'] == stat2:
+            if stat_id2 != -1:
+                print('Found same station name', stat2)
+            stat_id2 = stat_id
+        if stat_id1 != -1 and stat_id2 != -1:
+            break
+    key = stat_id1 + '#' + stat_id2
+    #print(stat_sp_dic[key])
+    return stat_sp_dic[key]['distance'], stat_sp_dic[key]['path']
 
 def generate_shortest_path_for_all_stat(stat_info_dic, graph_dic):
     sp_dic = get_spt_for_all_stations(stat_info_dic, graph_dic)
@@ -128,12 +160,10 @@ def get_all_stations_spt_dic_from_file():
     return dic
 
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
-    limit = '10'
+    limit = 3
     sp_dic = {}
     for id1 in stat_id_dic.keys():
         #print('id1', id1)
-        #if id1 == limit:
-        #    break
         for id2 in stat_id_dic.keys():
             #print('id2', id2)
             if id1 == id2:
@@ -145,6 +175,10 @@ def get_spt_for_all_stations(stat_id_dic, graph_dic):
             sp_dic[key] = {}
             sp_dic[key]['distance'] = dist
             sp_dic[key]['path'] = path
+            if limit > 0 and len(sp_dic) >= limit:
+                break
+        if limit > 0 and len(sp_dic) >= limit:
+            break
     return sp_dic
 '''
 def is_ready(stat_id, stat_id_dic):
@@ -176,7 +210,7 @@ def internal_test_graph():
     internal_dijkstra('0', test_graph_adj_dic, test_graph_edge_dic)
     #print(test_graph_adj_dic)
 
-    get_shortest_path('0', '4', test_graph_adj_dic)
+    get_shortest_path_from_road_id('0', '4', test_graph_adj_dic)
 
 def internal_dijkstra(src, graph_dic, dist_dic):
     if src not in graph_dic:
@@ -252,7 +286,7 @@ def get_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic):
     if road1_id == -1 or road2_id == -1:
         print(src_id, 'or', dst_id, 'do not have closest road')
         return -100, -100
-    return get_shortest_path(road1_id, road2_id, graph_dic)
+    return get_shortest_path_from_road_id(road1_id, road2_id, graph_dic)
 
 def add_station_to_road_mapping(station_dic, road_dic):
     stat_road_not_map_stat = []
@@ -272,7 +306,7 @@ def add_station_to_road_mapping(station_dic, road_dic):
             stat_road_not_map_stat.append(stat)
     return stat_road_not_map_stat
 
-def get_shortest_path(src, dst, graph_dic):
+def get_shortest_path_from_road_id(src, dst, graph_dic):
     dijkstra(src, graph_dic)
     path = get_dijkstra_path(src, dst, graph_dic)
     dist = graph_dic[dst]['dist']

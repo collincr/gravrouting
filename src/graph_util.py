@@ -136,10 +136,8 @@ def write_dic_to_csv(dic):
              w.writerow([key, val])
 
 def write_dic_to_json(dic, filename):
-    output = json.dumps(dict)
-    f = open(filename,"w")
-    f.write(output)
-    f.close()
+    with open(filename, 'w') as file:
+        file.write(json.dumps(dic))
 
 def get_coord_from_vertex_id(vertex_id, vertex_visit_dic):
     if vertex_id in vertex_visit_dic:
@@ -385,8 +383,9 @@ def handle_road_not_found(station_id_dic, vertex_adj_dic):
             insert_coord_to_edge_of_network(edge, closest_coordinate, vertex_adj_dic)
             #check_vertex_connected(vertex_adj_dic)
     remove_item_from_dic('visited', vertex_adj_dic)
-#    if all_found:
-#        print('All stations have closest road coordinate')
+
+    #if all_found:
+    #    print('All stations have closest road coordinate')
 
 def get_perpendicular_distance(point, edge, vertex_adj_dic):
     if edge[0] == edge[1]:
