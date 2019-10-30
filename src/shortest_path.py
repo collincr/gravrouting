@@ -7,10 +7,13 @@ import os.path
 
 def main():
 
-    graph_dic, stat_info_dic = preprocess()
-    generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+    # Generate shortest path for all stations and write to file
+    #graph_dic, stat_info_dic = preprocess()
+    #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
 
-    #get_station_adj_dic()
+    # Print station's adjacent stations
+    stat_adj_dic = get_station_adj_dic()
+    print_stat_adj('DOR72', stat_adj_dic)
 
     #get_not_ready_station()
     #get_all_stations_spt()
@@ -114,7 +117,7 @@ def get_station_adj_dic():
                 stat_info_dic, graph_dic)
         stat_info_dic[stat]['adj'] = adj_set
 
-    print(stat_info_dic)
+    #print(stat_info_dic)
     return stat_info_dic
 
 def get_stat_adj_from_road(start, stat_info_dic, graph_dic):
@@ -128,12 +131,20 @@ def get_stat_adj_from_road(start, stat_info_dic, graph_dic):
             graph_dic[road]['visited'] = True
             for adj in graph_dic[road]['adj']:
                 #print(adj, graph_dic[adj]['coordinates'])
-                if graph_dic[adj].get('stat_id') is not None:
-                    stat_adj.add(graph_dic[adj]['stat_id'])
-                else:
-                    queue.append(adj)
+                if not graph_dic[adj]['visited']:
+                    if graph_dic[adj].get('stat_id') is not None:
+                        stat_adj.add(graph_dic[adj]['stat_id'])
+                    else:
+                        queue.append(adj)
     #print(stat_adj)
     return stat_adj
+
+def print_stat_adj(stat, stat_adj_dic):
+    for stat_id in stat_adj_dic:
+        if stat_adj_dic[stat_id]['name'] == stat:
+            for adj in stat_adj_dic[stat_id]['adj']:
+                print(stat_adj_dic[adj]['name'], end = " ")
+    print()
 
 def get_station_dic():
     stat_id_dic = gutil.create_station_status_from_file(
@@ -284,7 +295,18 @@ def get_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic):
         print(src_id, 'or', dst_id, 'do not have closest road')
         return -100, -100
     return get_shortest_path_from_road_id(road1_id, road2_id, graph_dic)
-
+'''
+Add road_id item to station dictionary
+'id':
+{
+    'name': 'RE37',
+    'type': 0,
+    'status': 'Found',
+    'coordinates': [easting, northing],
+    'road_coordinates': [easting, northing, elevation]
+    'road_id': '4'
+}
+'''
 def add_station_to_road_mapping(station_dic, road_dic):
     stat_road_not_map_stat = []
     for stat in station_dic:
