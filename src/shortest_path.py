@@ -19,6 +19,7 @@ def main():
     #get_all_stations_spt()
     #get_all_stations_spt_dic_from_file()
 
+
     #internal_get_spt_from_stat_name('CSE1', 'DOR72')
 
     #graph_dic, graph_edges = get_test_graph()
@@ -30,6 +31,7 @@ def main():
     #internal_get_spt_from_stat_name('CSE1', 'DOR72')
 
     pass
+
 
 def get_ignore_stations():
     stats = {'S47A', 'GPO', 'G005', 'HW4', 'CS31A', 'RE22', 'RE27', 'BMU45',
@@ -55,6 +57,7 @@ def preprocess():
 
     # Add mapping to station info dictionary
     road_not_map_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
+
     if len(road_not_map_stat) > 0:
         print(len(road_not_map_stat), "stations can't find road mapping")
 
@@ -265,8 +268,8 @@ def internal_get_spt_from_stat_name(station1, station2):
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
     path, dist = get_shortest_path_from_stat_id(id1, id2, stat_info_dic, graph_dic)
-    print('Shortest path distance (m):', dist)
-    print(path)
+    #print('Shortest path distance (m):', dist)
+    #print(path)
 
     return path, dist
 
@@ -276,7 +279,7 @@ def internal_get_straight_dist_from_stats(stat1, stat2, stat_name_dic, stat_id_d
     coord1 = stat_id_dic[id1]['coordinates']
     coord2 = stat_id_dic[id2]['coordinates']
     dist = gutil.calculate_dst_from_coordinates(coord1, coord2)
-    print(stat1, stat2, dist)
+    #print(stat1, stat2, dist)
 
 def create_stat_name_id_mapping(station_dic):
     stat_name_dic = {}
