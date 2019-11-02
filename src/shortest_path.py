@@ -28,8 +28,6 @@ def main():
 
     #internal_test_graph()
 
-    #internal_get_spt_from_stat_name('CSE1', 'DOR72')
-
     pass
 
 
