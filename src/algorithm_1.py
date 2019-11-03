@@ -3,12 +3,19 @@ import collections
 import operator
 import time
 from shortest_path import internal_get_spt_from_stat_name
+import shortest_path as sp
 
 distance_dct = {}
-
+road_network_dic = None
+station_info_dic = None
+stations_shortest_path_dic = None
 
 def main():
 	print(str(dt.timedelta(seconds = time.time())))
+	# Initialize the station dict
+	road_network_dic, station_info_dic = sp.preprocess()
+	stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+	
 	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
 	permutation_list = get_permutation_with_mini_time(station_list)
 	#permutation_list = ['CS44', 'COSO2', 'CS43', 'CS25', 'CS26']
@@ -31,7 +38,13 @@ def getDistance(station1, station2):
 		#print("cache")
 		return None, distance_dct[station2][station1]
 	
-	_, distance = internal_get_spt_from_stat_name(station1, station2)
+	distance = 0
+	if stations_shortest_path_dic is not None:
+		distance, path = sp.get_shortest_path(stat1, stat2, station_info_dic,
+				stations_shortest_path_dic)
+	else:
+		_, distance = internal_get_spt_from_stat_name(station1, station2)
+
 	if station1 not in distance_dct:
 		distance_dct[station1] = {}
 	
