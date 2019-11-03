@@ -361,7 +361,8 @@ def create_station_status_from_file(stat_id_geojson, stat_road_geojson):
         station_id_dic[station_id]['status'] = station_status
         station_id_dic[station_id]['coordinates'] = station_coord
         if station_name in station_road_dic:
-            station_id_dic[station_id]['road_coordinates'] = station_road_dic[station_name]
+            station_id_dic[station_id]['road_coordinates'] = \
+                [int(i) for i in station_road_dic[station_name]]
         else:
             #print(station_name, "closest road not found")
             station_id_dic[station_id]['road_coordinates'] = [-1, -1]
