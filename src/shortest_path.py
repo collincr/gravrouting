@@ -28,6 +28,8 @@ def main():
 
     #internal_test_graph()
 
+    #get_stat_info_from_name('J217', stat_info_dic)
+    #get_stat_info_from_name('B-14', stat_info_dic)
     pass
 
 
@@ -169,7 +171,7 @@ def get_all_stations_spt_dic_from_file():
     return dic
 
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
-    limit = 3
+    limit = 5
     sp_dic = {}
     for id1 in stat_id_dic.keys():
         #print('id1', id1)
@@ -266,8 +268,8 @@ def internal_get_spt_from_stat_name(station1, station2):
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
     path, dist = get_shortest_path_from_stat_id(id1, id2, stat_info_dic, graph_dic)
-    #print('Shortest path distance (m):', dist)
-    #print(path)
+    print('Shortest path distance (m):', dist)
+    print(path)
 
     return path, dist
 
@@ -415,6 +417,11 @@ def get_test_graph_edge_dic():
             test_graph_edge_dic[key2] = int(row['edge'])
     #print(test_graph_edge_dic)
     return test_graph_edge_dic
+
+def get_stat_info_from_name(stat_name, stat_dic):
+    for stat_id in stat_dic:
+        if stat_dic[stat_id]['name'] == stat_name:
+            print(stat_id, stat_dic[stat_id])
 
 if __name__ == '__main__':
     main()
