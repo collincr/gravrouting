@@ -12,8 +12,10 @@ def main():
     #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
 
     # Print station's adjacent stations
-    stat_adj_dic = get_station_adj_dic()
-    print_stat_adj('DOR72', stat_adj_dic)
+    #stat_adj_dic = get_station_adj_dic()
+    #print_stat_adj('DOR72', stat_adj_dic)
+    
+    print(get_station_dic())
 
     #get_not_ready_station()
     #get_all_stations_spt()
@@ -96,8 +98,10 @@ def get_shortest_path(stat1, stat2, stat_info_dic, stat_sp_dic):
             stat_id2 = stat_id
         if stat_id1 != -1 and stat_id2 != -1:
             break
-    key = stat_id1 + '#' + stat_id2
+    key = str(stat_id1) + '#' + str(stat_id2)
     #print(stat_sp_dic[key])
+    if key not in stat_sp_dic:
+        return None, None
     return stat_sp_dic[key]['distance'], stat_sp_dic[key]['path']
 
 def generate_shortest_path_for_all_stat(stat_info_dic, graph_dic):
