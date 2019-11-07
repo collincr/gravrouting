@@ -10,7 +10,7 @@ with open('../data/20190904_station_sequence.csv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	station = '-1'
-	prev_time = 0;
+	prev_time = 0
 	for row in csv_reader:
 		if line_count != 0:
 			if station != '-1' and row[5] != station:

@@ -18,7 +18,7 @@ with open('../resources/file/intra_measurement_time.txt') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	station = '-1'
-	prev_time = 0;
+	prev_time = 0
 	for row in csv_reader:
 		num = get_sec(row[1][1:-1])
 		if num > 260 and num < 300:
