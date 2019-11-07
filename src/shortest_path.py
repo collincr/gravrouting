@@ -176,7 +176,7 @@ def get_all_stations_spt_dic_from_file():
     return dic
 
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
-    limit = 5
+    limit = -1
     sp_dic = {}
     for id1 in stat_id_dic.keys():
         #print('id1', id1)
@@ -273,8 +273,8 @@ def internal_get_spt_from_stat_name(station1, station2):
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
     path, dist = get_shortest_path_from_stat_id(id1, id2, stat_info_dic, graph_dic)
-    print('Shortest path distance (m):', dist)
-    print(path)
+    #print('Shortest path distance (m):', dist)
+    #print(path)
 
     return path, dist
 
