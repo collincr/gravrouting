@@ -10,12 +10,13 @@ def main():
     # Generate shortest path for all stations and write to file
     #graph_dic, stat_info_dic = preprocess()
     #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+    #gutil.write_dic_to_json( stat_info_dic, files.station_info_json)
 
     # Print station's adjacent stations
     #stat_adj_dic = get_station_adj_dic()
     #print_stat_adj('DOR72', stat_adj_dic)
     
-    print(get_station_dic())
+    #print(get_station_dic())
 
     #get_not_ready_station()
     #get_all_stations_spt()

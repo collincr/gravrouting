@@ -1,3 +1,4 @@
+# coordinates conversion
 roads_pads_network_utm_geojson = '../data/roads_pads_network_w_stations_utm.geojson'
 roads_correction_utm_csv = '../data/roads_correction_utm.csv'
 station_status_utm_geojson = '../resources/file/utm_station_status.geojson'
@@ -6,6 +7,9 @@ closest_to_road_geojson_utm = '../data/closest_at_road_utm.geojson'
 
 # shortest path tree of all stations
 spt_json = '../data/all_stations_spt.json'
+
+# debugging
+station_info_json = '../data/stations_info.json'
 
 # testing
 tmp_roads_geojson = '../data/jasper_tmp.geojson'
