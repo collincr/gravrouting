@@ -4,7 +4,7 @@ import json
 import geopandas as gpd
 import data_readin_conversion as drc
 import files
-import numpy
+import numpy as np
 
 def main():
 
@@ -97,7 +97,7 @@ def dfs_iterative(vertex_id, vertex_visit_dic, path):
 
 def bfs_iterative(coordinate, src, vertex_visit_dic):
     queue = [src]
-    min_dist = numpy.Inf
+    min_dist = np.Inf
     edge = []
     closest_coord = [-1, -1]
     while queue:
@@ -191,7 +191,7 @@ def find_closest_road(stat_list, stat_dic, road_dic):
     closest_road_list = []
     for stat in stat_list:
         stat_coordinate = stat_dic[stat]['coordinates']
-        min_dist = numpy.Inf
+        min_dist = np.Inf
         road_id = -1
         for road in road_dic:
             road_coordinate = road_dic[road]['coordinates']

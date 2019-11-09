@@ -10,12 +10,13 @@ def main():
     # Generate shortest path for all stations and write to file
     #graph_dic, stat_info_dic = preprocess()
     #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
+    #gutil.write_dic_to_json( stat_info_dic, files.station_info_json)
 
     # Print station's adjacent stations
     #stat_adj_dic = get_station_adj_dic()
     #print_stat_adj('DOR72', stat_adj_dic)
     
-    print(get_station_dic())
+    #print(get_station_dic())
 
     #get_not_ready_station()
     #get_all_stations_spt()
@@ -104,6 +105,25 @@ def get_shortest_path(stat1, stat2, stat_info_dic, stat_sp_dic):
         return None, None
     return stat_sp_dic[key]['distance'], stat_sp_dic[key]['path']
 
+def get_shortest_path_from_stat_id(id1, id2, stat_info_dic, stat_sp_dic):
+    key1 = id1 + "#" + id2
+    key2 = id2 + "#" + id1
+    if key1 not in stat_sp_dic and key2 not in stat_sp_dic:
+        print("station", id1, id2, "not found in stat_sp_dic")
+        return None, None
+    dist1 = None
+    dist2 = None
+    if key1 in stat_sp_dic:
+        dist1 = stat_sp_dic[key1]['distance']
+        return stat_sp_dic[key1]['distance'], stat_sp_dic[key1]['path']
+    if key2 in stat_sp_dic:
+        dist2 = stat_sp_dic[key2]['distance']
+        return stat_sp_dic[key2]['distance'], stat_sp_dic[key2]['path']
+    #if dist1 is not None and dist2 is not None and dist1 != dist2:
+    #    print("Distance is not consistant!")
+    return None, None
+
+
 def generate_shortest_path_for_all_stat(stat_info_dic, graph_dic):
     sp_dic = get_spt_for_all_stations(stat_info_dic, graph_dic)
     gutil.write_dic_to_json(sp_dic, files.spt_json)
@@ -175,7 +195,7 @@ def get_all_stations_spt_dic_from_file():
     return dic
 
 def get_spt_for_all_stations(stat_id_dic, graph_dic):
-    limit = 5
+    limit = -1
     sp_dic = {}
     for id1 in stat_id_dic.keys():
         #print('id1', id1)
@@ -184,7 +204,7 @@ def get_spt_for_all_stations(stat_id_dic, graph_dic):
             if id1 == id2:
                 continue
             print('finding shortest path of', id1, '->', id2)
-            path, dist = get_shortest_path_from_stat_id(id1, id2, stat_id_dic,
+            path, dist = calculate_shortest_path_from_stat_id(id1, id2, stat_id_dic,
                     graph_dic)
             key = id1 + '#' + id2
             sp_dic[key] = {}
@@ -271,9 +291,10 @@ def internal_get_spt_from_stat_name(station1, station2):
 
     id1 = stat_name_dic[station1]
     id2 = stat_name_dic[station2]
-    path, dist = get_shortest_path_from_stat_id(id1, id2, stat_info_dic, graph_dic)
-    print('Shortest path distance (m):', dist)
-    print(path)
+    path, dist = calculate_shortest_path_from_stat_id(id1, id2,
+            stat_info_dic,graph_dic)
+    #print('Shortest path distance (m):', dist)
+    #print(path)
 
     return path, dist
 
@@ -292,7 +313,7 @@ def create_stat_name_id_mapping(station_dic):
         stat_name_dic[stat_name] = stat_id
     return stat_name_dic
 
-def get_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic):
+def calculate_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic):
     if src_id not in station_dic or dst_id not in station_dic:
         print('Invalid station id')
         return -100, -100
