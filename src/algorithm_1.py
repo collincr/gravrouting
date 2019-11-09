@@ -9,13 +9,13 @@ distance_dct = {}
 road_network_dic = None
 station_info_dic = None
 stations_shortest_path_dic = None
-
+'''
 def main():
 	print(str(dt.timedelta(seconds = time.time())))
 	# Initialize the station dict
 	road_network_dic, station_info_dic = sp.preprocess()
 	stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
-	
+
 	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
 	permutation_list = get_permutation_with_mini_time(station_list)
 	#permutation_list = ['CS44', 'COSO2', 'CS43', 'CS25', 'CS26']
@@ -23,6 +23,39 @@ def main():
 	print(permutation_list)
 	simulate_visit_station(permutation_list)
 	print(str(dt.timedelta(seconds = time.time())))
+'''
+def main():
+    '''
+    station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
+    #print(station_list)
+
+    stat_dic = sp.get_station_dic()
+    stat_name_dic = sp.create_stat_name_id_mapping(stat_dic)
+    for stat in station_list:
+        print(stat, stat_name_dic[stat])
+    '''
+    stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
+    time, visit_path = get_visit_path(stat_id_list)
+
+def get_visit_path(stat_id_list):
+
+    print(str(dt.timedelta(seconds = time.time())))
+    # Initialize the station dict
+    road_network_dic, station_info_dic = sp.preprocess()
+    stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+
+    station_list = []
+    for stat_id in stat_id_list:
+        station_list.append(str(station_info_dic[stat_id]['name']))
+
+    #print(station_list)
+    permutation_list = get_permutation_with_mini_time(station_list)
+    print("first permutation:")
+    print(permutation_list)
+    visit_time, visit_path = simulate_visit_station(permutation_list)
+    print(str(dt.timedelta(seconds = time.time())))
+
+    return visit_time, visit_path
 
 def getTime(timestr):
 	minute = timestr / 60
@@ -153,7 +186,7 @@ def simulate_visit_station(permutation_list):
 	print("final path:")
 	print(visit_path)
 	print(visit_time)
-		
+	return visit_path, visit_time
 
 
 ''' Find all permutations of a station list.

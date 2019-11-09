@@ -13,7 +13,7 @@ def get_cluster_dic():
 
     cluster_number = 11
     cluster_labels = agglomerative_clustering(cluster_number, dist_matrix)
-    print(cluster_labels)
+    #print(cluster_labels)
     
     stat_list = np.array(list(station_dic.keys()))
     cluster_stat_dic = {}
