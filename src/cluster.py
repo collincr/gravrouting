@@ -170,8 +170,9 @@ for sub in range(0,cluster_num):
 	else:	
 		for j in range(0,len(x)):
 			plt.annotate(label, (x[j]+50, y[j]+50))
-			label += 1
+			num += 1
 		print(str(label)+": "+str(num))
+		label += 1
 
 
 plt.show()
