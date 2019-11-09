@@ -4,7 +4,8 @@ import shortest_path as sp
 from sklearn.cluster import AgglomerativeClustering
 
 def main():
-    get_cluster_dic()
+    cluster_stat_dic = get_cluster_dic()
+    find_cluster_adj(cluster_stat_dic)
     pass
 
 def get_cluster_dic():
@@ -18,11 +19,37 @@ def get_cluster_dic():
     stat_list = np.array(list(station_dic.keys()))
     cluster_stat_dic = {}
     for i in range(0, cluster_number):
-        cluster_stat_dic[str(i)] = stat_list[cluster_labels==i]
+        cluster_stat_dic[str(i)] = {}
+        cluster_stat_dic[str(i)]['stations'] = stat_list[cluster_labels==i]
 
-    print(cluster_stat_dic)
+    #print(cluster_stat_dic)
     #print(cluster_stat_dic['0'])
     return cluster_stat_dic
+
+def find_cluster_adj(cluster_stat_dic):
+    for c1 in cluster_stat_dic:
+        cluster_stat_dic[c1]['adj'] = set()
+        for c2 in cluster_stat_dic:
+            if c1 != c2:
+                #print("Check clusters", c1, c2)
+                if is_cluster_adj(cluster_stat_dic[c1]['stations'],
+                        cluster_stat_dic[c2]['stations']):
+                    cluster_stat_dic[c1]['adj'].add(c2)
+    #print(cluster_stat_dic)
+
+def is_cluster_adj(cluster1_stats, cluster2_stats):
+    stat_adj_dic = sp.get_station_adj_dic()
+    for stat1 in cluster1_stats:
+        for stat2 in cluster2_stats:
+            if stat1 == stat2:
+                print("stat1 and stat2 should not be the same!", stat1, stat2)
+            else:
+                if stat1 not in stat_adj_dic:
+                    print("Couldn't find stat1", stat1, "in stat_adj_dic")
+                else:
+                    if stat2 in stat_adj_dic[stat1]['adj']:
+                        return True
+    return False
 
 def agglomerative_clustering(cluster_num, dist_matrix):
     hc = AgglomerativeClustering(n_clusters=cluster_num, affinity = 'precomputed',
