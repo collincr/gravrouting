@@ -14,6 +14,11 @@ import shortest_path as sp
 from shortest_path import internal_get_spt_from_stat_name
 import pickle
 
+cluster_num = 9
+recluster_num = 3
+cluster_size_limit = 13
+
+label = 0
 
 def computeDisMetrix():
 	staion_dic = get_station_dic()
@@ -43,6 +48,45 @@ def computeDisMetrix():
 	
 	return dis_metrix
 
+
+def reCluster(dirmap):
+	# Re-cluster
+	global label
+	dis_metrix = [([0] * len(dirmap)) for i in range(len(dirmap))]
+	for station in range(0,len(dirmap)):
+		for station1 in range(0,len(dirmap)):
+			if station != station1:
+				dis_metrix[station][station1] = itemlist[dirmap[station]][dirmap[station1]]
+				dis_metrix[station1][station] = itemlist[dirmap[station]][dirmap[station1]]
+	
+	recluster_num = int(len(dirmap) / 7)
+	hc2 = AgglomerativeClustering(n_clusters=recluster_num, affinity = 'precomputed', linkage = 'average')
+	dis_metrix = np.array(dis_metrix)
+	y_hc2 = hc2.fit_predict(dis_metrix)
+	
+	number = 1
+	for sub2 in range(0,recluster_num):
+		num = 0
+		if np.count_nonzero(y_hc2 == sub2) > cluster_size_limit:
+			dirmap2 = {}
+			index = 0
+			for i in range(0, len(y_hc2)):
+				if sub2 == y_hc2[i]:
+					dirmap2[index] = dirmap[i]
+					index += 1
+			reCluster(dirmap2)
+		else:
+			for i in range(0, len(y_hc2)):
+				if sub2 == y_hc2[i]:
+					x = loc[dirmap[i], 0]
+					y = loc[dirmap[i], 1]
+					plt.annotate(str(label), (x+50, y+50))
+					num += 1
+			print(str(label)+": "+str(num))
+			label += 1
+		
+		
+		
 #dis_metrix = computeDisMetrix()
 
 itemlist = None
@@ -100,7 +144,7 @@ loc = np.array(loc)
 
 #hc = AgglomerativeClustering(n_clusters=4, affinity = 'euclidean', linkage = 'ward')
 #y_hc = hc.fit_predict(points)
-cluster_num = 11
+
 hc = AgglomerativeClustering(n_clusters=cluster_num, affinity = 'precomputed', linkage = 'average')
 y_hc = hc.fit_predict(itemlist)
 
@@ -115,14 +159,19 @@ for sub in range(0,cluster_num):
 	x = loc[y_hc ==sub,0]
 	y = loc[y_hc ==sub,1]
 	num = 0
-	for j in range(0,len(x)):
-		plt.annotate(sub, (x[j]+50, y[j]+50))
-		num += 1
-	print(str(sub)+": "+str(num))
+	if len(x) > cluster_size_limit:
+		dirmap = {}
+		index = 0
+		for i in range(0, len(y_hc)):
+			if y_hc[i] == sub:
+				dirmap[index] = i
+				index += 1
+		reCluster(dirmap)
+	else:	
+		for j in range(0,len(x)):
+			plt.annotate(label, (x[j]+50, y[j]+50))
+			label += 1
+		print(str(label)+": "+str(num))
 
-#plt.scatter(loc[y_hc ==0,0], loc[y_hc == 0,1], s=20, c='red')
-#plt.scatter(loc[y_hc==1,0], loc[y_hc == 1,1], s=20, c='black')
-#plt.scatter(loc[y_hc ==2,0], loc[y_hc == 2,1], s=20, c='blue')
-#plt.scatter(loc[y_hc ==3,0], loc[y_hc == 3,1], s=20, c='yellow')
 
 plt.show()
