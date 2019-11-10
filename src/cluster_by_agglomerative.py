@@ -3,6 +3,7 @@ import shortest_path as sp
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import files
+import time
 
 from sklearn.cluster import AgglomerativeClustering
 
@@ -15,9 +16,15 @@ stat_list = None
 dist_matrix = None
 
 def main():
+    #t1 = time.time()
     cluster_stat_dic = get_cluster_dic()
-    #find_cluster_adj(cluster_stat_dic)
-    plot_clustering_from_dic(cluster_stat_dic)
+    #t2 = time.time()
+    #print('get_cluster_dic took', t2-t1)
+
+    find_cluster_adj(cluster_stat_dic)
+    #t3 = time.time()
+    #print('find_cluster_adj took', t3-t2)
+    #plot_clustering_from_dic(cluster_stat_dic)
     pass
 
 def get_cluster_dic():
@@ -37,7 +44,7 @@ def get_cluster_dic():
 
     #print(cluster_stat_dic)
     #print(cluster_stat_dic['0'])
-    print(cluster_stat_dic)
+    #print(cluster_stat_dic)
     return cluster_stat_dic
 
 def reCluster(dirmap):
@@ -77,13 +84,14 @@ def reCluster(dirmap):
             label += 1
 
 def find_cluster_adj(cluster_stat_dic):
+    stat_adj_dic = sp.get_station_adj_dic()
     for c1 in cluster_stat_dic:
         cluster_stat_dic[c1]['adj'] = set()
         for c2 in cluster_stat_dic:
             if c1 != c2:
                 #print("Check clusters", c1, c2)
                 if is_cluster_adj(cluster_stat_dic[c1]['stations'],
-                        cluster_stat_dic[c2]['stations']):
+                        cluster_stat_dic[c2]['stations'], stat_adj_dic):
                     cluster_stat_dic[c1]['adj'].add(c2)
     #print(cluster_stat_dic)
 
@@ -117,10 +125,11 @@ def plot_clustering_from_dic(cluster_stat_dic):
     plt.title('Stations with ' +  str(len(cluster_stat_dic)) + ' clusters')
     plt.xlabel('Easting [m]', fontsize=13)
     plt.ylabel('Northing [m]', fontsize=13)
-    plt.show()
+    filename = '../resources/img/stations_clustering.png'
+    #plt.savefig(filename, dpi=1000)
+    #plt.show()
 
-def (cluster1_stats, cluster2_stats):
-    stat_adj_dic = sp.get_station_adj_dic()
+def is_cluster_adj(cluster1_stats, cluster2_stats, stat_adj_dic):
     for stat1 in cluster1_stats:
         for stat2 in cluster2_stats:
             if stat1 == stat2:
