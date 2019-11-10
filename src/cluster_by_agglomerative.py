@@ -3,35 +3,91 @@ import shortest_path as sp
 
 from sklearn.cluster import AgglomerativeClustering
 
+cluster_stat_dic = {}
+label = 0
+cluster_size_limit = 13
+recluster_num = 3
+cluster_num = 9
+stat_list = None
+dist_matrix = None
+
 def main():
     get_cluster_dic()
     pass
 
 def get_cluster_dic():
+    global stat_list
+    global dist_matrix
     station_dic = sp.get_station_dic()
     dist_matrix = compute_dis_matrix()
 
-    cluster_number = 11
-    cluster_labels = agglomerative_clustering(cluster_number, dist_matrix)
-    #print(cluster_labels)
-    
     stat_list = np.array(list(station_dic.keys()))
-    cluster_stat_dic = {}
-    for i in range(0, cluster_number):
-        cluster_stat_dic[str(i)] = stat_list[cluster_labels==i]
+
+    cluster_labels = agglomerative_clustering(cluster_num, dist_matrix)
+    
+#    for i in range(0, cluster_number):
+#        cluster_stat_dic[str(i)] = stat_list[cluster_labels==i]
 
     print(cluster_stat_dic)
     #print(cluster_stat_dic['0'])
     return cluster_stat_dic
 
+def reCluster(dirmap):
+    # Re-cluster
+    global label
+    dis_metrix = [([0] * len(dirmap)) for i in range(len(dirmap))]
+    for station in range(0,len(dirmap)):
+        for station1 in range(0,len(dirmap)):
+            if station != station1:
+                dis_metrix[station][station1] = dist_matrix[dirmap[station]][dirmap[station1]]
+                dis_metrix[station1][station] = dist_matrix[dirmap[station]][dirmap[station1]]
+    
+    recluster_num = int(len(dirmap) / 7)
+    hc2 = AgglomerativeClustering(n_clusters=recluster_num, affinity = 'precomputed', linkage = 'average')
+    dis_metrix = np.array(dis_metrix)
+    y_hc2 = hc2.fit_predict(dis_metrix)
+    
+    number = 1
+    for sub2 in range(0,recluster_num):
+        num = 0
+        if np.count_nonzero(y_hc2 == sub2) > cluster_size_limit:
+            dirmap2 = {}
+            index = 0
+            for i in range(0, len(y_hc2)):
+                if sub2 == y_hc2[i]:
+                    dirmap2[index] = dirmap[i]
+                    index += 1
+            reCluster(dirmap2)
+        else:
+            cluster_stat_dic[str(label)] = []
+            for i in range(0, len(y_hc2)):
+                if sub2 == y_hc2[i]:
+                    num += 1
+                    cluster_stat_dic[str(label)].append(stat_list[dirmap[i]])
+            cluster_stat_dic[str(label)] = np.array(cluster_stat_dic[str(label)])
+            label += 1
+
 def agglomerative_clustering(cluster_num, dist_matrix):
+    global label
     hc = AgglomerativeClustering(n_clusters=cluster_num, affinity = 'precomputed',
             linkage = 'average')
     y_hc = hc.fit_predict(dist_matrix)
-    #print(len(dist_matrix))
-    #print(len(y_hc))
-    #print(y_hc)
-    #print(y_hc[y_hc==1])
+    
+    for sub in range(0,cluster_num):
+        x = stat_list[y_hc ==sub]
+        num = 0
+        if len(x) > cluster_size_limit:
+            dirmap = {}
+            index = 0
+            for i in range(0, len(y_hc)):
+                if y_hc[i] == sub:
+                    dirmap[index] = i
+                    index += 1
+            reCluster(dirmap)
+        else:	
+            cluster_stat_dic[str(label)] = stat_list[y_hc==sub]
+            label += 1
+    
     return y_hc
 
 def compute_dis_matrix():
