@@ -1,11 +1,15 @@
 import numpy as np
 import shortest_path as sp
+import matplotlib.pyplot as plt
+import geopandas as gpd
+import files
 
 from sklearn.cluster import AgglomerativeClustering
 
 def main():
     cluster_stat_dic = get_cluster_dic()
-    find_cluster_adj(cluster_stat_dic)
+    #find_cluster_adj(cluster_stat_dic)
+    plot_clustering_from_dic(cluster_stat_dic)
     pass
 
 def get_cluster_dic():
@@ -36,6 +40,38 @@ def find_cluster_adj(cluster_stat_dic):
                         cluster_stat_dic[c2]['stations']):
                     cluster_stat_dic[c1]['adj'].add(c2)
     #print(cluster_stat_dic)
+
+def plot_clustering_from_dic(cluster_stat_dic):
+    stat_info_dic = sp.get_station_dic()
+    plt.rcParams['figure.figsize'] = (12, 9)
+    df_roads = gpd.read_file(files.roads_pads_network_utm_geojson)
+    df_roads.plot(color='black')
+
+    for cluster in cluster_stat_dic:
+        stats = cluster_stat_dic[cluster]['stations']
+        stat_coords  = []
+
+        # plot stations
+        for stat in stats:
+            stat_coords.append(stat_info_dic[stat]['coordinates'])
+        stat_coords = np.array(stat_coords)
+        plt.scatter(stat_coords[:, 0], stat_coords[:, 1])
+
+        # plot annotate
+        if False:
+            for stat in stats:
+                e = stat_info_dic[stat]['coordinates'][0]
+                n = stat_info_dic[stat]['coordinates'][1]
+                plt.annotate(stat, xy=(e, n), xytext=(e+10, n+10))
+
+        if True:
+            for coord in stat_coords:
+                plt.annotate(cluster, xy=(coord[0], coord[1]), xytext=(coord[0]+10,
+                    coord[1]+10))
+    plt.title('Stations with ' +  str(len(cluster_stat_dic)) + ' clusters')
+    plt.xlabel('Easting [m]', fontsize=13)
+    plt.ylabel('Northing [m]', fontsize=13)
+    plt.show()
 
 def is_cluster_adj(cluster1_stats, cluster2_stats):
     stat_adj_dic = sp.get_station_adj_dic()
