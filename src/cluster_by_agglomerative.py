@@ -21,7 +21,7 @@ def main():
     #t2 = time.time()
     #print('get_cluster_dic took', t2-t1)
 
-    find_cluster_adj(cluster_stat_dic)
+    #find_cluster_adj(cluster_stat_dic)
     #t3 = time.time()
     #print('find_cluster_adj took', t3-t2)
     #plot_clustering_from_dic(cluster_stat_dic)
@@ -131,7 +131,7 @@ def plot_clustering_from_dic(cluster_stat_dic):
     plt.ylabel('Northing [m]', fontsize=13)
     filename = '../resources/img/stations_clustering.png'
     #plt.savefig(filename, dpi=1000)
-    #plt.show()
+    plt.show()
 
 def is_cluster_adj(cluster1_stats, cluster2_stats, stat_adj_dic):
     for stat1 in cluster1_stats:

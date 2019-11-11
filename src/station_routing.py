@@ -37,9 +37,9 @@ def main():
     stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
     time, visit_path = get_visit_path(stat_id_list)
 
-def get_visit_path(stat_id_list):
+def get_visit_path(stat_id_list, is_first):
 
-    print(str(dt.timedelta(seconds = time.time())))
+    #print(str(dt.timedelta(seconds = time.time())))
     # Initialize the station dict
     road_network_dic, station_info_dic = sp.preprocess()
     stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
@@ -49,13 +49,23 @@ def get_visit_path(stat_id_list):
         station_list.append(str(station_info_dic[stat_id]['name']))
 
     #print(station_list)
-    permutation_list = get_permutation_with_mini_time(station_list)
-    print("first permutation:")
-    print(permutation_list)
-    visit_time, visit_path = simulate_visit_station(permutation_list)
-    print(str(dt.timedelta(seconds = time.time())))
+    if is_first:
+        permutation_list = get_permutation_start_with_station(station_list, "CS25")
+    else:
+        permutation_list = get_permutation_with_mini_time(station_list)
+    #print("first permutation:")
+    #print(permutation_list)
+    visit_path, visit_time = simulate_visit_station(permutation_list)
+    #print(str(dt.timedelta(seconds = time.time())))
+    
+    id_path = []
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    print(visit_path)
+    for stat in visit_path:
+        id_path.append(stat_name_dic[stat])
+    visit_path = id_path
 
-    return visit_time, visit_path
+    return visit_path, visit_time
 
 def getTime(timestr):
 	minute = timestr / 60
@@ -94,9 +104,9 @@ def get_permutation_with_mini_time(station_list):
 		if min_time == 0 or time < min_time:
 			min_time = time
 			permutation_list = res
-	print("get_permutation_with_mini_time")
-	print(permutation_list)
-	print(min_time)
+	#print("get_permutation_with_mini_time")
+	#print(permutation_list)
+	#print(min_time)
 	return permutation_list
 	
 def get_permutation_start_with_station(station_list, station):
@@ -110,8 +120,8 @@ def get_permutation_start_with_station(station_list, station):
 		if min_time == 0 or time < min_time:
 			min_time = time
 			permutation_list = res
-	print("get_permutation_start_with_station")
-	print(permutation_list)
+	#print("get_permutation_start_with_station")
+	#print(permutation_list)
 	return permutation_list
 
 def simulate_visit_station(permutation_list):
@@ -133,7 +143,7 @@ def simulate_visit_station(permutation_list):
 		if current_station in left_stations:
 			left_stations.remove(current_station)
 		
-		print("visit: "+str(current_station)+" at time: "+getTime(current_time))
+		#print("visit: "+str(current_station)+" at time: "+getTime(current_time))
 		visit_path.append(current_station)
 		visit_time.append(current_time)
 		
@@ -141,17 +151,17 @@ def simulate_visit_station(permutation_list):
 		current_time = current_time + test_time
 
 		if current_time - last_time_repeat > N:
-			print("Making choice!!!!!!!")
-			print(current_station)
+			#print("Making choice!!!!!!!")
+			#print(current_station)
 			if len(visit_path) == 0:
 				print("Error!!!!!!!!!!!!!!!!!!!!!!!!!")
 			else:
 				station_travel_time = {}
 				for i in range(0, len(visit_path)):
 					_, distance = getDistance(current_station, visit_path[i])
-					print(visit_path[i])
+					#print(visit_path[i])
 					travel_time = distance // speed
-					print(getTime(travel_time))
+					#print(getTime(travel_time))
 					if current_time - visit_time[i] + travel_time > N and travel_time < M:
 						station_travel_time[visit_path[i]] = travel_time
 				# Choose the station with minimum travel time
@@ -183,9 +193,9 @@ def simulate_visit_station(permutation_list):
 			current_time += travel_time
 			current_station = next_station
 	
-	print("final path:")
-	print(visit_path)
-	print(visit_time)
+	#print("final path:")
+	#print(visit_path)
+	#print(visit_time)
 	return visit_path, visit_time
 
 
