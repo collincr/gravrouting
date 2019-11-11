@@ -27,6 +27,9 @@ def main():
     #plot_clustering_from_dic(cluster_stat_dic)
     pass
 
+def get_cluster_adj_dic():
+    return find_cluster_adj(get_cluster_dic())
+
 def get_cluster_dic():
     global stat_list
     global dist_matrix
@@ -94,6 +97,7 @@ def find_cluster_adj(cluster_stat_dic):
                         cluster_stat_dic[c2]['stations'], stat_adj_dic):
                     cluster_stat_dic[c1]['adj'].add(c2)
     #print(cluster_stat_dic)
+    return cluster_stat_dic
 
 def plot_clustering_from_dic(cluster_stat_dic):
     stat_info_dic = sp.get_station_dic()
