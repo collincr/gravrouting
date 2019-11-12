@@ -119,7 +119,7 @@ def plot_clustering_from_dic(cluster_stat_dic):
     plt.ylabel('Northing [m]', fontsize=13)
     plt.show()
 
-def (cluster1_stats, cluster2_stats):
+def is_cluster_adj(cluster1_stats, cluster2_stats):
     stat_adj_dic = sp.get_station_adj_dic()
     for stat1 in cluster1_stats:
         for stat2 in cluster2_stats:
@@ -176,6 +176,7 @@ def compute_dis_matrix():
                 #print(key)
                 distance, path = sp.get_shortest_path_from_stat_id(stat_id1, stat_id2,
                         station_dic, stations_shortest_path_dic)
+                print(path)
                 if distance == None:
                     print("Coundn't find distance in file, calculate again")
                     path, distance = internal_get_spt_from_stat_name(

@@ -13,16 +13,16 @@ def main():
     #gutil.write_dic_to_json( stat_info_dic, files.station_info_json)
 
     # Print station's adjacent stations
-    stat_adj_dic = get_station_adj_dic()
-    road_type_dic = {}
-    for stat in stat_adj_dic:
-        road_type_dic[stat] = {}
-        for adj in stat_adj_dic[stat]['adj']:
-            road_type_dic[stat][adj] = 'U'
-    
-    json.dump(road_type_dic, open('road.json', 'w'))
-    data = json.load( open( "road.json" ) )
-    print(data)
+#    stat_adj_dic = get_station_adj_dic()
+#    road_type_dic = {}
+#    for stat in stat_adj_dic:
+#        road_type_dic[stat_adj_dic[stat]['name']] = {}
+#        for adj in stat_adj_dic[stat]['adj']:
+#            road_type_dic[stat_adj_dic[stat]['name']][stat_adj_dic[adj]['name']] = 'U'
+#    
+#    json.dump(road_type_dic, open('road.json', 'w'))
+#    data = json.load( open( "road.json" ) )
+    #print(data)
     
     #print(get_station_adj_dic())
 

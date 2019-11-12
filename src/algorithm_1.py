@@ -76,7 +76,7 @@ def getDistance(station1, station2):
 		distance, path = sp.get_shortest_path(station1, station2, station_info_dic,
 				stations_shortest_path_dic)
 	else:
-		_, distance = internal_get_spt_from_stat_name(station1, station2)
+		path, distance = internal_get_spt_from_stat_name(station1, station2)
 
 	if station1 not in distance_dct:
 		distance_dct[station1] = {}
