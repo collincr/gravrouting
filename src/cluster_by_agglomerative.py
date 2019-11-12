@@ -14,6 +14,7 @@ recluster_num = 3
 cluster_num = 9
 stat_list = None
 dist_matrix = None
+cluster_adj_dic = None
 
 def main():
     #t1 = time.time()
@@ -28,7 +29,10 @@ def main():
     pass
 
 def get_cluster_adj_dic():
-    return find_cluster_adj(get_cluster_dic())
+    global cluster_adj_dic
+    if cluster_adj_dic == None:
+        cluster_adj_dic = find_cluster_adj(get_cluster_dic())
+    return cluster_adj_dic
 
 def get_cluster_dic():
     global stat_list
@@ -189,7 +193,6 @@ def compute_dis_matrix():
                 #print(key)
                 distance, path = sp.get_shortest_path_from_stat_id(stat_id1, stat_id2,
                         station_dic, stations_shortest_path_dic)
-                print(path)
                 if distance == None:
                     print("Coundn't find distance in file, calculate again")
                     path, distance = internal_get_spt_from_stat_name(

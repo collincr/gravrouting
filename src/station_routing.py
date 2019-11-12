@@ -25,47 +25,45 @@ def main():
 	print(str(dt.timedelta(seconds = time.time())))
 '''
 def main():
-    '''
-    station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
-    #print(station_list)
+	'''
+	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
+	#print(station_list)
 
-    stat_dic = sp.get_station_dic()
-    stat_name_dic = sp.create_stat_name_id_mapping(stat_dic)
-    for stat in station_list:
-        print(stat, stat_name_dic[stat])
-    '''
-    stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
-    time, visit_path = get_visit_path(stat_id_list)
+	stat_dic = sp.get_station_dic()
+	stat_name_dic = sp.create_stat_name_id_mapping(stat_dic)
+	for stat in station_list:
+		print(stat, stat_name_dic[stat])
+	'''
+	stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
+	time, visit_path = get_visit_path(stat_id_list)
 
 def get_visit_path(stat_id_list, is_first):
 
-    #print(str(dt.timedelta(seconds = time.time())))
-    # Initialize the station dict
-    road_network_dic, station_info_dic = sp.preprocess()
-    stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+	#print(str(dt.timedelta(seconds = time.time())))
+	# Initialize the station dict
+	road_network_dic, station_info_dic = sp.preprocess()
+	stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
 
-    station_list = []
-    for stat_id in stat_id_list:
-        station_list.append(str(station_info_dic[stat_id]['name']))
+	station_list = []
+	for stat_id in stat_id_list:
+		station_list.append(str(station_info_dic[stat_id]['name']))
+	
+	if is_first:
+		permutation_list = get_permutation_start_with_station(station_list, "CS25")
+	else:
+		permutation_list = get_permutation_with_mini_time(station_list)
 
-    #print(station_list)
-    if is_first:
-        permutation_list = get_permutation_start_with_station(station_list, "CS25")
-    else:
-        permutation_list = get_permutation_with_mini_time(station_list)
-    #print("first permutation:")
-    #print(permutation_list)
-    visit_path, visit_time = simulate_visit_station(permutation_list)
-    #print(str(dt.timedelta(seconds = time.time())))
-    
-    id_path = []
-    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
-    print(visit_path)
-    for stat in visit_path:
-        id_path.append(stat_name_dic[stat])
-    visit_path = id_path
+	visit_path, visit_time = simulate_visit_station(permutation_list)
+	#print(str(dt.timedelta(seconds = time.time())))
+	
+	id_path = []
+	stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+	print(visit_path)
+	for stat in visit_path:
+		id_path.append(stat_name_dic[stat])
+	visit_path = id_path
 
-    return visit_path, visit_time
+	return visit_path, visit_time
 
 def getTime(timestr):
 	minute = timestr / 60
