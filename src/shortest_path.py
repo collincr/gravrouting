@@ -12,6 +12,11 @@ def main():
     #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
     #gutil.write_dic_to_json( stat_info_dic, files.station_info_json)
 
+    stat_info_dic = get_station_dic()
+    road_dic = get_road_dic()
+    #print(stat_info_dic)
+    print(road_dic)
+
     # Print station's adjacent stations
 #    stat_adj_dic = get_station_adj_dic()
 #    road_type_dic = {}
@@ -66,12 +71,6 @@ def preprocess():
     gutil.handle_road_not_found(stat_info_dic, graph_dic)
     #gutil.check_vertex_connected(graph_dic)
 
-    # Add mapping to station info dictionary
-    road_not_map_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
-
-    if len(road_not_map_stat) > 0:
-        print(len(road_not_map_stat), "stations can't find road mapping")
-
     # Get station name to id mapping
     #stat_name_dic = create_stat_name_id_mapping(stat_id_dic)
 
@@ -81,12 +80,59 @@ def preprocess():
 
     #print(stat_id_dic)
     return graph_dic, stat_info_dic
+
 '''
-def get_road_network_dic():
+Create stations dictionary
+'id':
+{
+    'name': 'RE37',
+    'type': 0,
+    'status': 'Found',
+    'coordinates': [easting, northing],
+    'road_coordinates': [easting, northing, elevation]
+    'road_id': '4'
+}
+'''
+def get_station_dic():
+    stat_info_dic = get_stations_dic_from_file()
     graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
             files.roads_correction_utm_csv)
-    return graph_dic
+
+    # Add mapping to station info dictionary
+    road_not_map_stat = add_station_to_road_mapping(stat_info_dic, graph_dic)
+
+    if len(road_not_map_stat) > 0:
+        print(len(road_not_map_stat), "stations can't find road mapping")
+
+    return stat_info_dic
 '''
+Create road network dictionary
+id:
+{
+    'adj': {adjacent vertices id},
+    'coordinates': [easting, northing],
+    'stat_id': station id
+}
+'''
+def get_road_dic():
+    stat_info_dic = get_station_dic()
+    graph_dic = gutil.get_graph(files.roads_pads_network_utm_geojson,
+            files.roads_correction_utm_csv)
+
+    for stat in stat_info_dic:
+        road = stat_info_dic[stat]['road_id']
+        if road in graph_dic:
+            graph_dic[road]['stat_id'] = stat
+        else:
+            print('station road id not in graph_dic')
+
+    for road in graph_dic:
+        stat_id = graph_dic[road].get('stat_id', None)
+        if stat_id is None:
+            graph_dic[road]['stat_id'] = '-1'
+
+    return graph_dic
+
 def get_shortest_path(stat1, stat2, stat_info_dic, stat_sp_dic):
     if stat1 == stat2:
         return 0, []
@@ -131,6 +177,11 @@ def get_shortest_path_from_stat_id(id1, id2, stat_info_dic, stat_sp_dic):
     #    print("Distance is not consistant!")
     return None, None
 
+def get_stations_dic_from_file():
+    stat_info_dic = gutil.create_station_status_from_file(
+            files.station_status_utm_geojson,files.closest_to_road_geojson_utm)
+    remove_invalid_stations(stat_info_dic)
+    return stat_info_dic
 
 def generate_shortest_path_for_all_stat(stat_info_dic, graph_dic):
     sp_dic = get_spt_for_all_stations(stat_info_dic, graph_dic)
@@ -181,11 +232,6 @@ def print_stat_adj(stat, stat_adj_dic):
                 print(stat_adj_dic[adj]['name'], end = " ")
     print()
 
-def get_station_dic():
-    stat_id_dic = gutil.create_station_status_from_file(
-            files.station_status_utm_geojson,files.closest_to_road_geojson_utm)
-    remove_invalid_stations(stat_id_dic)
-    return stat_id_dic
 
 def remove_invalid_stations(stat_id_dic):
     ignore_stat_set = get_ignore_stations()
@@ -331,18 +377,7 @@ def calculate_shortest_path_from_stat_id(src_id, dst_id, station_dic, graph_dic)
         print(src_id, 'or', dst_id, 'do not have closest road')
         return -100, -100
     return get_shortest_path_from_road_id(road1_id, road2_id, graph_dic)
-'''
-Add road_id item to station dictionary
-'id':
-{
-    'name': 'RE37',
-    'type': 0,
-    'status': 'Found',
-    'coordinates': [easting, northing],
-    'road_coordinates': [easting, northing, elevation]
-    'road_id': '4'
-}
-'''
+
 def add_station_to_road_mapping(station_dic, road_dic):
     stat_road_not_map_stat = []
     for stat in station_dic:
@@ -357,7 +392,7 @@ def add_station_to_road_mapping(station_dic, road_dic):
                 found = True
                 break
         if not found and not (coordinate[0] == -1 and coordinate[1] == -1):
-            #print(station_dic[stat]['name'], 'closest road not map')
+            print(station_dic[stat]['name'], 'closest road not map')
             stat_road_not_map_stat.append(stat)
     return stat_road_not_map_stat
 
