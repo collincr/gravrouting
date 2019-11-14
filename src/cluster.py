@@ -4,6 +4,7 @@ from sklearn.datasets import make_blobs
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import geopandas as gpd
 
 # import hierarchical clustering libraries
 import scipy.cluster.hierarchy as sch

@@ -19,13 +19,16 @@ cluster_adj_dic = None
 def main():
     #t1 = time.time()
     cluster_stat_dic = get_cluster_dic()
+    print(get_cluster_adj_dic())
+#    for cluster in cluster_adj_dic:
+#        print(cluster+" : "+str(len(cluster_stat_dic[cluster]['stations'])))
     #t2 = time.time()
     #print('get_cluster_dic took', t2-t1)
 
     #find_cluster_adj(cluster_stat_dic)
     #t3 = time.time()
     #print('find_cluster_adj took', t3-t2)
-    #plot_clustering_from_dic(cluster_stat_dic)
+    plot_clustering_from_dic(cluster_stat_dic)
     pass
 
 def get_cluster_adj_dic():

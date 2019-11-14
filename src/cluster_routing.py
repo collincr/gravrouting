@@ -15,8 +15,8 @@ def main():
     #get_cluster_permutation(cluster_adj_dic, True)
     cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
             '9', '17', '1', '2', '3', '4', '18', '19', '16']
-    # route_with_sequence(cluster_seq)
-    get_cluster_permutations(cluster_adj_dic)
+    route_with_sequence(cluster_seq)
+    # get_cluster_permutations(cluster_adj_dic)
     print(str(dt.timedelta(seconds = time.time())))
     '''
     perms = []
@@ -59,26 +59,28 @@ def route_with_sequence(clusters_list):
     print(cluster_info_dic)
     road_network_dic, station_info_dic = sp.preprocess()
     stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
-
+    
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    
     total_time = 0
     average_speed = 3 # m/s
-    
+    visit_path = []
+    visit_time = []
     for cluster in clusters_list:
         print("***** cluster", cluster, " *****")
         if cluster == clusters_list[0]:
-            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], True)
+            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], True, visit_path, visit_time)
         else:
             #stat_list = cluster_info_dic[cluster]['stations']
-            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], False)
-            dist_to_next_cluster, _ = sp.get_shortest_path_from_stat_id(prev_stat, path[0], station_info_dic,
-                    stations_shortest_path_dic)
+            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], False, visit_path, visit_time)
+            dist_to_next_cluster, _ = sp.get_shortest_path_from_stat_id(prev_stat, stat_name_dic[path[0]], station_info_dic,stations_shortest_path_dic)
             print("dist_to_next_cluster", dist_to_next_cluster)
             total_time = total_time + (dist_to_next_cluster/average_speed)
         
         print(time)
         print(path)
 
-        prev_stat = path[-1]
+        prev_stat = stat_name_dic[path[-1]]
         total_time = total_time + time[-1]
         print("total_time", total_time, str(datetime.timedelta(seconds=total_time)))
 
