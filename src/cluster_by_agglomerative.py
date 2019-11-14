@@ -34,12 +34,16 @@ def main():
 def get_cluster_adj_dic():
     global cluster_adj_dic
     if cluster_adj_dic == None:
-        cluster_adj_dic = find_cluster_adj(get_cluster_dic())
+        temp = get_cluster_dic()
+        #print(temp)
+        cluster_adj_dic = find_cluster_adj(temp)
     return cluster_adj_dic
 
 def get_cluster_dic():
     global stat_list
     global dist_matrix
+    if len(cluster_stat_dic) != 0:
+        return cluster_stat_dic
     station_dic = sp.get_station_dic()
     dist_matrix = compute_dis_matrix()
 
