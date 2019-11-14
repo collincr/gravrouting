@@ -8,6 +8,9 @@ closest_to_road_geojson_utm = '../data/closest_at_road_utm.geojson'
 # shortest path tree of all stations
 spt_json = '../data/all_stations_spt.json'
 
+# cluster info
+clusters_info_json = '../data/clusters_info.json'
+
 # debugging
 station_info_json = '../data/stations_info.json'
 
