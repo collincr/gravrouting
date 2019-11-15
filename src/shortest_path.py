@@ -12,10 +12,10 @@ def main():
     #generate_shortest_path_for_all_stat(stat_info_dic, graph_dic)
     #gutil.write_dic_to_json( stat_info_dic, files.station_info_json)
 
-    stat_info_dic = get_station_dic()
-    road_dic = get_road_dic()
+    #stat_info_dic = get_station_dic()
+    #road_dic = get_road_dic()
     #print(stat_info_dic)
-    print(get_time_between_stations('CSE1', 'DOR72'))
+    print(get_time_between_station('CSE1', 'DOR72'))
 
     # Print station's adjacent stations
 #    stat_adj_dic = get_station_adj_dic()
@@ -48,38 +48,54 @@ def main():
     #get_stat_info_from_name('B-14', stat_info_dic)
     pass
 
-def get_time_between_stations(station1, station2):
+def get_time_between_station(station1, station2):
+    time_station = json.load(open("time.json"))
+    return time_station[station1][station2]
+    
+def get_time_between_stations():
     road_network_dic, station_info_dic = preprocess()
     stations_shortest_path_dic = get_all_stations_spt_dic_from_file()
-    stat_name_dic = create_stat_name_id_mapping(stat_info_dic)
+    stat_name_dic = create_stat_name_id_mapping(station_info_dic)
     road_dic = get_road_dic()
     road_type = json.load(open("road.json"))
     
-    distance, path = get_shortest_path(station1, station2, station_info_dic,
-    stations_shortest_path_dic)
+    station_time_dic = {}
     
-    previoud_station = None
-    total_time = 0
-    for road_id in path:
-        if road_dic[road]['stat_id'] != '-1':
-            if previoud_station != None:
-                dis, pa = get_shortest_path_from_stat_id(previoud_station, road_dic[road]['stat_id'], station_info_dic, stations_shortest_path_dic)
-                speed = 0
-                if station1 not in road_type or station2 not in road_type:
-                    speed = 3
-                else:
-                    types = road_type[station1][station2]
-                    if types == 'U':
-                        speed = 4
-                    elif types == 'P':
-                        speed = 6
-                    else:
-                        speed = 2
-                time = dis/speed
-                total_time += time
-            previoud_station = road_dic[road]['stat_id']
-    
-    print(path)
+    for station1 in stat_name_dic:
+        station_time_dic[station1] = {}
+        for station2 in stat_name_dic:
+            if station1 != station2:
+                if station2 in station_time_dic[station1]:
+                    continue
+                distance, path = get_shortest_path(station1, station2, station_info_dic,
+                stations_shortest_path_dic)
+                previoud_station = None
+                total_time = 0
+                for road_id in path:
+                    if road_dic[road_id]['stat_id'] != '-1':
+                        name = station_info_dic[road_dic[road_id]['stat_id']]['name']
+                        if previoud_station != None:
+                            dis, pa = get_shortest_path(previoud_station, name, station_info_dic, stations_shortest_path_dic)
+                            speed = 0
+                            if (previoud_station not in road_type) or (name not in road_type):
+                                speed = 3
+                            else:
+                                types = road_type[previoud_station][name]
+                                if types == 'U':
+                                    speed = 4
+                                elif types == 'P':
+                                    speed = 6
+                                else:
+                                    speed = 2
+                            time = dis/speed
+                            total_time += time
+                        previoud_station = name
+                station_time_dic[station1][station2] = total_time
+                if station2 not in station_time_dic:
+                    station_time_dic[station2] = {}
+                station_time_dic[station2][station1] = total_time
+    json.dump(station_time_dic, open('time.json', 'w'))
+
 
 def get_ignore_stations():
     stats = {'S47A', 'GPO', 'G005', 'HW4', 'CS31A', 'RE22', 'RE27', 'BMU45',
