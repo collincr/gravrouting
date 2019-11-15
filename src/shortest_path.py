@@ -288,7 +288,7 @@ def remove_invalid_stations(stat_id_dic):
             del stat_id_dic[stat]
 
 def get_all_stations_spt_dic_from_file():
-    print(files.spt_json)
+    #print(files.spt_json)
     if not os.path.exists(files.spt_json):
         print("Havn't generate stations shortest path file!")
         return None

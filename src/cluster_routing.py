@@ -6,9 +6,10 @@ import datetime
 import datetime as dt
 import time
 import itertools
-
+import files
 
 def main():
+    '''
     print(str(dt.timedelta(seconds = time.time())))
     cluster_adj_dic = cba.get_cluster_adj_dic()
     # print(cluster_adj_dic)
@@ -19,12 +20,14 @@ def main():
     # get_cluster_permutations(cluster_adj_dic)
     print(str(dt.timedelta(seconds = time.time())))
     '''
+    '''
     perms = []
     dic = {}
     for i in range(0, 20):
         dic[i] = i
     helper([], perms, dic)
     '''
+    write_cluster_dic_to_file(cba.get_cluster_adj_dic())
     pass
 
 def get_cluster_permutations(cluster_adj_dic):
@@ -131,6 +134,20 @@ def dfs_cluster(cur_perm, all_perms, prev, cluster_adj_dic):
     if not found_adj:
         #print(cur_perm)
         all_perms.append(cur_perm.copy())
+
+def write_cluster_dic_to_file(cluster_dic):
+    for cluster in cluster_dic:
+        cluster_dic[cluster]['stations'] = cluster_dic[cluster]['stations'].tolist()
+        cluster_dic[cluster]['adj'] = list(cluster_dic[cluster]['adj'])
+    gutil.write_dic_to_json(cluster_dic, files.clusters_info_json)
+
+def read_cluster_dic_from_file():
+    if not os.path.exists(files.clusters_info_json):
+        print(files.clusters_info_json, "file not found")
+        return None
+    with open(files.clusters_info_json) as file:
+        dic = json.load(file)
+    return dic
 
 if __name__ == '__main__':
     main()
