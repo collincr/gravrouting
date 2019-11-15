@@ -1,9 +1,11 @@
 import datetime as dt
 import collections
 import operator
-import time
 from shortest_path import internal_get_spt_from_stat_name
 import shortest_path as sp
+import json
+import time
+import itertools
 
 distance_dct = {}
 road_network_dic = None
@@ -35,8 +37,14 @@ def main():
 	for stat in station_list:
 		print(stat, stat_name_dic[stat])
 	'''
-	stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
-	time, visit_path = get_visit_path_by_id(stat_id_list, [], [])
+#	stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
+#	time, visit_path = get_visit_path_by_id(stat_id_list, [], [])
+	print(str(dt.timedelta(seconds = time.time())))
+	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
+	visit_path, times = get_visit_path_by_name(station_list, [], [])
+	print(visit_path)
+	print(times)
+	print(str(dt.timedelta(seconds = time.time())))
 	
 '''
 def get_visit_path(stat_id_list, is_first, visit, visit_time):
@@ -68,33 +76,51 @@ def get_visit_path(stat_id_list, is_first, visit, visit_time):
 	return visit_path, visit_time
 '''
 def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
-    road_network_dic, station_info_dic = sp.preprocess()
-    station_name_list = []
-    for stat_id in stat_id_list:
-	    station_name_list.append(str(station_info_dic[stat_id]['name']))
+	road_network_dic, station_info_dic = sp.preprocess()
+	station_name_list = []
+	for stat_id in stat_id_list:
+		station_name_list.append(str(station_info_dic[stat_id]['name']))
 
-    visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_path, visit_time)
+	visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_path, visit_time)
 
-    id_path = []
-    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
-    for stat in visit_path:
-        id_path.append(stat_name_dic[stat])
-    #print(id_path)
-    #print(visited_time)
-    return id_path, visit_time
+	id_path = []
+	stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+	for stat in visit_path:
+		id_path.append(stat_name_dic[stat])
+	#print(id_path)
+	#print(visited_time)
+	return id_path, visit_time
 
 def get_visit_path_by_name(stat_name_list, visit_path, visit_time):
-    permutation_list = get_permutation_with_mini_time(stat_name_list)
-    visited_path, visited_time = simulate_visit_station(permutation_list, visit_path, visit_time)
-    #print(visited_path)
-    #print(visited_time)
-    return visited_path, visited_time
+	permutation_list = get_permutation_with_mini_time(stat_name_list)
+	print(permutation_list)
+	visited_path, visited_time = simulate_visit_station(permutation_list, visit_path, visit_time)
+	#print(visited_path)
+	#print(visited_time)
+	return visited_path, visited_time
 
 def getTime(timestr):
 	minute = timestr / 60
 	second = (timestr % 60) * 60
 	return str(minute) + ":" + str(second)
+
+def getTravelTime(station1, station2):
+	if station1 in distance_dct and station2 in distance_dct[station1]:
+		#print("cache")
+		return distance_dct[station1][station2]
+
+	if station2 in distance_dct and station1 in distance_dct[station2]:
+		#print("cache")
+		return distance_dct[station2][station1]
 	
+	if station1 not in distance_dct:
+		distance_dct[station1] = {}
+	
+	time_station = json.load(open("time.json"))
+	distance_dct[station1][station2] = time_station[station1][station2]
+
+	return distance_dct[station1][station2]
+
 def getDistance(station1, station2):
 	if station1 in distance_dct and station2 in distance_dct[station1]:
 		#print("cache")
@@ -123,9 +149,9 @@ def get_permutation_with_mini_time(station_list):
 	min_time = 0
 	permutation_list = []
 	for stations in permutations:
-		time, res = add_visit_timestamp(stations)
-		if min_time == 0 or time < min_time:
-			min_time = time
+		times, res = add_visit_timestamp(stations)
+		if min_time == 0 or times < min_time:
+			min_time = times
 			permutation_list = res
 	#print("get_permutation_with_mini_time")
 	#print(permutation_list)
@@ -150,7 +176,7 @@ def get_permutation_start_with_station(station_list, station):
 def simulate_visit_station(permutation_list, visit_path, visit_time):
 	N = 1800
 	M = 900
-	test_time = 150
+	test_time = 150*3
 	speed = 3
 	last_time_repeat = 0
 	current_time = 0
@@ -164,7 +190,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 		if current_station in left_stations:
 			left_stations.remove(current_station)
 		
-		#print("visit: "+str(current_station)+" at time: "+getTime(current_time))
+		print("visit: "+str(current_station)+" at time: "+getTime(current_time))
 		visit_path.append(current_station)
 		visit_time.append(current_time)
 		
@@ -179,9 +205,11 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 			else:
 				station_travel_time = {}
 				for i in range(0, len(visit_path)):
-					_, distance = getDistance(current_station, visit_path[i])
+					if current_station == visit_path[i]:
+						continue
+					travel_time = getTravelTime(current_station, visit_path[i])
 					#print(visit_path[i])
-					travel_time = distance // speed
+					# travel_time = distance // speed
 					#print(getTime(travel_time))
 					if current_time - visit_time[i] + travel_time > N and travel_time < M:
 						station_travel_time[visit_path[i]] = travel_time
@@ -209,8 +237,8 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 
 		if len(left_stations) > 0:
 			next_station = left_stations[0]
-			_, distance = getDistance(current_station, next_station)
-			travel_time = distance // speed
+			travel_time = getTravelTime(current_station, next_station)
+			# travel_time = distance // speed
 			current_time += travel_time
 			current_station = next_station
 	
@@ -257,8 +285,8 @@ def add_visit_timestamp(stations):
 		else:
 			# 10m/s i.e. 36km/h Will be speed between actual station
 			speed = 10
-			_, distance = getDistance(last_station, station)
-			road_time = distance // speed   # intra-station time (secs)
+			road_time = getTravelTime(last_station, station)
+			# road_time = distance // speed   # intra-station time (secs)
 			arrival_time = departure_time + road_time
 
 		measure_time = 150                  # inner-station time (secs)

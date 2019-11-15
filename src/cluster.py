@@ -6,6 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import geopandas as gpd
 
+import json
+
 # import hierarchical clustering libraries
 import scipy.cluster.hierarchy as sch
 from sklearn.cluster import AgglomerativeClustering
@@ -88,13 +90,28 @@ def reCluster(dirmap):
 		
 		
 		
-#dis_metrix = computeDisMetrix()
+dis_metrix = computeDisMetrix()
 
 itemlist = None
 with open ('outfile', 'rb') as fp:
 	itemlist = pickle.load(fp)
 	# print(itemlist)
 itemlist = np.array(itemlist)
+
+#time_station = json.load(open("time.json"))
+#itemlist = [([0] * len(time_station)) for i in range(len(time_station))]
+#i = 0
+#for stat in time_station:
+#	j = 0
+#	for stat1 in time_station[stat]:
+#		if i == j:
+#			j += 1
+#		itemlist[i][j] = time_station[stat][stat1]
+#		j += 1
+#	i += 1
+#
+#print(itemlist)
+#print(len(itemlist))
 
 # create scatter plot
 staion_dic = get_station_dic()
