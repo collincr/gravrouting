@@ -18,8 +18,8 @@ cluster_adj_dic = None
 
 def main():
     #t1 = time.time()
-    cluster_stat_dic = get_cluster_dic()
-    print(get_cluster_adj_dic())
+    #cluster_stat_dic = get_cluster_dic()
+    #print(get_cluster_adj_dic())
 #    for cluster in cluster_adj_dic:
 #        print(cluster+" : "+str(len(cluster_stat_dic[cluster]['stations'])))
     #t2 = time.time()
@@ -28,15 +28,22 @@ def main():
     #find_cluster_adj(cluster_stat_dic)
     #t3 = time.time()
     #print('find_cluster_adj took', t3-t2)
-    plot_clustering_from_dic(cluster_stat_dic)
+    plot_clustering_from_dic(get_cluster_adj_dic())
     pass
-
+'''
+'id':
+    {
+        'stations': [stat id list],
+        'adj': [adjacent cluster list]
+    }
+'''
 def get_cluster_adj_dic():
     global cluster_adj_dic
     if cluster_adj_dic == None:
         temp = get_cluster_dic()
         #print(temp)
         cluster_adj_dic = find_cluster_adj(temp)
+        convert_to_list(cluster_adj_dic)
     return cluster_adj_dic
 
 def get_cluster_dic():
@@ -60,6 +67,11 @@ def get_cluster_dic():
     #print(cluster_stat_dic['0'])
     #print(cluster_stat_dic)
     return cluster_stat_dic
+
+def convert_to_list(cluster_adj_dic):
+    for cluster in cluster_adj_dic:
+        cluster_adj_dic[cluster]['stations'] = cluster_adj_dic[cluster]['stations'].tolist()
+        cluster_adj_dic[cluster]['adj'] = list(cluster_adj_dic[cluster]['adj'])
 
 def reCluster(dirmap):
     # Re-cluster
@@ -127,21 +139,23 @@ def plot_clustering_from_dic(cluster_stat_dic):
         plt.scatter(stat_coords[:, 0], stat_coords[:, 1])
 
         # plot annotate
-        if False:
+        if True:
             for stat in stats:
                 e = stat_info_dic[stat]['coordinates'][0]
                 n = stat_info_dic[stat]['coordinates'][1]
-                plt.annotate(stat, xy=(e, n), xytext=(e+10, n+10))
+                #label = stat + "(" + cluster + ")"
+                label = stat_info_dic[stat]['name'] + "(" + cluster + ")"
+                plt.annotate(label, xy=(e, n), xytext=(e+10, n+10))
 
-        if True:
+        if False:
             for coord in stat_coords:
                 plt.annotate(cluster, xy=(coord[0], coord[1]), xytext=(coord[0]+10,
                     coord[1]+10))
     plt.title('Stations with ' +  str(len(cluster_stat_dic)) + ' clusters')
     plt.xlabel('Easting [m]', fontsize=13)
     plt.ylabel('Northing [m]', fontsize=13)
-    filename = '../resources/img/stations_clustering.png'
-    #plt.savefig(filename, dpi=1000)
+    filename = '../resources/img/stations_name_clustering.png'
+    plt.savefig(filename, dpi=1000)
     plt.show()
 
 def is_cluster_adj(cluster1_stats, cluster2_stats, stat_adj_dic):
