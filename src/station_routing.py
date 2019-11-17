@@ -223,8 +223,9 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 
 	# Update current_time
 	if len(visit_path) > 0:
-		_, distance = getDistance(visit_path[-1], permutation_list[0])
-		current_time = visit_time[-1] + distance/speed
+		#_, distance = getDistance(visit_path[-1], permutation_list[0])
+		#current_time = visit_time[-1] + distance/speed
+		current_time = visit_time[-1] + getTravelTime(visit_path[-1], permutation_list[0])
 		last_time_repeat = current_time
 		#print("Set current_time", current_time)
 	

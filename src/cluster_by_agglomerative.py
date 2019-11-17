@@ -144,8 +144,9 @@ def plot_clustering_from_dic(cluster_stat_dic):
                 e = stat_info_dic[stat]['coordinates'][0]
                 n = stat_info_dic[stat]['coordinates'][1]
                 #label = stat + "(" + cluster + ")"
-                label = stat_info_dic[stat]['name'] + "(" + cluster + ")"
-                plt.annotate(label, xy=(e, n), xytext=(e+10, n+10))
+                label_name = stat_info_dic[stat]['name'] + "(" + cluster + ")"
+                label_id = stat + "(" + cluster + ")"
+                plt.annotate(label_id, xy=(e, n), xytext=(e+10, n+10))
 
         if False:
             for coord in stat_coords:

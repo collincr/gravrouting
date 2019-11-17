@@ -135,7 +135,7 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
     print("get_cluster_cands")
     road_network_dic, station_info_dic = sp.preprocess()
     stat_sp_dic = sp.get_all_stations_spt_dic_from_file()
-    avg_speed = 3
+    #avg_speed = 3
     cur_len = len(visited_stat)
     '''
     min_time = np.Inf
@@ -158,9 +158,11 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
         #print("time with cluster", c, time)
         #print("cur_len", cur_len)
 
-        dist, _ = sp.get_shortest_path_from_stat_id(stat, path[cur_len],
-                station_info_dic,stat_sp_dic)
-        time_to_c = dist/avg_speed
+        #dist, _ = sp.get_shortest_path_from_stat_id(stat, path[cur_len],
+                #station_info_dic,stat_sp_dic)
+        #time_to_c = dist/avg_speed
+        time_to_c = sr.getTravelTime(station_info_dic[stat]['name'], station_info_dic[path[cur_len]]['name'])
+        print("time_to_c with cluster", c, time_to_c)
         #travel_time = time[-1]  # time?
         #travel_time = time_to_c + (time[-1] - visited_time[cur_len-1]) # time?
         '''
