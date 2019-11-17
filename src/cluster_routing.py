@@ -62,6 +62,7 @@ def greedy_routing(time_limit):
 
     day = 0
     cluster_visited = [[]]
+    station_route = {}
 
     while not all_clusters_visited(cluster_adj_dic):
         cluster_cand_pq = get_cluster_cands(prev_stat, cluster_adj_dic, visited_path, visited_timestamp)
@@ -97,6 +98,7 @@ def greedy_routing(time_limit):
             visited_path = cand_path
             visited_timestamp = cand_timestamp
             cluster_adj_dic[cand_cluster]['visited'] = True
+            station_route[cand_cluster] = cand_path[prev_len:]
             prev_len = len(visited_path)
             prev_stat = visited_path[-1]
 
@@ -130,6 +132,7 @@ def greedy_routing(time_limit):
         #total_time = total_time + (visited_time[-1] - visited_time[prev_len-1])
 
     print("cluster_visited:", cluster_visited)
+    print("station route", station_route)
 
 def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
     print("get_cluster_cands")
