@@ -232,6 +232,7 @@ def route_with_sequence(clusters_list, cluster_info_dic):
     average_speed = 3 # m/s
     visit_path = []
     visit_time = []
+    total_time_list = []
     for cluster in clusters_list:
         print("***** cluster", cluster, " *****")
         path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], visit_path, visit_time)
@@ -246,6 +247,8 @@ def route_with_sequence(clusters_list, cluster_info_dic):
         prev_stat = stat_name_dic[path[-1]]
         total_time = time[-1]
         print("total_time", total_time, str(datetime.timedelta(seconds=total_time)))
+        total_time_list.append(total_time)
+    return total_time_list
 
 def get_cluster_permutation(cluster_adj_dic, is_start_fix):
     all_perms = []
