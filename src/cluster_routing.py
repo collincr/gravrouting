@@ -12,29 +12,27 @@ import numpy as np
 from heapq import heappush, heappop
 
 def main():
-    '''
-    print(str(dt.timedelta(seconds = time.time())))
-    cluster_adj_dic = cba.get_cluster_adj_dic()
-    print(cluster_adj_dic)
+
+    #print(str(dt.timedelta(seconds = time.time())))
+    #cluster_adj_dic = cba.get_cluster_adj_dic()
+    #print(cluster_adj_dic)
     #get_cluster_permutation(cluster_adj_dic, True)
-    #cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
-    #        '9', '17', '1', '2', '3', '4', '18', '19', '16']
-    #route_with_sequence(cluster_seq)
+    cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
+            '9', '17', '1', '2', '3', '4', '18', '19', '16']
+    route_with_sequence(cluster_seq)
     # get_cluster_permutations(cluster_adj_dic)
-    print(str(dt.timedelta(seconds = time.time())))
-    '''
-    '''
-    perms = []
-    dic = {}
-    for i in range(0, 20):
-        dic[i] = i
-    helper([], perms, dic)
-    '''
+    #print(str(dt.timedelta(seconds = time.time())))
+
+    #perms = []
+    #dic = {}
+    #for i in range(0, 20):
+    #    dic[i] = i
+    #helper([], perms, dic)
     #write_cluster_dic_to_file(cba.get_cluster_adj_dic())
-    t1 = time.time()
-    greedy_routing(8*60*60)
-    t2 = time.time()
-    print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+    #t1 = time.time()
+    #greedy_routing(8*60*60)
+    #t2 = time.time()
+    #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -249,7 +247,7 @@ def route_with_sequence(clusters_list):
         print(path)
 
         prev_stat = stat_name_dic[path[-1]]
-        total_time = total_time + time[-1]
+        total_time = time[-1]
         print("total_time", total_time, str(datetime.timedelta(seconds=total_time)))
 
 def get_cluster_permutation(cluster_adj_dic, is_start_fix):

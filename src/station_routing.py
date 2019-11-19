@@ -46,7 +46,6 @@ def main():
 	print(times)
 	print(str(dt.timedelta(seconds = time.time())))
 	
-'''
 def get_visit_path(stat_id_list, is_first, visit, visit_time):
 
 	#print(str(dt.timedelta(seconds = time.time())))
@@ -74,7 +73,7 @@ def get_visit_path(stat_id_list, is_first, visit, visit_time):
 #	visit_path = id_path
 
 	return visit_path, visit_time
-'''
+
 def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
     global station_info_dic
     road_network_dic, station_info_dic = sp.preprocess()
