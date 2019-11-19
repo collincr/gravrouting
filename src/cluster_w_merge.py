@@ -45,7 +45,7 @@ def main():
     time_of_days_before = 0
     for i in range(len(total_times)):
         time = total_times[i]
-        if dt.timedelta(seconds=time) > dt.timedelta(hours=8):
+        if dt.timedelta(seconds=time) > dt.timedelta(hours=8, seconds=time_of_days_before):
             one_day = {}
             clusters_for_each_day = cluster_seq[begin_stat_idx_of_the_day, i]
             one_day['clusters'] = clusters_for_each_day
