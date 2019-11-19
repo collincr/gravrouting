@@ -14,12 +14,12 @@ from heapq import heappush, heappop
 def main():
 
     #print(str(dt.timedelta(seconds = time.time())))
-    #cluster_adj_dic = cba.get_cluster_adj_dic()
+    cluster_adj_dic = cba.get_cluster_adj_dic()
     #print(cluster_adj_dic)
     #get_cluster_permutation(cluster_adj_dic, True)
     cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
             '9', '17', '1', '2', '3', '4', '18', '19', '16']
-    route_with_sequence(cluster_seq)
+    route_with_sequence(cluster_seq, cl, cluster_adj_dic)
     # get_cluster_permutations(cluster_adj_dic)
     #print(str(dt.timedelta(seconds = time.time())))
 
@@ -220,8 +220,8 @@ def backtrack(permutations, tmp_list, cluster_list):
         backtrack(permutations, tmp_list, cluster_list)
         del tmp_list[len(tmp_list) - 1]
 
-def route_with_sequence(clusters_list):
-    cluster_info_dic = cba.get_cluster_adj_dic()
+def route_with_sequence(clusters_list, cluster_info_dic):
+
     #print(cluster_info_dic)
     road_network_dic, station_info_dic = sp.preprocess()
     stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()

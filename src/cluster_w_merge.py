@@ -18,25 +18,27 @@ def main():
 
     updated_cluster_dic = find_cluster_adj(updated_cluster_dic)
     
-    file_path = '../resources/file/permutations.txt'
-    cluster_seqs = []
-    try:
-        with open(file_path, 'r') as f:
-            for line in f:
-                # remove linebreak which is the last character of the string
-                currentPermutation = line[:-1]
-                # add item to the list
-                cluster_seqs.append(currentPermutation)
-    except IOError:
-        print("\nGenerating permuations...")
-        cluster_seqs = permutations(len(updated_cluster_dic))
-        print("Finished generation of permuations.")
-        with open(file_path, 'w') as f:
-            for listitem in cluster_seqs:
-                f.write('%s\n' % str(listitem))
+    # file_path = '../resources/file/permutations.txt'
+    # cluster_seqs = []
+    # try:
+    #     with open(file_path, 'r') as f:
+    #         for line in f:
+    #             # remove linebreak which is the last character of the string
+    #             currentPermutation = line[:-1]
+    #             # add item to the list
+    #             cluster_seqs.append(currentPermutation)
+    # except IOError:
+    #     print("\nGenerating permuations...")
+    #     cluster_seqs = permutations(len(updated_cluster_dic))
+    #     print("Finished generation of permuations.")
+    #     with open(file_path, 'w') as f:
+    #         for listitem in cluster_seqs:
+    #             f.write('%s\n' % str(listitem))
 
     # cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
-    # route_with_sequence(cluster_seq)
+    cluster_seq = ['10', '7', '9', '4', '0', '5', '1', '2', '3', '6', '8', '11']
+    route_with_sequence(cluster_seq, updated_cluster_dic)
+    
 
     plot_clustering_from_dic(updated_cluster_dic)
 
