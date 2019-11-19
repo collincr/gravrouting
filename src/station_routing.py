@@ -46,7 +46,7 @@ def main():
 	print(times)
 	print(str(dt.timedelta(seconds = time.time())))
 	
-def get_visit_path(stat_id_list, is_first, visit, visit_time):
+def get_visit_path(stat_id_list, visit, visit_time):
 
 	#print(str(dt.timedelta(seconds = time.time())))
 	# Initialize the station dict
@@ -57,10 +57,7 @@ def get_visit_path(stat_id_list, is_first, visit, visit_time):
 	for stat_id in stat_id_list:
 		station_list.append(str(station_info_dic[stat_id]['name']))
 	
-	if is_first:
-		permutation_list = get_permutation_start_with_station(station_list, "CS25")
-	else:
-		permutation_list = get_permutation_with_mini_time(station_list)
+	permutation_list = get_permutation_with_mini_time(station_list)
 
 	visit_path, visit_time = simulate_visit_station(permutation_list, visit, visit_time)
 	#print(str(dt.timedelta(seconds = time.time())))
@@ -176,7 +173,8 @@ def getDistance(station1, station2):
 
 
 def get_permutation_with_mini_time(station_list):
-	permutations = permute(station_list)
+	#permutations = permute(station_list)
+	permutations = list(itertools.permutations(station_list))
 	min_time = 0
 	permutation_list = []
 	for stations in permutations:
@@ -190,7 +188,8 @@ def get_permutation_with_mini_time(station_list):
 	return permutation_list
 
 def get_permutation_start_with_station(station_list, station):
-	permutations = permute(station_list)
+	#permutations = permute(station_list)
+	permutations = list(itertools.permutations(station_list))
 	min_time = 0
 	permutation_list = []
 	for stations in permutations:
@@ -205,6 +204,8 @@ def get_permutation_start_with_station(station_list, station):
 	return permutation_list
 
 def simulate_visit_station(permutation_list, visit_path, visit_time):
+	print("!!!!!!")
+	print(permutation_list)
 	N = 1800
 	M = 900
 	test_time = 150*3
@@ -251,9 +252,9 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 					if current_station == visit_path[i]:
 						continue
 					travel_time = getTravelTime(current_station, visit_path[i])
-					#print(visit_path[i])
+					print(visit_path[i])
 					# travel_time = distance // speed
-					#print(getTime(travel_time))
+					print(getTime(travel_time))
 					if current_time - visit_time[i] + travel_time > N and travel_time < M:
 						station_travel_time[visit_path[i]] = travel_time
 				# Choose the station with minimum travel time

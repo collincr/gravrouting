@@ -139,6 +139,8 @@ def begin_routing(stations_everyday):
 						for station in stations:
 							new_list.append(station)
 						stations = get_permutation_start_with_station(new_list, first_station)
+					else:
+						print("Timt to visit repeat station, but no satisified stations!")
 			
 			elif station_name != target:
 				# Update the new order

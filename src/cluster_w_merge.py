@@ -35,8 +35,8 @@ def main():
     #         for listitem in cluster_seqs:
     #             f.write('%s\n' % str(listitem))
 
-    # cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
-    cluster_seq = ['10', '7', '9', '4', '0', '5', '1', '2', '3', '6', '8', '11']
+    cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
+    # cluster_seq = ['10', '7', '9', '4', '0', '5', '1', '2', '3', '6', '8', '11']
     route_with_sequence(cluster_seq, updated_cluster_dic)
     
 

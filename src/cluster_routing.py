@@ -234,11 +234,8 @@ def route_with_sequence(clusters_list, cluster_info_dic):
     visit_time = []
     for cluster in clusters_list:
         print("***** cluster", cluster, " *****")
-        if cluster == clusters_list[0]:
-            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], True, visit_path, visit_time)
-        else:
-            #stat_list = cluster_info_dic[cluster]['stations']
-            path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], False, visit_path, visit_time)
+        path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], visit_path, visit_time)
+        if cluster != clusters_list[0]:
             dist_to_next_cluster, _ = sp.get_shortest_path_from_stat_id(prev_stat, stat_name_dic[path[0]], station_info_dic,stations_shortest_path_dic)
             print("dist_to_next_cluster", dist_to_next_cluster)
             total_time = total_time + (dist_to_next_cluster/average_speed)
