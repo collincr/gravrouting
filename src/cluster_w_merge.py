@@ -1,8 +1,9 @@
 import numpy as np
-import time
+import itertools
 from cluster_by_agglomerative import get_cluster_dic
 from cluster_by_agglomerative import find_cluster_adj
 from cluster_by_agglomerative import plot_clustering_from_dic
+from cluster_routing import route_with_sequence
 
 def main():
 
@@ -11,6 +12,31 @@ def main():
 
     # aggregate small clusters 
     updated_cluster_dic = aggregate_cluster(cluster_stat_dic)
+
+    print("Aggregated cluster is: ")
+    print(updated_cluster_dic)
+
+    updated_cluster_dic = find_cluster_adj(updated_cluster_dic)
+    
+    file_path = '../resources/file/permutations.txt'
+    cluster_seqs = []
+    try:
+        with open(file_path, 'r') as f:
+            for line in f:
+                # remove linebreak which is the last character of the string
+                currentPermutation = line[:-1]
+                # add item to the list
+                cluster_seqs.append(currentPermutation)
+    except IOError:
+        print("\nGenerating permuations...")
+        cluster_seqs = permutations(len(updated_cluster_dic))
+        print("Finished generation of permuations.")
+        with open(file_path, 'w') as f:
+            for listitem in cluster_seqs:
+                f.write('%s\n' % str(listitem))
+
+    # cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
+    # route_with_sequence(cluster_seq)
 
     plot_clustering_from_dic(updated_cluster_dic)
 
@@ -76,6 +102,13 @@ def create_new_station_list(ids, cluster_stat_dic):
     tmp_stations = {}
     tmp_stations['stations'] = merged
     return tmp_stations
+
+
+def permutations(len):
+    cluster_ids = [str(x) for x in range(0, len)]
+    print(cluster_ids)
+    perm = list(itertools.permutations(cluster_ids))
+    return perm
 
 
 if __name__ == '__main__':
