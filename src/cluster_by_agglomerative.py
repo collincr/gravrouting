@@ -138,13 +138,20 @@ def plot_clustering_from_dic(cluster_stat_dic):
         stat_coords = np.array(stat_coords)
         plt.scatter(stat_coords[:, 0], stat_coords[:, 1])
 
+        # plot cluster only once
+        if False:
+            stat1 = stats[0]
+            e = stat_info_dic[stat1]['coordinates'][0]
+            n = stat_info_dic[stat1]['coordinates'][1]
+            plt.annotate(cluster, xy=(e, n), xytext=(e+20, n+20), fontsize=15)
+
         # plot annotate
         if True:
             for stat in stats:
                 e = stat_info_dic[stat]['coordinates'][0]
                 n = stat_info_dic[stat]['coordinates'][1]
                 #label = stat + "(" + cluster + ")"
-                label_name = stat_info_dic[stat]['name'] + "(" + cluster + ")"
+                #label_name = stat_info_dic[stat]['name'] + "(" + cluster + ")"
                 label_id = stat + "(" + cluster + ")"
                 plt.annotate(label_id, xy=(e, n), xytext=(e+10, n+10))
 
