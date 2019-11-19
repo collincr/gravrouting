@@ -204,6 +204,7 @@ def get_shortest_path(stat1, stat2, stat_info_dic, stat_sp_dic):
     key = str(stat_id1) + '#' + str(stat_id2)
     #print(stat_sp_dic[key])
     if key not in stat_sp_dic:
+        print("key", key, "not found", stat1, stat2)
         return None, None
     return stat_sp_dic[key]['distance'], stat_sp_dic[key]['path']
 

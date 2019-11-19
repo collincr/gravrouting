@@ -46,7 +46,6 @@ def main():
 	print(times)
 	print(str(dt.timedelta(seconds = time.time())))
 	
-'''
 def get_visit_path(stat_id_list, is_first, visit, visit_time):
 
 	#print(str(dt.timedelta(seconds = time.time())))
@@ -74,30 +73,53 @@ def get_visit_path(stat_id_list, is_first, visit, visit_time):
 #	visit_path = id_path
 
 	return visit_path, visit_time
-'''
+
 def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
-	road_network_dic, station_info_dic = sp.preprocess()
-	station_name_list = []
-	for stat_id in stat_id_list:
-		station_name_list.append(str(station_info_dic[stat_id]['name']))
+    global station_info_dic
+    road_network_dic, station_info_dic = sp.preprocess()
+    station_name_list = []
+    visit_name_path = []
+    for stat_id in stat_id_list:
+        station_name_list.append(str(station_info_dic[stat_id]['name']))
+    for stat_id in visit_path:
+        visit_name_path.append(station_info_dic[stat_id]['name'])
 
-	visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_path, visit_time)
-
-	id_path = []
-	stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
-	for stat in visit_path:
-		id_path.append(stat_name_dic[stat])
-	#print(id_path)
-	#print(visited_time)
-	return id_path, visit_time
+    #visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
+    get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
+    #print("After get_visit_path_by_name", visit_name_path)
+    tmp_id_path = []
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    for stat in visit_name_path:
+        if stat in stat_name_dic:
+            tmp_id_path.append(stat_name_dic[stat])
+        else:
+            print("stat not found in name-id mapping")
+    '''
+    id_path = []
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    for stat in visit_path:
+        if stat in stat_name_dic
+        id_path.append(stat_name_dic[stat])
+    '''
+    #print("tmp_id_path", tmp_id_path)
+    #print(visited_time)
+    return tmp_id_path, visit_time
 
 def get_visit_path_by_name(stat_name_list, visit_path, visit_time):
-	permutation_list = get_permutation_with_mini_time(stat_name_list)
-	print(permutation_list)
-	visited_path, visited_time = simulate_visit_station(permutation_list, visit_path, visit_time)
-	#print(visited_path)
-	#print(visited_time)
-	return visited_path, visited_time
+    #print("get_visit_path_by_name", visit_path)
+    global stations_shortest_path_dic
+    stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+    permutation_list = get_permutation_with_mini_time(stat_name_list)
+    #visited_path, visited_time = simulate_visit_station(permutation_list, visit_path, visit_time)
+    #print("before")
+    #print(visit_path)
+    #print(visit_time)
+    simulate_visit_station(permutation_list, visit_path, visit_time)
+    #print("after")
+    #print(visit_path)
+    #print(visit_time)
+    return visit_path, visit_time
+    #return visited_path, visited_time
 
 def getTime(timestr):
 	minute = timestr / 60
@@ -129,20 +151,29 @@ def getDistance(station1, station2):
 	if station2 in distance_dct and station1 in distance_dct[station2]:
 		#print("cache")
 		return None, distance_dct[station2][station1]
-	
+
 	distance = 0
+	'''
+	if stations_shortest_path_dic is not None:
+		stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+		distance, path = sp.get_shortest_path(station1, station2,
+			 station_info_dic,stations_shortest_path_dic)
+	if distance is None or path is None:
+		path, distance = internal_get_spt_from_stat_name(station1, station2)
+	'''
+	global stations_shortest_path_dic
 	if stations_shortest_path_dic is not None:
 		distance, path = sp.get_shortest_path(station1, station2, station_info_dic,
 				stations_shortest_path_dic)
 	else:
+		print("stations_shortest_path_dic is None")
 		path, distance = internal_get_spt_from_stat_name(station1, station2)
-
 	if station1 not in distance_dct:
 		distance_dct[station1] = {}
-	
+
 	distance_dct[station1][station2] = distance
 	return None, distance
-	
+
 
 def get_permutation_with_mini_time(station_list):
 	permutations = permute(station_list)
@@ -157,7 +188,7 @@ def get_permutation_with_mini_time(station_list):
 	#print(permutation_list)
 	#print(min_time)
 	return permutation_list
-	
+
 def get_permutation_start_with_station(station_list, station):
 	permutations = permute(station_list)
 	min_time = 0
@@ -185,12 +216,23 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 	left_stations = permutation_list
 	previous_time = 0
 	current_station = left_stations[0]
+
+	if len(visit_path) != len(visit_time):
+		print("visit path and timestamp not match!")
+
+	# Update current_time
+	if len(visit_path) > 0:
+		#_, distance = getDistance(visit_path[-1], permutation_list[0])
+		#current_time = visit_time[-1] + distance/speed
+		current_time = visit_time[-1] + getTravelTime(visit_path[-1], permutation_list[0])
+		last_time_repeat = current_time
+		#print("Set current_time", current_time)
 	
 	while len(left_stations) > 0:
 		if current_station in left_stations:
 			left_stations.remove(current_station)
 		
-		print("visit: "+str(current_station)+" at time: "+getTime(current_time))
+		#print("visit: "+str(current_station)+" at time: "+getTime(current_time))
 		visit_path.append(current_station)
 		visit_time.append(current_time)
 		
@@ -200,6 +242,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 		if current_time - last_time_repeat > N:
 			#print("Making choice!!!!!!!")
 			#print(current_station)
+			#print("N=", N, "timeout")
 			if len(visit_path) == 0:
 				print("Error!!!!!!!!!!!!!!!!!!!!!!!!!")
 			else:
@@ -218,22 +261,26 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 					sorted_s = sorted(station_travel_time.items(), key=operator.itemgetter(1))
 					sorted_station = collections.OrderedDict(sorted_s)
 					first_station = next(iter(sorted_station))
-					
+					#print("Revisit", first_station)
+
 					# Go back to visit the repeat station
 					current_station = first_station
 					current_time += station_travel_time[first_station]
 					last_time_repeat = current_time
-					
+
 					# Update the new order
 					new_list = []
 					new_list.append(current_station)
 					for station in left_stations:
 						new_list.append(station)
 					left_stations = get_permutation_start_with_station(new_list, current_station)
-					left_stations.remove(current_station)
+					if current_station in left_stations:
+						#print("left_stations.remove", current_station)
+						left_stations.remove(current_station)
 					continue
 				else:
-					print("No visited stations satisfy the repeat condition!!!!!!")
+					#print("No visited stations satisfy the repeat condition!!!!!!")
+                                        pass
 
 		if len(left_stations) > 0:
 			next_station = left_stations[0]
@@ -241,7 +288,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 			# travel_time = distance // speed
 			current_time += travel_time
 			current_station = next_station
-	
+
 	#print("final path:")
 	#print(visit_path)
 	#print(visit_time)
