@@ -11,6 +11,7 @@ distance_dct = {}
 road_network_dic = None
 station_info_dic = None
 stations_shortest_path_dic = None
+stat_name_dic = None
 '''
 def main():
 
@@ -71,6 +72,14 @@ def get_visit_path(stat_id_list, visit, visit_time):
 
 	return visit_path, visit_time
 
+def preprocess():
+    global station_info_dic
+    global stat_name_dic
+    if station_info_dic is None:
+        road_network_dic, station_info_dic = sp.preprocess()
+    if stat_name_dic is None:
+        stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+
 def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
     global station_info_dic
     road_network_dic, station_info_dic = sp.preprocess()
@@ -123,7 +132,19 @@ def getTime(timestr):
 	second = (timestr % 60) * 60
 	return str(minute) + ":" + str(second)
 
+def get_travel_time_from_id(stat_id1, stat_id2):
+    global station_info_dic
+    preprocess()
+    if stat_id1 not in station_info_dic or stat_id2 not in station_info_dic:
+        print("Stations id not found")
+        return -1
+    name1 = station_info_dic[stat_id1]['name']
+    name2 = station_info_dic[stat_id2]['name']
+    return getTravelTime(name1, name2)
+
 def getTravelTime(station1, station2):
+	if station1 == station2:
+		return 0
 	if station1 in distance_dct and station2 in distance_dct[station1]:
 		#print("cache")
 		return distance_dct[station1][station2]
@@ -136,6 +157,7 @@ def getTravelTime(station1, station2):
 		distance_dct[station1] = {}
 	
 	time_station = json.load(open("time.json"))
+	#print(station1, station2)
 	distance_dct[station1][station2] = time_station[station1][station2]
 
 	return distance_dct[station1][station2]
@@ -204,8 +226,8 @@ def get_permutation_start_with_station(station_list, station):
 	return permutation_list
 
 def simulate_visit_station(permutation_list, visit_path, visit_time):
-	print("!!!!!!")
-	print(permutation_list)
+	#print("!!!!!!")
+	#print(permutation_list)
 	N = 1800
 	M = 900
 	test_time = 150*3
@@ -252,9 +274,9 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 					if current_station == visit_path[i]:
 						continue
 					travel_time = getTravelTime(current_station, visit_path[i])
-					print(visit_path[i])
+					#print(visit_path[i])
 					# travel_time = distance // speed
-					print(getTime(travel_time))
+					#print(getTime(travel_time))
 					if current_time - visit_time[i] + travel_time > N and travel_time < M:
 						station_travel_time[visit_path[i]] = travel_time
 				# Choose the station with minimum travel time
