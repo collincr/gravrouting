@@ -48,13 +48,15 @@ def main():
     #cluster_info_dic = read_cluster_dic_from_file()
     #print(cluster_info_dic)
 
+    cluster_adj_dic = cba.get_cluster_adj_dic()
+    get_start_stat_dic(cluster_adj_dic)
     t1 = time.time()
-    #greedy_routing_cut_cluster(8*60*60)
+    greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
 
-    agg_cluster_dic = cm.get_agg_cluster_dic()
-    print(len(agg_cluster_dic))
+    #agg_cluster_dic = cm.get_agg_cluster_dic()
+    #print(len(agg_cluster_dic))
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -72,12 +74,13 @@ def preprocess_cluster():
         get_start_stat_dic(cluster_adj_dic)
         write_cluster_dic_to_file(cluster_adj_dic)
         cluster_info_dic = cluster_adj_dic
+    return cluster_info_dic
 
-def greedy_routing_cut_cluster(time_limit):
+def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
 
-    preprocess_cluster()
+    #preprocess_cluster()
 
-    global cluster_info_dic
+    #global cluster_info_dic
     global station_info_dic
     global stat_name_dic
     gutil.reset_vertex_visit_dic(cluster_info_dic)
@@ -100,6 +103,7 @@ def greedy_routing_cut_cluster(time_limit):
     station_route = {}
 
     #print(cluster_info_dic)
+    print("cluster count:", len(cluster_info_dic))
     while not all_clusters_visited(cluster_info_dic):
         # find closest cluster
         next_cluster = -1
@@ -130,13 +134,17 @@ def greedy_routing_cut_cluster(time_limit):
         # Check if we can finish the cluster
         last_idx = len(visited_path)-1
         last_stat = visited_path[last_idx]
-        if visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat) > time_limit:
+        total_time = visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat)
+        finish_today = False
+        if total_time > time_limit:
             print("Exceed time limit")
-            while visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat) > time_limit:
+            finish_today = True
+            while total_time > time_limit:
                 #print("last_stat:", visited_path[last_idx], visited_timestamp[last_idx])
                 #print("Time back:", sr.get_travel_time_from_id(last_stat, start_stat))
                 last_idx = last_idx - 1
                 last_stat = visited_path[last_idx]
+                total_time = visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat)
 
             print("last_stat:", visited_path[last_idx], visited_timestamp[last_idx])
             print("Time back:", sr.get_travel_time_from_id(last_stat, start_stat))
@@ -153,21 +161,29 @@ def greedy_routing_cut_cluster(time_limit):
             cluster_info_dic[c_id]['stations'] = list(remain_stats)
             cluster_info_dic[c_id]['start'] = get_start_stat_of_cluster(cluster_info_dic[c_id]['stations'])
 
+        if all_clusters_visited(cluster_info_dic):
+            finish_today = True
+
+        if finish_today:
             # Finish this day
             print("----- Finish day", day, " -----")
             prev_stat = start_stat
             station_route[day] = {}
+            station_route[day]['total_time'] = total_time
             station_route[day]['path'] = visited_path[0:last_idx+1]
-            station_route[day]['time'] = visited_timestamp[0:last_idx+1]
+            station_route[day]['timestamp'] = [ int(t) for t in visited_timestamp[0:last_idx+1] ]
+
             visited_path = []
             visited_timestamp = []
             day = day + 1
-
+            total_time = 0
             visited_clusters.append([])
+            finish_today = False
 
         print("final path", visited_path)
         print("final time", visited_timestamp)
 
+    del visited_clusters[-1]
     print("final cluster:", cluster_info_dic)
     print("visited_clusters", visited_clusters)
     print("station_route", station_route)
