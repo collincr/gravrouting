@@ -48,14 +48,16 @@ def main():
     #cluster_info_dic = read_cluster_dic_from_file()
     #print(cluster_info_dic)
 
-    cluster_adj_dic = cba.get_cluster_adj_dic()
-    get_start_stat_dic(cluster_adj_dic)
-    t1 = time.time()
-    greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
-    t2 = time.time()
-    print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
-
     #agg_cluster_dic = cm.get_agg_cluster_dic()
+    #get_start_stat_dic(agg_cluster_dic)
+    #write_cluster_dic_to_file(agg_cluster_dic, './agg_cluster_dic.json')
+    #t1 = time.time()
+    #greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
+    #t2 = time.time()
+    #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+
+    cluster_adj_dic = cba.get_cluster_adj_dic()
+    get_next_day_station_seq(cluster_adj_dic)
     #print(len(agg_cluster_dic))
     pass
 '''
@@ -72,9 +74,21 @@ def preprocess_cluster():
     if cluster_info_dic is None:
         cluster_adj_dic = cba.get_cluster_adj_dic()
         get_start_stat_dic(cluster_adj_dic)
-        write_cluster_dic_to_file(cluster_adj_dic)
+        write_cluster_dic_to_file(cluster_adj_dic, files.clusters_info_json)
         cluster_info_dic = cluster_adj_dic
     return cluster_info_dic
+
+def get_next_day_station_seq(cluster_dic):
+    global station_info_dic
+    get_start_stat_dic(cluster_dic)
+    stations_route = greedy_routing_cut_cluster(cluster_dic, 8*60*60)
+    stations_everyday = {}
+    for day in stations_route:
+        stats = stations_route[day]['path']
+        stations_everyday[day] = [station_info_dic[i]['name'] for i in stats]
+
+    print(stations_everyday)
+    return stations_everyday
 
 def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
 
@@ -169,7 +183,7 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
             print("----- Finish day", day, " -----")
             prev_stat = start_stat
             station_route[day] = {}
-            station_route[day]['total_time'] = total_time
+            station_route[day]['total_time'] = int(total_time)
             station_route[day]['path'] = visited_path[0:last_idx+1]
             station_route[day]['timestamp'] = [ int(t) for t in visited_timestamp[0:last_idx+1] ]
 
@@ -187,6 +201,7 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
     print("final cluster:", cluster_info_dic)
     print("visited_clusters", visited_clusters)
     print("station_route", station_route)
+    return station_route
 
 def greedy_routing(time_limit):
     global station_info_dic
@@ -334,6 +349,7 @@ def get_start_stat_dic(cluster_dic):
     for c in cluster_dic:
         stats = cluster_dic[c]['stations']
         cluster_dic[c]['start'] = get_start_stat_of_cluster(stats)
+        print("cluster", c, "start with", cluster_dic[c]['start'])
 
 def get_start_stat_of_cluster(stat_id_list):
     #print("get_start_stat_of_cluster", stat_id_list)
@@ -462,13 +478,13 @@ def dfs_cluster(cur_perm, all_perms, prev, cluster_adj_dic):
         #print(cur_perm)
         all_perms.append(cur_perm.copy())
 
-def write_cluster_dic_to_file(cluster_dic):
+def write_cluster_dic_to_file(cluster_dic, filename):
     for cluster in cluster_dic:
         stats = cluster_dic[cluster]['stations']
         if isinstance(stats, np.ndarray):
             cluster_dic[cluster]['stations'] = cluster_dic[cluster]['stations'].tolist()
         cluster_dic[cluster]['adj'] = list(cluster_dic[cluster]['adj'])
-    gutil.write_dic_to_json(cluster_dic, files.clusters_info_json)
+    gutil.write_dic_to_json(cluster_dic, filename)
 
 def read_cluster_dic_from_file():
     if not os.path.exists(files.clusters_info_json):
