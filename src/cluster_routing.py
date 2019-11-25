@@ -10,6 +10,7 @@ import files
 import numpy as np
 import os.path
 import json
+import cluster_w_merge as cm
 
 from heapq import heappush, heappop
 
@@ -48,9 +49,12 @@ def main():
     #print(cluster_info_dic)
 
     t1 = time.time()
-    greedy_routing_cut_cluster(8*60*60)
+    #greedy_routing_cut_cluster(8*60*60)
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+
+    agg_cluster_dic = cm.get_agg_cluster_dic()
+    print(len(agg_cluster_dic))
     pass
 '''
 def calculate_route_for_all_clusters():

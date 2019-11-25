@@ -59,6 +59,12 @@ def main():
     plot_clustering_from_dic(updated_cluster_dic)
 
 
+def get_agg_cluster_dic():
+    cluster_stat_dic = get_cluster_dic()
+    updated_cluster_dic = aggregate_cluster(cluster_stat_dic)
+    updated_cluster_dic = find_cluster_adj(updated_cluster_dic)
+    return updated_cluster_dic
+
 def aggregate_cluster(cluster_stat_dic):
 
     updated_cluster_dic = {}
