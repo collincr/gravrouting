@@ -86,6 +86,7 @@ def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
     road_network_dic, station_info_dic = sp.preprocess()
     station_name_list = []
     visit_name_path = []
+    visit_name_time = visit_time.copy()
     for stat_id in stat_id_list:
         station_name_list.append(str(station_info_dic[stat_id]['name']))
     for stat_id in visit_path:
@@ -95,7 +96,7 @@ def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
     #oritinal_time = visit_time.copy()
     oritinal_len = len(visit_path)
     #visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
-    get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
+    get_visit_path_by_name(station_name_list, visit_name_path, visit_name_time)
     #print("After get_visit_path_by_name", visit_name_path)
     tmp_id_path = []
     stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
@@ -113,7 +114,38 @@ def get_visit_path_by_id(stat_id_list, visit_path, visit_time):
     '''
     #print("tmp_id_path", tmp_id_path)
     #print(visited_time)
-    return tmp_id_path, visit_time[oritinal_len:len(visit_name_path)]
+    return tmp_id_path, visit_name_time[oritinal_len:len(visit_name_path)]
+
+def get_visit_path_by_id_tmp(stat_id_list, visit_path, visit_time):
+    global station_info_dic
+    road_network_dic, station_info_dic = sp.preprocess()
+    station_name_list = []
+    visit_name_path = []
+    for stat_id in stat_id_list:
+        station_name_list.append(str(station_info_dic[stat_id]['name']))
+    for stat_id in visit_path:
+        visit_name_path.append(station_info_dic[stat_id]['name'])
+
+    #visited_path, visited_time = get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
+    get_visit_path_by_name(station_name_list, visit_name_path, visit_time)
+    #print("After get_visit_path_by_name", visit_name_path)
+    tmp_id_path = []
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    for stat in visit_name_path:
+        if stat in stat_name_dic:
+            tmp_id_path.append(stat_name_dic[stat])
+        else:
+            print("stat not found in name-id mapping")
+    '''
+    id_path = []
+    stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+    for stat in visit_path:
+        if stat in stat_name_dic
+        id_path.append(stat_name_dic[stat])
+    '''
+    #print("tmp_id_path", tmp_id_path)
+    #print(visited_time)
+    return tmp_id_path, visit_time
 
 def get_visit_path_by_name(stat_name_list, visit_path, visit_time):
     #print("get_visit_path_by_name", visit_path)
