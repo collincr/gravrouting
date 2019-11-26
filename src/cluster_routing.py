@@ -51,13 +51,15 @@ def main():
     #agg_cluster_dic = cm.get_agg_cluster_dic()
     #get_start_stat_dic(agg_cluster_dic)
     #write_cluster_dic_to_file(agg_cluster_dic, './agg_cluster_dic.json')
-    #t1 = time.time()
-    #greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
-    #t2 = time.time()
-    #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+    agg_cluster_dic = read_cluster_dic_from_file(files.agg_cluster_dic_json)
+    print(agg_cluster_dic)
+    t1 = time.time()
+    greedy_routing_cut_cluster(agg_cluster_dic, 8*60*60)
+    t2 = time.time()
+    print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
 
-    cluster_adj_dic = cba.get_cluster_adj_dic()
-    get_next_day_station_seq(cluster_adj_dic)
+    #cluster_adj_dic = cba.get_cluster_adj_dic()
+    #get_next_day_station_seq(cluster_adj_dic)
     #print(len(agg_cluster_dic))
     pass
 '''
@@ -486,11 +488,11 @@ def write_cluster_dic_to_file(cluster_dic, filename):
         cluster_dic[cluster]['adj'] = list(cluster_dic[cluster]['adj'])
     gutil.write_dic_to_json(cluster_dic, filename)
 
-def read_cluster_dic_from_file():
-    if not os.path.exists(files.clusters_info_json):
-        print(files.clusters_info_json, "file not found")
+def read_cluster_dic_from_file(filename):
+    if not os.path.exists(filename):
+        print(filename, "file not found")
         return None
-    with open(files.clusters_info_json) as file:
+    with open(filename) as file:
         dic = json.load(file)
     return dic
 
