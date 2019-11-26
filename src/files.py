@@ -10,6 +10,7 @@ spt_json = '../data/all_stations_spt.json'
 
 # cluster info
 clusters_info_json = '../data/clusters_info.json'
+agg_cluster_dic_json = '../resources/file/agg_cluster_dic.json'
 
 # debugging
 station_info_json = '../data/stations_info.json'
