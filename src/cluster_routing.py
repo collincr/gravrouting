@@ -10,7 +10,7 @@ import files
 import numpy as np
 import os.path
 import json
-import cluster_w_merge as cm
+#import cluster_w_merge as cm
 
 from heapq import heappush, heappop
 
@@ -57,7 +57,8 @@ def main():
     #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
 
     cluster_adj_dic = cba.get_cluster_adj_dic()
-    get_next_day_station_seq(cluster_adj_dic)
+    print(cluster_adj_dic)
+    print(get_next_day_station_seq(cluster_adj_dic))
     #print(len(agg_cluster_dic))
     pass
 '''

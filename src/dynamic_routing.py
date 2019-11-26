@@ -1,5 +1,6 @@
 import shortest_path as sp
 import cluster_by_agglomerative as cba
+from cluster_routing import get_next_day_station_seq
 import json
 import operator
 import collections
@@ -11,7 +12,7 @@ distance_dct = {}
 
 def main():
 	station_sequence = ["B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"]
-	stations_everyday = {'1':[["ZAP28", "RE16", "CS15", "JOSRIDGE", "J214", "CS14", "VOLPK"], ["B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"]], '2':[["CS28", "J217", "CS29", "CS52", "CS30", "J4", "CS41"], ["CS12", "CS36", "CS37", "CS13", "CS38", "CS64", "CS63"]], '3':[["CS7", "CS3", "CS6", "CS4", "HW4", "CS5", "CS65"], ["CS8", "DOR37", "DOR38", "DOR39", "CS34", "CS35", "CS9"], ["DOR68", "CS20", "ZAP29", "RE15", "RE12", "RE14", "CS17"]]}
+	stations_everyday = {'1':[["ZAP28", "RE16", "CS15", "JOSRIDGE", "J214", "CS14", "VOLPK"], ["B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"]], '2':[["CS28", "J217", "CS29", "CS52", "CS30", "J4", "CS41"], ["CS12", "CS36", "CS37", "CS13", "CS38", "CS64", "CS63"]], '3':[["CS7", "CS3", "CS6", "CS4", "CS5", "CS65"], ["CS8", "DOR37", "DOR38", "DOR39", "CS34", "CS35", "CS9"], ["DOR68", "CS20", "ZAP29", "RE15", "RE12", "RE14", "CS17"]]}
 	cluster_dic = cba.get_cluster_dic()
 	begin_routing(stations_everyday)
 
@@ -86,6 +87,10 @@ def add_visit_timestamp(stations):
 	return departure_time, res
 
 def begin_routing(stations_everyday):
+	road_network_dic, station_info_dic = sp.preprocess()
+	name_to_id = {}
+	for id in station_info_dic:
+		name_to_id[station_info_dic[id]['name']] = id
 	print('Initial path:')
 	for day in stations_everyday:
 		each_day = stations_everyday[day]
@@ -96,9 +101,14 @@ def begin_routing(stations_everyday):
 				
 	while(True):
 		day = input("Input your current day: ")
+		clusters = stations_everyday[day]
+		dat_str = []
+		for cluster in clusters:
+			dat_str = dat_str + cluster
+		print('Today\'s path: ' + str(dat_str))
+		
 		begin_time = input("Input your begin time: ")
 		being_time = get_sec(begin_time)
-		clusters = stations_everyday[day]
 		del stations_everyday[day]
 		last_time_repeat = 0
 		current_station_index = 0
@@ -185,15 +195,28 @@ def begin_routing(stations_everyday):
 				for cluster in clusters:
 					left_clusters[str(id)] = {}
 					left_clusters[str(id)]['visited'] = False
-					left_clusters[str(id)]['stations'] = cluster
+					left_clusters[str(id)]['stations'] = []
+					for stat in cluster:
+						left_clusters[str(id)]['stations'].append(name_to_id[stat])
 					id += 1
 				for left_day in stations_everyday:
 					for cluster in stations_everyday[left_day]:
 						left_clusters[str(id)] = {}
 						left_clusters[str(id)]['visited'] = False
-						left_clusters[str(id)]['stations'] = cluster
+						left_clusters[str(id)]['stations'] = []
+						for stat in cluster:
+							left_clusters[str(id)]['stations'].append(name_to_id[stat])
 						id += 1
-			
+				print(left_clusters)
+				new_stations_everyday = get_next_day_station_seq(left_clusters)
+				new_day = int(day) + 1
+				stations_everyday = {}
+				for days in new_stations_everyday:
+					stations_everyday[str(new_day)] = new_stations_everyday[days]
+					new_day += 1
+				print(stations_everyday)
+				print("You have reached 8 hours limit, now you can go back to CS25")
+				break
 			print("Next station is: " + stations[0])
 		
 		if len(stations_everyday) == 0:
