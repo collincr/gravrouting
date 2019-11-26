@@ -61,6 +61,7 @@ def main():
     '''
 
     cluster_adj_dic = get_cluster_info_dic()
+    print(cluster_adj_dic)
     get_next_day_station_seq(cluster_adj_dic)
     '''
     cluster_adj_dic = get_cluster_info_dic()
@@ -90,6 +91,8 @@ def get_next_day_station_seq(cluster_dic):
     global station_info_dic
     #get_start_stat_dic(cluster_dic)
     stations_route = greedy_routing_cut_cluster(cluster_dic, 8*60*60)
+    print("!!!!")
+    print(stations_route)
     stations_everyday = {}
     for day in stations_route:
         paths = stations_route[day]['path']
