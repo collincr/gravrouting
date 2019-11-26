@@ -60,17 +60,15 @@ def main():
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
     '''
 
-    #cluster_adj_dic = cba.get_cluster_adj_dic()
-    #get_next_day_station_seq(cluster_adj_dic)
-    #print(len(agg_cluster_dic))
-
-
+    cluster_adj_dic = get_cluster_info_dic()
+    get_next_day_station_seq(cluster_adj_dic)
+    '''
     cluster_adj_dic = get_cluster_info_dic()
     t1 = time.time()
     greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
-
+    '''
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -90,12 +88,14 @@ def get_cluster_info_dic():
 
 def get_next_day_station_seq(cluster_dic):
     global station_info_dic
-    get_start_stat_dic(cluster_dic)
+    #get_start_stat_dic(cluster_dic)
     stations_route = greedy_routing_cut_cluster(cluster_dic, 8*60*60)
     stations_everyday = {}
     for day in stations_route:
-        stats = stations_route[day]['path']
-        stations_everyday[day] = [station_info_dic[i]['name'] for i in stats]
+        paths = stations_route[day]['path']
+        stations_everyday[day] = []
+        for path in paths:
+            stations_everyday[day].append([station_info_dic[i]['name'] for i in path])
 
     print(stations_everyday)
     return stations_everyday
