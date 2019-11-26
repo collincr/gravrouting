@@ -8,18 +8,26 @@ import time
 import itertools
 import files
 import numpy as np
+import os.path
+import json
+import cluster_w_merge as cm
 
 from heapq import heappush, heappop
 
-def main():
+road_network_dic, station_info_dic = sp.preprocess()
+stat_name_dic = sp.create_stat_name_id_mapping(station_info_dic)
+cluster_info_dic =  None
 
+def main():
+    #global cluster_info_dic
+    #cluster_info_dic = read_cluster_dic_from_file()
     #print(str(dt.timedelta(seconds = time.time())))
-    cluster_adj_dic = cba.get_cluster_adj_dic()
+    #cluster_adj_dic = cba.get_cluster_adj_dic()
     #print(cluster_adj_dic)
     #get_cluster_permutation(cluster_adj_dic, True)
-    cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
-            '9', '17', '1', '2', '3', '4', '18', '19', '16']
-    route_with_sequence(cluster_seq, cl, cluster_adj_dic)
+    #cluster_seq = ['0', '8', '14', '13', '12', '5', '15', '11', '6', '7', '10',
+    #        '9', '17', '1', '2', '3', '4', '18', '19', '16']
+    #route_with_sequence(cluster_seq, cl, cluster_adj_dic)
     # get_cluster_permutations(cluster_adj_dic)
     #print(str(dt.timedelta(seconds = time.time())))
 
@@ -33,6 +41,24 @@ def main():
     #greedy_routing(8*60*60)
     #t2 = time.time()
     #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+
+    #get_start_stat_dic(cluster_adj_dic)
+    #print(cluster_adj_dic)
+    #write_cluster_dic_to_file(cluster_adj_dic)
+    #cluster_info_dic = read_cluster_dic_from_file()
+    #print(cluster_info_dic)
+
+    #agg_cluster_dic = cm.get_agg_cluster_dic()
+    #get_start_stat_dic(agg_cluster_dic)
+    #write_cluster_dic_to_file(agg_cluster_dic, './agg_cluster_dic.json')
+    #t1 = time.time()
+    #greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
+    #t2 = time.time()
+    #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+
+    cluster_adj_dic = cba.get_cluster_adj_dic()
+    get_next_day_station_seq(cluster_adj_dic)
+    #print(len(agg_cluster_dic))
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -41,10 +67,147 @@ def calculate_route_for_all_clusters():
         stat_list = cluster_adj_dic[c]['stations']
 '''
 
+def preprocess_cluster():
+    global cluster_info_dic
+    if cluster_info_dic is None:
+        cluster_info_dic = read_cluster_dic_from_file()
+    if cluster_info_dic is None:
+        cluster_adj_dic = cba.get_cluster_adj_dic()
+        get_start_stat_dic(cluster_adj_dic)
+        write_cluster_dic_to_file(cluster_adj_dic, files.clusters_info_json)
+        cluster_info_dic = cluster_adj_dic
+    return cluster_info_dic
+
+def get_next_day_station_seq(cluster_dic):
+    global station_info_dic
+    get_start_stat_dic(cluster_dic)
+    stations_route = greedy_routing_cut_cluster(cluster_dic, 8*60*60)
+    stations_everyday = {}
+    for day in stations_route:
+        stats = stations_route[day]['path']
+        stations_everyday[day] = [station_info_dic[i]['name'] for i in stats]
+
+    print(stations_everyday)
+    return stations_everyday
+
+def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
+
+    #preprocess_cluster()
+
+    #global cluster_info_dic
+    global station_info_dic
+    global stat_name_dic
+    gutil.reset_vertex_visit_dic(cluster_info_dic)
+    stat_sp_dic = sp.get_all_stations_spt_dic_from_file()
+
+    visited_path = []
+    visited_timestamp = []
+    start_stat = '70'
+    prev_stat = start_stat
+    total_time = 0
+
+    remove_stat_from_cluster(start_stat, cluster_info_dic)
+    visited_path.append(prev_stat)
+    visited_timestamp.append(0)
+    prev_len = len(visited_path)
+
+    cluster_id_start = 100
+    day = 0
+    visited_clusters = [[]]
+    station_route = {}
+
+    #print(cluster_info_dic)
+    print("cluster count:", len(cluster_info_dic))
+    while not all_clusters_visited(cluster_info_dic):
+        # find closest cluster
+        next_cluster = -1
+        min_time = np.Inf
+        for c in cluster_info_dic:
+            if not cluster_info_dic[c]['visited']:
+                cur_time = sr.get_travel_time_from_id(prev_stat, cluster_info_dic[c]['start'])
+                if cur_time < min_time:
+                    min_time = cur_time
+                    next_cluster = c
+
+        if next_cluster == -1:
+            print("Something wrong about finding next cluster")
+            break
+
+        print("***** Go to cluster", next_cluster, " *****", cluster_info_dic[next_cluster]['stations'])
+        visited_path, visited_timestamp = sr.get_visit_path_by_id(
+                cluster_info_dic[next_cluster]['stations'],
+                visited_path, visited_timestamp)
+        visited_clusters[day].append(next_cluster)
+        print(visited_path)
+        print(visited_timestamp)
+
+        # Set visited for the cluster
+        cluster_info_dic[next_cluster]['visited'] = True
+        prev_stat = visited_path[-1]
+
+        # Check if we can finish the cluster
+        last_idx = len(visited_path)-1
+        last_stat = visited_path[last_idx]
+        total_time = visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat)
+        finish_today = False
+        if total_time > time_limit:
+            print("Exceed time limit")
+            finish_today = True
+            while total_time > time_limit:
+                #print("last_stat:", visited_path[last_idx], visited_timestamp[last_idx])
+                #print("Time back:", sr.get_travel_time_from_id(last_stat, start_stat))
+                last_idx = last_idx - 1
+                last_stat = visited_path[last_idx]
+                total_time = visited_timestamp[last_idx] + sr.get_travel_time_from_id(last_stat, start_stat)
+
+            print("last_stat:", visited_path[last_idx], visited_timestamp[last_idx])
+            print("Time back:", sr.get_travel_time_from_id(last_stat, start_stat))
+            # Create new cluster
+            remain_stats = set()
+            for i in range(last_idx + 1, len(visited_path)):
+                if visited_path[i] in cluster_info_dic[next_cluster]['stations']:
+                    remain_stats.add(visited_path[i])
+            print("remain_stats", remain_stats)
+            c_id = str(cluster_id_start)
+            cluster_id_start = cluster_id_start + 1
+            cluster_info_dic[c_id] = {}
+            cluster_info_dic[c_id]['visited'] = False
+            cluster_info_dic[c_id]['stations'] = list(remain_stats)
+            cluster_info_dic[c_id]['start'] = get_start_stat_of_cluster(cluster_info_dic[c_id]['stations'])
+
+        if all_clusters_visited(cluster_info_dic):
+            finish_today = True
+
+        if finish_today:
+            # Finish this day
+            print("----- Finish day", day, " -----")
+            prev_stat = start_stat
+            station_route[day] = {}
+            station_route[day]['total_time'] = int(total_time)
+            station_route[day]['path'] = visited_path[0:last_idx+1]
+            station_route[day]['timestamp'] = [ int(t) for t in visited_timestamp[0:last_idx+1] ]
+
+            visited_path = []
+            visited_timestamp = []
+            day = day + 1
+            total_time = 0
+            visited_clusters.append([])
+            finish_today = False
+
+        print("final path", visited_path)
+        print("final time", visited_timestamp)
+
+    del visited_clusters[-1]
+    print("final cluster:", cluster_info_dic)
+    print("visited_clusters", visited_clusters)
+    print("station_route", station_route)
+    return station_route
+
 def greedy_routing(time_limit):
+    global station_info_dic
     cluster_adj_dic = cba.get_cluster_adj_dic()
     gutil.reset_vertex_visit_dic(cluster_adj_dic)
-    road_network_dic, station_info_dic = sp.preprocess()
+    #road_network_dic, station_info_dic = sp.preprocess()
     stat_sp_dic = sp.get_all_stations_spt_dic_from_file()
 
     visited_path = []
@@ -90,8 +253,8 @@ def greedy_routing(time_limit):
 
         if found_next:
             #print("***** Go to cluster", cand_cluster, "***** before:", total_time)
-            #print("***** Go to cluster", cand_cluster, "***** before:", visited_path)
-            #print("***** Go to cluster", cand_cluster, "***** before:", visited_timestamp)
+            print("***** Go to cluster", cand_cluster, "***** before:", visited_path)
+            print("***** Go to cluster", cand_cluster, "***** before:", visited_timestamp)
             total_time = total_time + time_to_finish_cand
             visited_path = cand_path
             visited_timestamp = cand_timestamp
@@ -103,8 +266,8 @@ def greedy_routing(time_limit):
             cluster_visited[day].append(cand_cluster)
 
             print("***** Go to cluster", cand_cluster, "***** after:", total_time)
-            #print("***** Go to cluster", cand_cluster, "***** after:", visited_path)
-            #print("***** Go to cluster", cand_cluster, "***** after:", visited_timestamp)
+            print("***** Go to cluster", cand_cluster, "***** after:", visited_path)
+            print("***** Go to cluster", cand_cluster, "***** after:", visited_timestamp)
         else: # leave it tomorrow
             print("Finish this day", total_time)
             visited_path = []
@@ -134,7 +297,8 @@ def greedy_routing(time_limit):
 
 def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
     print("get_cluster_cands")
-    road_network_dic, station_info_dic = sp.preprocess()
+    global station_info_dic
+    #road_network_dic, station_info_dic = sp.preprocess()
     stat_sp_dic = sp.get_all_stations_spt_dic_from_file()
     #avg_speed = 3
     cur_len = len(visited_stat)
@@ -156,7 +320,7 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
         path, time = sr.get_visit_path_by_id(cluster_dic[c]['stations'],
                 visited_stat.copy(), visited_time.copy())
         print("path with cluster", c, path)
-        #print("time with cluster", c, time)
+        print("time with cluster", c, time)
         #print("cur_len", cur_len)
 
         #dist, _ = sp.get_shortest_path_from_stat_id(stat, path[cur_len],
@@ -180,6 +344,22 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
         visited_time.append(min_visited_time[i])
     '''
     return pq
+
+def get_start_stat_dic(cluster_dic):
+    for c in cluster_dic:
+        stats = cluster_dic[c]['stations']
+        cluster_dic[c]['start'] = get_start_stat_of_cluster(stats)
+        print("cluster", c, "start with", cluster_dic[c]['start'])
+
+def get_start_stat_of_cluster(stat_id_list):
+    #print("get_start_stat_of_cluster", stat_id_list)
+    global station_info_dic
+    global stat_name_dic
+    stat_name_list = []
+    for stat in stat_id_list:
+        stat_name_list.append(station_info_dic[stat]['name'])
+    min_time_route = sr.get_permutation_with_mini_time(stat_name_list)
+    return stat_name_dic[min_time_route[0]]
 
 def all_clusters_visited(cluster_dic):
     for c in cluster_dic:
@@ -232,6 +412,7 @@ def route_with_sequence(clusters_list, cluster_info_dic):
     average_speed = 3 # m/s
     visit_path = []
     visit_time = []
+    total_time_list = []
     for cluster in clusters_list:
         print("***** cluster", cluster, " *****")
         path, time = sr.get_visit_path(cluster_info_dic[cluster]['stations'], visit_path, visit_time)
@@ -246,6 +427,8 @@ def route_with_sequence(clusters_list, cluster_info_dic):
         prev_stat = stat_name_dic[path[-1]]
         total_time = time[-1]
         print("total_time", total_time, str(datetime.timedelta(seconds=total_time)))
+        total_time_list.append(total_time)
+    return total_time_list
 
 def get_cluster_permutation(cluster_adj_dic, is_start_fix):
     all_perms = []
@@ -295,11 +478,13 @@ def dfs_cluster(cur_perm, all_perms, prev, cluster_adj_dic):
         #print(cur_perm)
         all_perms.append(cur_perm.copy())
 
-def write_cluster_dic_to_file(cluster_dic):
+def write_cluster_dic_to_file(cluster_dic, filename):
     for cluster in cluster_dic:
-        cluster_dic[cluster]['stations'] = cluster_dic[cluster]['stations'].tolist()
+        stats = cluster_dic[cluster]['stations']
+        if isinstance(stats, np.ndarray):
+            cluster_dic[cluster]['stations'] = cluster_dic[cluster]['stations'].tolist()
         cluster_dic[cluster]['adj'] = list(cluster_dic[cluster]['adj'])
-    gutil.write_dic_to_json(cluster_dic, files.clusters_info_json)
+    gutil.write_dic_to_json(cluster_dic, filename)
 
 def read_cluster_dic_from_file():
     if not os.path.exists(files.clusters_info_json):

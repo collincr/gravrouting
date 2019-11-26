@@ -1,5 +1,6 @@
 import numpy as np
 import itertools
+import datetime as dt
 from cluster_by_agglomerative import get_cluster_dic
 from cluster_by_agglomerative import find_cluster_adj
 from cluster_by_agglomerative import plot_clustering_from_dic
@@ -35,13 +36,34 @@ def main():
     #         for listitem in cluster_seqs:
     #             f.write('%s\n' % str(listitem))
 
-    cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
-    # cluster_seq = ['10', '7', '9', '4', '0', '5', '1', '2', '3', '6', '8', '11']
-    route_with_sequence(cluster_seq, updated_cluster_dic)
-    
+    #cluster_seq = ['0', '8', '5', '11', '6', '7', '10', '9', '1', '2', '3', '4']
+    cluster_seq = ['10', '7', '9', '4', '0', '5', '1', '2', '3', '6', '8', '11']
+    total_times = route_with_sequence(cluster_seq, updated_cluster_dic)
+    res = {}
+    day = 1
+    begin_stat_idx_of_the_day = 0
+    time_of_days_before = 0
+    for i in range(len(total_times)):
+        time = total_times[i]
+        if dt.timedelta(seconds=time) > dt.timedelta(hours=8, seconds=time_of_days_before):
+            one_day = {}
+            clusters_for_each_day = cluster_seq[begin_stat_idx_of_the_day, i]
+            one_day['clusters'] = clusters_for_each_day
+            seconds = time - time_of_days_before
+            one_day['time'] = dt.timedelta(seconds=seconds)
+            time_of_days_before += time
+            begin_stat_idx_of_the_day = i
+            day += 1
+    print(res)
 
     plot_clustering_from_dic(updated_cluster_dic)
 
+
+def get_agg_cluster_dic():
+    cluster_stat_dic = get_cluster_dic()
+    updated_cluster_dic = aggregate_cluster(cluster_stat_dic)
+    updated_cluster_dic = find_cluster_adj(updated_cluster_dic)
+    return updated_cluster_dic
 
 def aggregate_cluster(cluster_stat_dic):
 
