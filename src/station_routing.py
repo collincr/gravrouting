@@ -264,7 +264,8 @@ def get_permutation_start_with_station(station_list, station):
 def simulate_visit_station(permutation_list, visit_path, visit_time):
 	#print("!!!!!!")
 	#print(permutation_list)
-	N = 1800
+	#N = 30*60
+	N = 2*60*60
 	M = 900
 	test_time = 150*3
 	speed = 3

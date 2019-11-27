@@ -54,6 +54,7 @@ def main():
     #get_start_stat_dic(agg_cluster_dic)
     #write_cluster_dic_to_file(agg_cluster_dic, './agg_cluster_dic.json')
     '''
+    # agg cluster
     agg_cluster_dic = read_cluster_dic_from_file(files.agg_cluster_dic_json)
     print(agg_cluster_dic)
     t1 = time.time()
@@ -66,11 +67,14 @@ def main():
     print(cluster_adj_dic)
     get_next_day_station_seq(cluster_adj_dic)
     '''
+
+    # cluster info dic
     cluster_adj_dic = get_cluster_info_dic()
     t1 = time.time()
-    greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
+    stat_routes = greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+    get_total_time_from_sec(stat_routes)
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -78,6 +82,12 @@ def calculate_route_for_all_clusters():
     for c in cluster_adj_dic:
         stat_list = cluster_adj_dic[c]['stations']
 '''
+
+def get_total_time_from_sec(stat_routes):
+    total = 0
+    for day in stat_routes:
+        total += stat_routes[day]['total_time']
+    print(datetime.timedelta(seconds=total))
 
 def get_cluster_info_dic():
     cluster_info_dic = read_cluster_dic_from_file(files.clusters_info_json)
@@ -158,7 +168,6 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
         cluster_path, cluster_timestamp = sr.get_visit_path_by_id(
                 cluster_info_dic[next_cluster]['stations'],
                 visited_path, visited_timestamp)
-        visited_clusters[day].append(next_cluster)
         print("cluster_path", cluster_path)
         print("cluster_timestamp", cluster_timestamp)
         print("visited_path", visited_path)
@@ -166,6 +175,7 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
 
         # Set visited for the cluster
         cluster_info_dic[next_cluster]['visited'] = True
+        visited_clusters[day].append(next_cluster)
         prev_stat = cluster_path[-1]
 
         # Check if we can finish the cluster
@@ -206,6 +216,7 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
                 del cluster_timestamp[last_idx+1:]
             else:
                 cluster_info_dic[next_cluster]['visited'] = False
+                del visited_clusters[day][-1]
                 print("visited_timestamp[-1]", visited_timestamp[-1])
                 print("visited_path[-1], start_stat", sr.get_travel_time_from_id(visited_path[-1], start_stat))
                 total_time = visited_timestamp[-1] + sr.get_travel_time_from_id(visited_path[-1], start_stat)
@@ -266,7 +277,8 @@ def greedy_routing(time_limit):
 
     visited_path = []
     visited_timestamp = []
-    prev_stat = '70'
+    start_stat = '70'
+    prev_stat = start_stat
     total_time = 0
     avg_speed = 3
 
@@ -293,7 +305,11 @@ def greedy_routing(time_limit):
         while not found_next:
             time_to_cand, cand_cluster, cand_path, cand_timestamp = heappop(cluster_cand_pq)
             time_to_finish_cand = cand_timestamp[-1] - cand_timestamp[prev_len-1]
-            if total_time +  time_to_finish_cand > time_limit:
+            time_to_go_back = cand_timestamp[-1] + sr.get_travel_time_from_id(cand_path[-1], start_stat)
+            print("total_time", total_time)
+            print("time_to_finish_cand", time_to_finish_cand)
+            print("time_to_go_back", time_to_go_back)
+            if total_time + time_to_finish_cand + time_to_go_back > time_limit:
                 tmp_list.append((time_to_cand, cand_cluster, cand_path, cand_timestamp))
             else:
                 found_next = True
@@ -371,7 +387,7 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
             continue
 
         print("--- check cluster", c, "---")
-        path, time = sr.get_visit_path_by_id(cluster_dic[c]['stations'],
+        path, time = sr.get_visit_path_by_id_tmp(cluster_dic[c]['stations'],
                 visited_stat.copy(), visited_time.copy())
         print("path with cluster", c, path)
         print("time with cluster", c, time)
