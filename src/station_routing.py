@@ -229,21 +229,28 @@ def getDistance(station1, station2):
 	distance_dct[station1][station2] = distance
 	return None, distance
 
-
 def get_permutation_with_mini_time(station_list):
-	#permutations = permute(station_list)
-	permutations = list(itertools.permutations(station_list))
-	min_time = 0
-	permutation_list = []
-	for stations in permutations:
-		times, res = add_visit_timestamp(stations)
-		if min_time == 0 or times < min_time:
-			min_time = times
-			permutation_list = res
-	#print("get_permutation_with_mini_time")
-	#print(permutation_list)
-	#print(min_time)
-	return permutation_list
+        #permutations = permute(station_list)
+        curr = time.time()
+        permutations = list(itertools.permutations(station_list))
+        min_time = 0
+        print("Possible permutations number:")
+        print(len(permutations))
+        print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
+        print("Calculating the permutation with minimum time spent...")
+        curr = time.time()
+        permutation_list = []
+        for stations in permutations:
+                times, res = add_visit_timestamp(stations)
+                if min_time == 0 or times < min_time:
+                        min_time = times
+                        permutation_list = res
+        print("Permuation with minimum time found")
+        print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
+        #print("get_permutation_with_mini_time")
+        #print(permutation_list)
+        #print(min_time)
+        return permutation_list
 
 def get_permutation_start_with_station(station_list, station):
 	#permutations = permute(station_list)

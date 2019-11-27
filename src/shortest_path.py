@@ -278,7 +278,7 @@ def print_stat_adj(stat, stat_adj_dic):
     for stat_id in stat_adj_dic:
         if stat_adj_dic[stat_id]['name'] == stat:
             for adj in stat_adj_dic[stat_id]['adj']:
-                print(stat_adj_dic[adj]['name'], end = " ")
+                print(stat_adj_dic[adj]['name'], " ")
     print()
 
 
