@@ -146,7 +146,7 @@ def plot_clustering_from_dic(cluster_stat_dic):
             plt.annotate(cluster, xy=(e, n), xytext=(e+20, n+20), fontsize=15)
 
         # plot annotate
-        if True:
+        if False:
             for stat in stats:
                 e = stat_info_dic[stat]['coordinates'][0]
                 n = stat_info_dic[stat]['coordinates'][1]

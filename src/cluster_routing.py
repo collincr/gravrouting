@@ -67,7 +67,7 @@ def main():
     print(cluster_adj_dic)
     get_next_day_station_seq(cluster_adj_dic)
     '''
-
+    '''
     # cluster info dic
     cluster_adj_dic = get_cluster_info_dic()
     t1 = time.time()
@@ -75,6 +75,8 @@ def main():
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
     get_total_time_from_sec(stat_routes)
+    '''
+    print(len(station_info_dic))
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -87,7 +89,7 @@ def get_total_time_from_sec(stat_routes):
     total = 0
     for day in stat_routes:
         total += stat_routes[day]['total_time']
-    print(datetime.timedelta(seconds=total))
+    print("total travel time::", datetime.timedelta(seconds=total), "(", total, "sec)")
 
 def get_cluster_info_dic():
     cluster_info_dic = read_cluster_dic_from_file(files.clusters_info_json)
@@ -233,7 +235,7 @@ def greedy_routing_cut_cluster(cluster_info_dic, time_limit):
         all_visited = all_clusters_visited(cluster_info_dic)
         if all_visited:
             finish_today = True
-
+        print("current total_time:", total_time)
         if finish_today:
             # Finish this day
             print("----- Finish day", day, " -----")

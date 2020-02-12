@@ -272,8 +272,13 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 	#print("!!!!!!")
 	#print(permutation_list)
 	#N = 30*60
+	#N = 1*60*60
+	#N = 1.5*60*60
 	N = 2*60*60
-	M = 900
+	#N = 2.5*60*60
+	M = 15*60
+	#M = 30*60
+	#M = 60*60
 	test_time = 150*3
 	speed = 3
 	last_time_repeat = 0
