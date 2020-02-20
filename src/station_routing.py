@@ -285,7 +285,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 	current_time = 0
 	visited_stations = []
 	index = 0
-	left_stations = permutation_list
+	left_stations = permutation_list.copy()
 	previous_time = 0
 	current_station = left_stations[0]
 
