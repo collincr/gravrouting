@@ -4,6 +4,8 @@ import shortest_path as sp
 import itertools
 import matplotlib.pyplot as plt
 
+from scipy import stats
+
 cluster_info_dic =  None
 station_info_dic = None
 
@@ -31,12 +33,14 @@ def get_all_stats_travel_time():
     limit = 5
     cluster_id = '1'
     plt.figure(figsize=(12,10))
+    #ax = plt.gca()
+    plt.plot([], [], '.', label="(P, S, K)")
     for cluster in cluster_info_dic:
         limit = limit - 1
         if limit < 0: 
             break
         
-        if cluster_id != -1:
+        if 'cluster_id' in locals() and cluster_id != -1:
             limit = 100
             if cluster_id != cluster:
                 continue
@@ -48,13 +52,30 @@ def get_all_stats_travel_time():
             limit = limit + 1
             continue
         x, y = get_stats_travel_time(stat_id_list)
-        plt.plot(x, y, '.')
-  
+        r, _ = get_pearson(x, y)
+        rho, _ = get_spearman(x, y)
+        tau, _ = get_kendalltau(x, y)
+        #print(r, p)
+        plt.plot(x, y, '.', label="(" + str(round(r, 2)) + ", " + str(round(rho, 2)) + ", " + str(round(tau, 2)) + ")")
+
+
+    file_name = 'travel_time_comparision_1800_1.png'
     plt.title("Travel time w/o repeat time", fontsize=20)
     plt.xlabel("Travel time without repeat time (s)", fontsize=20)
     plt.ylabel("Travel time with repeat time (s)", fontsize=20)
-    plt.savefig('travel_time_comparision_1.png')
+    plt.legend(loc='lower right')
+
+    plt.savefig(file_name)
     plt.show()
+
+def get_pearson(x, y):
+    return stats.pearsonr(x, y)
+
+def get_spearman(x, y):
+    return stats.spearmanr(x, y)
+
+def get_kendalltau(x, y):
+    return stats.kendalltau(x, y)
 
 def get_stats_travel_time(stat_id_list):
     stat_name_list = stat_id_to_name_list(stat_id_list)
@@ -80,6 +101,8 @@ def get_stats_travel_time(stat_id_list):
         time_wo_re_list.append(travel_time_without_repeat)
         time_w_re_list.append(travel_time_with_repeat)
     return time_wo_re_list, time_w_re_list
+
+
 
 def get_key_from_path(stat_path):
     #print("get_key_from_path", stat_path)

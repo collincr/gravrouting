@@ -271,10 +271,10 @@ def get_permutation_start_with_station(station_list, station):
 def simulate_visit_station(permutation_list, visit_path, visit_time):
 	#print("!!!!!!")
 	#print(permutation_list)
-	#N = 30*60
+	N = 30*60
 	#N = 1*60*60
 	#N = 1.5*60*60
-	N = 2*60*60
+	#N = 2*60*60
 	#N = 2.5*60*60
 	M = 15*60
 	#M = 30*60
