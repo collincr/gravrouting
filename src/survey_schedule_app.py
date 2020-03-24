@@ -5,11 +5,32 @@ import json
 def main():
     road_network_dic, station_info_dic = sp.preprocess()
     #print(station_info_dic)
-    write_dic_to_file(station_info_dic, 'stat_info.json')
+    stat_info_new = {}
+    for stat in station_info_dic:
+        name = station_info_dic[stat]['name']
+        stat_info_new[name] = {}
+        stat_info_new[name]['id'] = stat
+        stat_info_new[name]['type'] = station_info_dic[stat]['type']
+        stat_info_new[name]['status'] = station_info_dic[stat]['status']
+        stat_info_new[name]['coordinates'] = station_info_dic[stat]['coordinates']
+        stat_info_new[name]['road_coordinates'] = station_info_dic[stat]['road_coordinates']
+        stat_info_new[name]['road_id'] = station_info_dic[stat]['road_id']
+    #print(stat_info_new)
+    write_dic_to_file(stat_info_new, 'stat_info.json')
 
     cluster_info_dic = cr.get_cluster_info_dic()
     #print(cluster_info_dic)
-    write_dic_to_file(cluster_info_dic, 'cluster_info.json')
+    cluster_new = {}
+    for c in cluster_info_dic:
+        cluster_new[c] = {}
+        stats = []
+        for stat in cluster_info_dic[c]['stations']:
+            stats.append(station_info_dic[stat]['name'])
+        cluster_new[c]['stations'] = stats
+        cluster_new[c]['adj'] = cluster_info_dic[c]['adj']
+    print(cluster_new)
+    write_dic_to_file(cluster_new, 'cluster_info.json')
+
 
     stat_times_dic = json.load(open("time.json"))
     #print(stat_times_dic)
