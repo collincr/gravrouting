@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import geopandas as gpd
 
+import itertools
 import json
 
 # import hierarchical clustering libraries
@@ -16,6 +17,12 @@ from shortest_path import get_station_dic
 import shortest_path as sp
 from shortest_path import internal_get_spt_from_stat_name
 import pickle
+
+# import multidimensional scaling libraries
+from sklearn import manifold
+from sklearn.metrics import euclidean_distances
+
+from scipy.spatial import distance
 
 cluster_num = 9
 recluster_num = 3
@@ -143,7 +150,6 @@ loc = np.array(loc)
 #
 #plt.show()
 
-#kmeans = KMeans(n_clusters=4)
 ## fit kmeans object to data
 #kmeans.fit(points)
 ## print location of clusters learned by kmeans object
@@ -163,8 +169,19 @@ loc = np.array(loc)
 #hc = AgglomerativeClustering(n_clusters=4, affinity = 'euclidean', linkage = 'ward')
 #y_hc = hc.fit_predict(points)
 
+# generating clusters using hierarchical clustering on station-to-station distance matrix
 hc = AgglomerativeClustering(n_clusters=cluster_num, affinity = 'precomputed', linkage = 'average')
 y_hc = hc.fit_predict(itemlist)
+
+# perform metric multidimensional scaling on station-to-station distance matrix
+mds = manifold.MDS(n_components=2, max_iter=3000, eps=1e-9,
+                   dissimilarity="precomputed", n_jobs=1)
+pos_ = mds.fit(itemlist).embedding_
+
+# Rescale the data
+pos = pos_*np.sqrt((loc ** 2).sum()) / np.sqrt((pos_ ** 2).sum())
+
+n_dist_mat = euclidean_distances(pos)
 
 colors = cm.rainbow(np.linspace(0, 1, cluster_num))
 
@@ -192,5 +209,75 @@ for sub in range(0,cluster_num):
 		print(str(label)+": "+str(num))
 		label += 1
 
+road_network_dic, station_info_dic = sp.preprocess()
+stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
+
+km_cluster_maxdists = {}
+
+
+# number of realizations
+n_real = 250
+
+# maximum number of clusters to test
+max_n_cluster = 25
+
+for real in range(n_real):
+    print("realization {}".format(real))
+
+    for n_cluster in range(1, max_n_cluster + 1):
+        
+        if n_cluster not in km_cluster_maxdists:
+            km_cluster_maxdists[n_cluster] = []
+
+        kmeans = KMeans(n_clusters=n_cluster)
+
+        # fit kmeans cluster to MDS-projected locations
+        kmeans.fit(pos)
+
+        # cluster assignment from kmeans
+        y_km = kmeans.fit_predict(pos)
+
+        # now checking maximum intraclass distance -- looking for cluster
+        # configurations where no station is more than [threshold distance]
+        # from any other station in the class.
+        km_cluster_ks = {}
+        km_cluster_dists = {}
+
+        for k, station in enumerate(staion_dic):
+            km_cluster_id = y_km[k]
+            if km_cluster_id not in km_cluster_ks:
+                km_cluster_ks[km_cluster_id] = []
+            km_cluster_ks[km_cluster_id].append(k)
+
+        for cluster_id in km_cluster_ks:
+            if cluster_id not in km_cluster_dists:
+                km_cluster_dists[cluster_id] = []
+
+            locs = loc[km_cluster_ks[cluster_id]]
+
+            Dmat = distance.squareform(distance.pdist(locs))
+            Dmat[np.diag_indices(Dmat.shape[0])] = np.NaN
+
+            km_cluster_dists[cluster_id].append(np.max(np.nanmin(Dmat, axis=0)))
+
+        max_intraclass_dist = np.nanmax(np.array(list(km_cluster_dists.values())))
+        km_cluster_maxdists[n_cluster].append(max_intraclass_dist)
+
+km_cluster_maxdists_mean = {}
+
+for n_cluster in range(1, max_n_cluster + 1):
+    km_cluster_maxdists_mean[n_cluster] = np.nanmean(km_cluster_maxdists[n_cluster])
+
+fig_md, ax_md = plt.subplots()
+
+ax_md.plot(*zip(*km_cluster_maxdists_mean.items()), c="b", label="Mean")
+
+ax_md.set_xlabel("Number of K-means clusters")
+ax_md.set_ylabel("Max intraclass distance")
+
+ax_md.legend()
+
+fig_md.savefig("../resources/img/max_intraclass_dist.png")
 
 plt.show()
+
