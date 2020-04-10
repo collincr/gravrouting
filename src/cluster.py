@@ -59,7 +59,7 @@ def computeDisMetrix():
 	return dis_metrix
 
 
-def reCluster(dirmap):
+def reCluster(dirmap, ax):
 	# Re-cluster
 	global label
 	dis_metrix = [([0] * len(dirmap)) for i in range(len(dirmap))]
@@ -84,13 +84,13 @@ def reCluster(dirmap):
 				if sub2 == y_hc2[i]:
 					dirmap2[index] = dirmap[i]
 					index += 1
-			reCluster(dirmap2)
+			reCluster(dirmap2, ax)
 		else:
 			for i in range(0, len(y_hc2)):
 				if sub2 == y_hc2[i]:
 					x = loc[dirmap[i], 0]
 					y = loc[dirmap[i], 1]
-					plt.annotate(str(label), (x+50, y+50))
+					ax.annotate(str(label), (x+50, y+50))
 					num += 1
 			print(str(label)+": "+str(num))
 			label += 1
@@ -169,6 +169,60 @@ loc = np.array(loc)
 #hc = AgglomerativeClustering(n_clusters=4, affinity = 'euclidean', linkage = 'ward')
 #y_hc = hc.fit_predict(points)
 
+########## Implementation of clustering algorithm without sklearn ##########
+
+# number of stations
+num_stations = len(staion_dic)
+
+# converting distance matrix to np.array
+Dmat = np.array(dis_metrix)
+
+# don't need to do this but it helps ensure that the entries on the diagonal
+# do not appear when finding minimum distances
+Dmat[np.diag_indices(Dmat.shape[0])] = np.Inf
+
+# will store the merged clusters
+merged_clusters = np.array(list(range(num_stations)))
+
+# maximum cluster size (max spanning tree size)
+max_size = 8000
+
+# gets nearest neighbor for each station
+distances = np.argsort(Dmat, axis=1)[:,:num_stations-1]
+
+# dict to hold the spanning tree sizes
+sizes = {}
+
+for k in range(num_stations-1):
+    pairs = list(zip(merged_clusters, distances[:,k]))
+
+    for cluster_0, cluster_1 in pairs:
+
+        # cluster_1 that will be removed and will be merged into cluster_0
+        big_cluster = merged_clusters[cluster_0]
+        old_cluster = merged_clusters[cluster_1]
+        if big_cluster not in sizes:
+            sizes[big_cluster] = 0
+     
+        if old_cluster != big_cluster and sizes[big_cluster] < max_size:
+
+            # find all the points that have been assigned to old_cluster and
+            # reassign them to big_cluster
+            for i_ in np.where(merged_clusters == cluster_1)[0]:
+                merged_clusters[i_] = big_cluster
+                sizes[big_cluster] += Dmat[cluster_0, i_]
+
+
+# Plotting the new cluster results
+fig, ax = plt.subplots()
+ax.scatter(*zip(*loc), c=merged_clusters, cmap="jet")
+for k, l in enumerate(loc):
+    ax.annotate(str(merged_clusters[k]), xy=l)
+
+fig.suptitle("New clustering method")
+
+############################################################################
+
 # generating clusters using hierarchical clustering on station-to-station distance matrix
 hc = AgglomerativeClustering(n_clusters=cluster_num, affinity = 'precomputed', linkage = 'average')
 y_hc = hc.fit_predict(itemlist)
@@ -185,9 +239,11 @@ n_dist_mat = euclidean_distances(pos)
 
 colors = cm.rainbow(np.linspace(0, 1, cluster_num))
 
+fig2, ax2 = plt.subplots()
+
 i = 0
 for c in colors:
-	plt.scatter(loc[y_hc ==i,0], loc[y_hc == i,1], s=20, color=c)
+	ax2.scatter(loc[y_hc ==i,0], loc[y_hc == i,1], s=20, color=c)
 	i+=1
 
 for sub in range(0,cluster_num):
@@ -201,83 +257,15 @@ for sub in range(0,cluster_num):
 			if y_hc[i] == sub:
 				dirmap[index] = i
 				index += 1
-		reCluster(dirmap)
+		reCluster(dirmap, ax2)
 	else:	
 		for j in range(0,len(x)):
-			plt.annotate(label, (x[j]+50, y[j]+50))
+			ax2.annotate(label, (x[j]+50, y[j]+50))
 			num += 1
 		print(str(label)+": "+str(num))
 		label += 1
 
-road_network_dic, station_info_dic = sp.preprocess()
-stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
-
-km_cluster_maxdists = {}
-
-
-# number of realizations
-n_real = 250
-
-# maximum number of clusters to test
-max_n_cluster = 25
-
-for real in range(n_real):
-    print("realization {}".format(real))
-
-    for n_cluster in range(1, max_n_cluster + 1):
-        
-        if n_cluster not in km_cluster_maxdists:
-            km_cluster_maxdists[n_cluster] = []
-
-        kmeans = KMeans(n_clusters=n_cluster)
-
-        # fit kmeans cluster to MDS-projected locations
-        kmeans.fit(pos)
-
-        # cluster assignment from kmeans
-        y_km = kmeans.fit_predict(pos)
-
-        # now checking maximum intraclass distance -- looking for cluster
-        # configurations where no station is more than [threshold distance]
-        # from any other station in the class.
-        km_cluster_ks = {}
-        km_cluster_dists = {}
-
-        for k, station in enumerate(staion_dic):
-            km_cluster_id = y_km[k]
-            if km_cluster_id not in km_cluster_ks:
-                km_cluster_ks[km_cluster_id] = []
-            km_cluster_ks[km_cluster_id].append(k)
-
-        for cluster_id in km_cluster_ks:
-            if cluster_id not in km_cluster_dists:
-                km_cluster_dists[cluster_id] = []
-
-            locs = loc[km_cluster_ks[cluster_id]]
-
-            Dmat = distance.squareform(distance.pdist(locs))
-            Dmat[np.diag_indices(Dmat.shape[0])] = np.NaN
-
-            km_cluster_dists[cluster_id].append(np.max(np.nanmin(Dmat, axis=0)))
-
-        max_intraclass_dist = np.nanmax(np.array(list(km_cluster_dists.values())))
-        km_cluster_maxdists[n_cluster].append(max_intraclass_dist)
-
-km_cluster_maxdists_mean = {}
-
-for n_cluster in range(1, max_n_cluster + 1):
-    km_cluster_maxdists_mean[n_cluster] = np.nanmean(km_cluster_maxdists[n_cluster])
-
-fig_md, ax_md = plt.subplots()
-
-ax_md.plot(*zip(*km_cluster_maxdists_mean.items()), c="b", label="Mean")
-
-ax_md.set_xlabel("Number of K-means clusters")
-ax_md.set_ylabel("Max intraclass distance")
-
-ax_md.legend()
-
-fig_md.savefig("../resources/img/max_intraclass_dist.png")
+fig2.suptitle("Old clustering method")
 
 plt.show()
 
