@@ -12,24 +12,9 @@ road_network_dic = None
 station_info_dic = None
 stations_shortest_path_dic = None
 stat_name_dic = None
+
 '''
 def main():
-
-	print(str(dt.timedelta(seconds = time.time())))
-	# Initialize the station dict
-	road_network_dic, station_info_dic = sp.preprocess()
-	stations_shortest_path_dic = sp.get_all_stations_spt_dic_from_file()
-
-	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
-	permutation_list = get_permutation_with_mini_time(station_list)
-	#permutation_list = ['CS44', 'COSO2', 'CS43', 'CS25', 'CS26']
-	print("first permutation:")
-	print(permutation_list)
-	simulate_visit_station(permutation_list)
-	print(str(dt.timedelta(seconds = time.time())))
-'''
-def main():
-	'''
 	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
 	#print(station_list)
 
@@ -37,16 +22,29 @@ def main():
 	stat_name_dic = sp.create_stat_name_id_mapping(stat_dic)
 	for stat in station_list:
 		print(stat, stat_name_dic[stat])
-	'''
 #	stat_id_list = {'6', '37', '38', '39', '47', '4', '40'}
 #	time, visit_path = get_visit_path_by_id(stat_id_list, [], [])
-	print(str(dt.timedelta(seconds = time.time())))
-	station_list = {"B-15", "DOR64", "DOR65", "DOR66", "CS1", "B-14", "DOR68"}
-	visit_path, times = get_visit_path_by_name(station_list, [], [])
-	print(visit_path)
-	print(times)
-	print(str(dt.timedelta(seconds = time.time())))
-	
+	#print(str(dt.timedelta(seconds = time.time())))
+	#station_list = ["DOR37", "DOR38", "DOR39", "CS8", "CS9", "CS34", "CS35"]
+        #get_permutation_with_mini_time(station_list)
+	#visit_path, times = get_visit_path_by_name(station_list, [], [])
+	#print(visit_path)
+	#print(times)
+	#print(str(dt.timedelta(seconds = time.time())))
+        station_list = ["DOR37", "DOR38", "DOR39", "CS8", "CS9", "CS34", "CS35"]
+        get_permutation_with_mini_time(station_list)
+'''
+def main():
+    #station_list =  ["CS11", "CS12", "CS13", "CS36", "CS37", "CS38", "RE33"]
+    with open("../app_data/cluster_info.json") as file:
+        cluster_dic = json.load(file)
+
+    #get_permutation_with_mini_time(station_list)
+    visit_path, times = get_visit_path_by_name(cluster_dic["19"]["stations"], [], [])
+    #print(visit_path)
+    #print(times)
+
+
 def get_visit_path(stat_id_list, visit, visit_time):
 
 	#print(str(dt.timedelta(seconds = time.time())))
@@ -234,10 +232,10 @@ def get_permutation_with_mini_time(station_list):
         curr = time.time()
         permutations = list(itertools.permutations(station_list))
         min_time = 0
-        print("Possible permutations number:")
-        print(len(permutations))
-        print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
-        print("Calculating the permutation with minimum time spent...")
+        #print("Possible permutations number:")
+        #print(len(permutations))
+        #print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
+        #print("Calculating the permutation with minimum time spent...")
         curr = time.time()
         permutation_list = []
         for stations in permutations:
@@ -245,11 +243,11 @@ def get_permutation_with_mini_time(station_list):
                 if min_time == 0 or times < min_time:
                         min_time = times
                         permutation_list = res
-        print("Permuation with minimum time found")
-        print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
-        #print("get_permutation_with_mini_time")
-        #print(permutation_list)
-        #print(min_time)
+        #print("Permuation with minimum time found")
+        #print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
+        print("get_permutation_with_mini_time")
+        print(permutation_list)
+        print(min_time)
         return permutation_list
 
 def get_permutation_start_with_station(station_list, station):
@@ -264,17 +262,17 @@ def get_permutation_start_with_station(station_list, station):
 		if min_time == 0 or time < min_time:
 			min_time = time
 			permutation_list = res
-	#print("get_permutation_start_with_station")
+	print("get_permutation_start_with_station done ", min_time)
 	#print(permutation_list)
 	return permutation_list
 
 def simulate_visit_station(permutation_list, visit_path, visit_time):
 	#print("!!!!!!")
 	#print(permutation_list)
-	N = 30*60
+	#N = 30*60
 	#N = 1*60*60
 	#N = 1.5*60*60
-	#N = 2*60*60
+	N = 2*60*60
 	#N = 2.5*60*60
 	M = 15*60
 	#M = 30*60
@@ -312,7 +310,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 		current_time = current_time + test_time
 
 		if current_time - last_time_repeat > N:
-			#print("Making choice!!!!!!!")
+			print("Making choice!!!!!!! ", current_station)
 			#print(current_station)
 			#print("N=", N, "timeout")
 			if len(visit_path) == 0:
@@ -346,6 +344,7 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 					for station in left_stations:
 						new_list.append(station)
 					left_stations = get_permutation_start_with_station(new_list, current_station)
+					print("New seq:", left_stations)
 					if current_station in left_stations:
 						#print("left_stations.remove", current_station)
 						left_stations.remove(current_station)
@@ -361,9 +360,9 @@ def simulate_visit_station(permutation_list, visit_path, visit_time):
 			current_time += travel_time
 			current_station = next_station
 
-	#print("final path:")
-	#print(visit_path)
-	#print(visit_time)
+	print("final path:")
+	print(visit_path)
+	print(visit_time)
 	return visit_path, visit_time
 
 

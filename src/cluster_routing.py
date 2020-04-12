@@ -67,7 +67,6 @@ def main():
     print(cluster_adj_dic)
     get_next_day_station_seq(cluster_adj_dic)
     '''
-    '''
     # cluster info dic
     cluster_adj_dic = get_cluster_info_dic()
     t1 = time.time()
@@ -75,7 +74,6 @@ def main():
     t2 = time.time()
     print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
     get_total_time_from_sec(stat_routes)
-    '''
     print(len(station_info_dic))
     pass
 '''

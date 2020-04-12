@@ -5,6 +5,7 @@ from shapely.geometry import Point
 def main():
     local_station_status_csv = '../data/20190829_stn_status.csv'
     utm_station_status_geojson = '../resources/file/utm_station_status.geojson'    
+    app_station_status_geojson = '../resources/file/app_station_status.geojson'
 
     print("Data converting to UTM coordinate system...")
     
@@ -15,9 +16,10 @@ def main():
     gdf_stations = gdf_constructor(df_stations, 'Easting', 'Northing')
 
     # convert coordinate system to utm
-    gdf_stations = utm_coordinate_converter(gdf_stations)
+    #gdf_stations = utm_coordinate_converter(gdf_stations)
+    gdf_stations = app_coordinate_converter(gdf_stations)
     # save geodataframe as geojson file
-    geojson_saver(gdf_stations, utm_station_status_geojson)
+    geojson_saver(gdf_stations, app_station_status_geojson)
 
     print(gdf_stations.head())
 
@@ -46,6 +48,16 @@ def utm_coordinate_converter(gdf):
 
     # coordinate system conversion
     gdf = gdf.to_crs(utm_coordinate)
+
+    return gdf
+
+def app_coordinate_converter(gdf):
+
+    # target coordinate reference system
+    app_coordinate = '+proj=latlong +datum=WGS84'
+
+    # coordinate system conversion
+    gdf = gdf.to_crs(app_coordinate)
 
     return gdf
 
