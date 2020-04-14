@@ -39,8 +39,8 @@ def make_min_perm_cache():
             key = key + stat + "#"
         #print("key:" + key)
         cluster_perm_cache[key] = {}
-        cluster_perm_cache[key]["min_permutation"] = min_perm
         cluster_perm_cache[key]["start"] = min_perm[0]
+        cluster_perm_cache[key]["min_permutation"] = min_perm
 
     write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
 
