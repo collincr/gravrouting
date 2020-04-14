@@ -52,14 +52,14 @@ def main():
             stats = []
             for stat in cluster_info_dic[c]['stations']:
                 stats.append(station_info_dic[stat]['name'])
-            cluster_new[c]['stations'] = stats
-            cluster_new[c]['adj'] = cluster_info_dic[c]['adj']
-            cluster_new[c]['start'] = station_info_dic[cluster_info_dic[c]['start']]['name']
+            #cluster_new[c]['adj'] = cluster_info_dic[c]['adj']
             min_perm = sr.get_permutation_with_mini_time(stats)
-            cluster_new[c]['min_permutation'] = min_perm
-            path, time = sr.get_visit_path_by_name(stats, [], [])
-            cluster_new[c]['visit_path'] = path
-            cluster_new[c]['visit_time'] = time
+            cluster_new[c]['start'] = min_perm[0]
+            cluster_new[c]['stations'] = stats
+            #cluster_new[c]['min_permutation'] = min_perm
+            #path, time = sr.get_visit_path_by_name(stats, [], [])
+            #cluster_new[c]['visit_path'] = path
+            #cluster_new[c]['visit_time'] = time
 
             # cluster start cache
             key = ""
@@ -71,11 +71,11 @@ def main():
             cluster_perm_cache[key]["min_permutation"] = min_perm
             cluster_perm_cache[key]["start"] = min_perm[0]
 
-        #print(cluster_new)
-        write_dic_to_file(cluster_perm_cache, 'cluster_perm_cache.json')
-        #write_dic_to_file(cluster_new, 'cluster_info.json')
+        print(cluster_new)
+        #write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
+        write_dic_to_file(cluster_new, 'cluster_info.json')
 
-    if True:
+    if False:
         stat_times_dic = json.load(open("time.json"))
         #print(stat_times_dic["DOR37"])
         #print(stat_times_dic)

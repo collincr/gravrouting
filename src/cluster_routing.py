@@ -69,12 +69,13 @@ def main():
     '''
     # cluster info dic
     cluster_adj_dic = get_cluster_info_dic()
-    t1 = time.time()
-    stat_routes = greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
-    t2 = time.time()
-    print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
-    get_total_time_from_sec(stat_routes)
-    print(len(station_info_dic))
+    print(cluster_adj_dic)
+    #t1 = time.time()
+    #stat_routes = greedy_routing_cut_cluster(cluster_adj_dic, 8*60*60)
+    #t2 = time.time()
+    #print("time to run greedy", t2-t1, str(datetime.timedelta(seconds=t2-t1)))
+    #get_total_time_from_sec(stat_routes)
+    #print(len(station_info_dic))
     pass
 '''
 def calculate_route_for_all_clusters():
@@ -91,6 +92,7 @@ def get_total_time_from_sec(stat_routes):
 
 def get_cluster_info_dic():
     cluster_info_dic = read_cluster_dic_from_file(files.clusters_info_json)
+    #cluster_info_dic = None
     if cluster_info_dic is None:
         cluster_adj_dic = cba.get_cluster_adj_dic()
         get_start_stat_dic(cluster_adj_dic)
@@ -416,10 +418,12 @@ def get_cluster_cands(stat, cluster_dic, visited_stat, visited_time):
     return pq
 
 def get_start_stat_dic(cluster_dic):
+    global station_info_dic
     for c in cluster_dic:
         stats = cluster_dic[c]['stations']
         cluster_dic[c]['start'] = get_start_stat_of_cluster(stats)
-        print("cluster", c, "start with", cluster_dic[c]['start'])
+        #print("cluster", c, "start with", cluster_dic[c]['start'])
+        print("cluster", c, "start with", station_info_dic[cluster_dic[c]['start']]['name'])
 
 def get_start_stat_of_cluster(stat_id_list):
     #print("get_start_stat_of_cluster", stat_id_list)
