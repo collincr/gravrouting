@@ -6,18 +6,24 @@ import data_readin_conversion as drc
 import pandas as pd
 import geopandas as gpd
 
+road_network_dic, station_info_dic = sp.preprocess()
+cluster_info_dic = cr.get_cluster_info_dic()
+
+local_station_status_csv = '../data/20190829_stn_status.csv'
+df_stations = pd.read_csv(local_station_status_csv)
+gdf_stations = drc.gdf_constructor(df_stations, 'Easting', 'Northing')
+gdf_stations = drc.app_coordinate_converter(gdf_stations)
+
 def main():
-    road_network_dic, station_info_dic = sp.preprocess()
-    cluster_info_dic = cr.get_cluster_info_dic()
 
     #print(station_info_dic)
-    local_station_status_csv = '../data/20190829_stn_status.csv'
-    df_stations = pd.read_csv(local_station_status_csv)
-    gdf_stations = drc.gdf_constructor(df_stations, 'Easting', 'Northing')
-    gdf_stations = drc.app_coordinate_converter(gdf_stations)
     #print(gdf_stations.loc[0]['geometry'].y)
 
-    if False:
+    make_new_stat_info()
+    make_new_cluster_info()
+    make_new_time()
+
+def make_new_stat_info():
         stat_info_new = {}
         for stat in station_info_dic:
             name = station_info_dic[stat]['name']
@@ -43,7 +49,7 @@ def main():
         #print(stat_info_new)
         write_dic_to_file(stat_info_new, 'stat_info.json')
 
-    if True:
+def make_new_cluster_info():
         #print(cluster_info_dic)
         cluster_new = {}
         cluster_perm_cache = {}
@@ -72,10 +78,10 @@ def main():
             cluster_perm_cache[key]["start"] = min_perm[0]
 
         print(cluster_new)
-        #write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
+        write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
         write_dic_to_file(cluster_new, 'cluster_info.json')
 
-    if False:
+def make_new_time():
         stat_times_dic = json.load(open("time.json"))
         #print(stat_times_dic["DOR37"])
         #print(stat_times_dic)
