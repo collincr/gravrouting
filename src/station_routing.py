@@ -245,9 +245,9 @@ def get_permutation_with_mini_time(station_list):
                         permutation_list = res
         #print("Permuation with minimum time found")
         #print("Time spent: " + str(dt.timedelta(seconds = time.time() - curr)))
-        print("get_permutation_with_mini_time")
-        print(permutation_list)
-        print(min_time)
+        #print("get_permutation_with_mini_time")
+        #print(permutation_list)
+        #print(min_time)
         return permutation_list
 
 def get_permutation_start_with_station(station_list, station):

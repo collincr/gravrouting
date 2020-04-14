@@ -19,9 +19,30 @@ def main():
     #print(station_info_dic)
     #print(gdf_stations.loc[0]['geometry'].y)
 
-    make_new_stat_info()
-    make_new_cluster_info()
-    make_new_time()
+    make_min_perm_cache()
+    #make_new_stat_info()
+    #make_new_cluster_info()
+    #make_new_time()
+
+def make_min_perm_cache():
+
+    cluster_perm_cache = {}
+    for c in cluster_info_dic:
+        stats = []
+        for stat in cluster_info_dic[c]['stations']:
+            stats.append(station_info_dic[stat]['name'])
+
+        min_perm = sr.get_permutation_with_mini_time(stats)
+        key = ""
+        #print(stats)
+        for stat in sorted(stats):
+            key = key + stat + "#"
+        #print("key:" + key)
+        cluster_perm_cache[key] = {}
+        cluster_perm_cache[key]["min_permutation"] = min_perm
+        cluster_perm_cache[key]["start"] = min_perm[0]
+
+    write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
 
 def make_new_stat_info():
         stat_info_new = {}
@@ -52,7 +73,6 @@ def make_new_stat_info():
 def make_new_cluster_info():
         #print(cluster_info_dic)
         cluster_new = {}
-        cluster_perm_cache = {}
         for c in cluster_info_dic:
             cluster_new[c] = {}
             stats = []
@@ -67,18 +87,8 @@ def make_new_cluster_info():
             #cluster_new[c]['visit_path'] = path
             #cluster_new[c]['visit_time'] = time
 
-            # cluster start cache
-            key = ""
-            #print(stats)
-            for stat in sorted(stats):
-                key = key + stat + "#"
-            print("key:" + key)
-            cluster_perm_cache[key] = {}
-            cluster_perm_cache[key]["min_permutation"] = min_perm
-            cluster_perm_cache[key]["start"] = min_perm[0]
 
         print(cluster_new)
-        write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
         write_dic_to_file(cluster_new, 'cluster_info.json')
 
 def make_new_time():
