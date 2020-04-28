@@ -5,6 +5,7 @@ import json
 import data_readin_conversion as drc
 import pandas as pd
 import geopandas as gpd
+import os.path
 
 road_network_dic, station_info_dic = sp.preprocess()
 cluster_info_dic = cr.get_cluster_info_dic()
@@ -14,15 +15,40 @@ df_stations = pd.read_csv(local_station_status_csv)
 gdf_stations = drc.gdf_constructor(df_stations, 'Easting', 'Northing')
 gdf_stations = drc.app_coordinate_converter(gdf_stations)
 
+stat_perm_file = 'stat_perm_cache.json'
+stat_perm_with_start_file = 'stat_perm_with_start_cache.json'
+
 def main():
 
     #print(station_info_dic)
     #print(gdf_stations.loc[0]['geometry'].y)
 
-    make_min_perm_cache()
+    stats = ["CSE1", "RE11", "RE34", "RE31", "RE32", "CS19", "CSE5", "RE24", "CS18", "RE25"]
+    add_min_perm_with_start_to_cache(stats)
+
+    #make_min_perm_cache()
+    #add_min_perm_to_cache(stats)
     #make_new_stat_info()
     #make_new_cluster_info()
     #make_new_time()
+
+def add_min_perm_with_start_to_cache(stations):
+    # Assumpt first one is the start
+    start = stations[0]
+    dic = read_dic_from_file(stat_perm_with_start_file)
+    if dic is None:
+        print("No file found")
+        dic = {}
+    key = get_key(stations[1:len(stations)])
+    key = start + "#" + key
+    if key in dic:
+        print("Key " + key + " already in dictionary")
+    else:
+        min_perm = sr.get_permutation_start_with_station(stations, start)
+        dic[key] = {}
+        dic[key]["min_permutation"] = min_perm
+    print(dic)
+    write_dic_to_file(dic, stat_perm_with_start_file)
 
 def make_min_perm_cache():
 
@@ -33,16 +59,33 @@ def make_min_perm_cache():
             stats.append(station_info_dic[stat]['name'])
 
         min_perm = sr.get_permutation_with_mini_time(stats)
-        key = ""
+        key = get_key(stats)
         #print(stats)
-        for stat in sorted(stats):
-            key = key + stat + "#"
-        #print("key:" + key)
         cluster_perm_cache[key] = {}
         cluster_perm_cache[key]["start"] = min_perm[0]
         cluster_perm_cache[key]["min_permutation"] = min_perm
 
-    write_dic_to_file(cluster_perm_cache, 'stat_perm_cache.json')
+    write_dic_to_file(cluster_perm_cache, stat_perm_file)
+
+def add_min_perm_to_cache(stations):
+    dic = read_dic_from_file(stat_perm_file)
+    key = get_key(stations)
+    if key in dic:
+        print("Key " + key + " already in dictionary")
+    else:
+        min_perm = sr.get_permutation_with_mini_time(stations)
+        dic[key] = {}
+        dic[key]['start'] = min_perm[0]
+        dic[key]["min_permutation"] = min_perm
+    write_dic_to_file(dic, stat_perm_file)
+
+def get_key(stations):
+    key = ""
+    #print(stations)
+    for stat in sorted(stations):
+        key = key + stat + "#"
+    #print("key:" + key)
+    return key
 
 def make_new_stat_info():
         stat_info_new = {}
@@ -116,6 +159,14 @@ def write_dic_to_file(dic, filename):
     with open(filepath, 'w') as outfile:
         json.dump(dic, outfile)
 
+def read_dic_from_file(filename):
+    filename = '../app_data/' + filename
+    if not os.path.exists(filename):
+        print(filename, "file not found")
+        return None
+    with open(filename) as file:
+        dic = json.load(file)
+    return dic
 
 if __name__ == '__main__':
     main()
